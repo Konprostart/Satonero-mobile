@@ -111,7 +111,7 @@ class FakeSharedPreferencesAsync implements SharedPreferencesAsync {
 class FakeSecureStorage implements FlutterSecureStorage {
   final Map<String, String?> _store = {};
   @override
-  Stream<Map<String, String?>> get getListeners => const Stream.empty();
+  Map<String, List<void Function(String?)>> get getListeners => {};
   @override
   Future<void> deleteAll(
       {AppleOptions? iOptions,
