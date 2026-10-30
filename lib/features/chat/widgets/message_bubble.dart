@@ -1,0 +1,244 @@
+import 'package:dart_nostr/nostr/model/event/event.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:mostro_mobile/shared/providers/avatar_provider.dart';
+import 'package:mostro_mobile/features/chat/widgets/encrypted_image_message.dart';
+import 'package:mostro_mobile/features/chat/widgets/encrypted_file_message.dart';
+import 'package:mostro_mobile/features/chat/utils/message_type_helpers.dart';
+import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+
+class MessageBubble extends ConsumerWidget {
+  final NostrEvent message;
+  final String peerPubkey;
+  final String orderId;
+
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.peerPubkey,
+    required this.orderId,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFromPeer = message.pubkey == peerPubkey;
+    final content = message.content;
+    
+    // Return empty container if message content is null
+    if (content == null) {
+      return const SizedBox.shrink();
+    }
+    
+    final chatNotifier = ref.read(chatRoomsProvider(orderId).notifier);
+
+    // Check if this is an encrypted image message
+    if (MessageTypeUtils.isEncryptedImageMessage(message)) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        alignment: isFromPeer ? Alignment.centerLeft : Alignment.centerRight,
+        child: Row(
+          mainAxisAlignment: isFromPeer ? MainAxisAlignment.start : MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.sizeOf(context).width * 0.75,
+                  minWidth: 0,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.purpleButton,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(16),
+                      topRight: const Radius.circular(16),
+                      bottomLeft: Radius.circular(isFromPeer ? 4 : 16),
+                      bottomRight: Radius.circular(isFromPeer ? 16 : 4),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      EncryptedImageMessage(
+                        message: message,
+                        isOwnMessage: !isFromPeer,
+                        getSharedKey: chatNotifier.getSharedKey,
+                        getCachedImage: chatNotifier.getCachedImage,
+                        getImageMetadata: chatNotifier.getImageMetadata,
+                        cacheDecryptedImage: chatNotifier.cacheDecryptedImage,
+                      ),
+                      _buildTimestamp(context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Check if this is an encrypted file message
+    if (MessageTypeUtils.isEncryptedFileMessage(message)) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        alignment: isFromPeer ? Alignment.centerLeft : Alignment.centerRight,
+        child: Row(
+          mainAxisAlignment: isFromPeer ? MainAxisAlignment.start : MainAxisAlignment.end,
+          children: [
+            Flexible(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.sizeOf(context).width * 0.75,
+                  minWidth: 0,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.purpleButton,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(16),
+                      topRight: const Radius.circular(16),
+                      bottomLeft: Radius.circular(isFromPeer ? 4 : 16),
+                      bottomRight: Radius.circular(isFromPeer ? 16 : 4),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      EncryptedFileMessage(
+                        message: message,
+                        isOwnMessage: !isFromPeer,
+                        getSharedKey: chatNotifier.getSharedKey,
+                        getCachedFile: chatNotifier.getCachedFile,
+                        getFileMetadata: chatNotifier.getFileMetadata,
+                        cacheDecryptedFile: chatNotifier.cacheDecryptedFile,
+                      ),
+                      _buildTimestamp(context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      alignment: isFromPeer ? Alignment.centerLeft : Alignment.centerRight,
+      child: Row(
+        mainAxisAlignment: isFromPeer ? MainAxisAlignment.start : MainAxisAlignment.end,
+        children: [
+          Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.sizeOf(context).width * 0.75, // Max 75% of screen width
+                minWidth: 0,
+              ),
+              child: GestureDetector(
+                onLongPress: () => _copyToClipboard(context, content),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.purpleButton,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(16),
+                      topRight: const Radius.circular(16),
+                      bottomLeft: Radius.circular(isFromPeer ? 4 : 16),
+                      bottomRight: Radius.circular(isFromPeer ? 16 : 4),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        content,
+                        style: const TextStyle(
+                          color: AppTheme.cream1,
+                          fontSize: 16,
+                          height: 1.4,
+                        ),
+                        softWrap: true,
+                      ),
+                      _buildTimestamp(context),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // DateFormat parses its pattern on construction. Cache one per locale so
+  // rebuilding after an in-app language change does not reuse the formatter
+  // created for the previous locale.
+  static final Map<Locale, DateFormat> _format24hByLocale = {};
+  static final Map<Locale, DateFormat> _format12hByLocale = {};
+
+  String _formatTime(BuildContext context) {
+    if (message.createdAt == null) return '';
+    final use24h = MediaQuery.alwaysUse24HourFormatOf(context);
+    final locale = Localizations.localeOf(context);
+    final formatters = use24h ? _format24hByLocale : _format12hByLocale;
+    final pattern = use24h ? 'HH:mm' : 'h:mm a';
+    final formatter = formatters.putIfAbsent(
+      locale,
+      () => DateFormat(pattern, locale.toString()),
+    );
+    return formatter.format(message.createdAt!.toLocal());
+  }
+
+  Widget _buildTimestamp(BuildContext context) {
+    final time = _formatTime(context);
+    if (time.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Text(
+        time,
+        style: TextStyle(
+          color: AppTheme.cream1.withValues(alpha: 0.6),
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+
+  void _copyToClipboard(BuildContext context, String text) {
+    // Only copy if text is not empty
+    if (text.isNotEmpty) {
+      Clipboard.setData(ClipboardData(text: text));
+      SnackBarHelper.showTopSnackBar(
+        context,
+        S.of(context)!.messageCopiedToClipboard,
+        duration: const Duration(seconds: 2),
+        backgroundColor: AppTheme.backgroundCard,
+      );
+    }
+  }
+  
+  /// Returns a subdued version of the peer's avatar color for message bubbles
+  Color _getPeerMessageColor(String pubkey) {
+    // Get the original avatar color
+    final avatarColor = pickNymColor(pubkey);
+    
+    // Create a subdued version by reducing saturation and value
+    final HSVColor hsvColor = HSVColor.fromColor(avatarColor);
+    
+    // Create a more subdued version with lower saturation and value
+    // but keep enough color to be recognizable
+    return hsvColor.withSaturation(0.3).withValue(0.25).toColor();
+  }
+}

@@ -1,0 +1,260 @@
+import 'package:dart_nostr/dart_nostr.dart';
+import 'package:mostro_mobile/data/models/enums/role.dart';
+import 'package:mostro_mobile/data/models/peer.dart';
+import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+
+/// Represents a User session
+///
+/// This class is used to store details of a user session
+class Session {
+  final NostrKeyPairs masterKey;
+  final NostrKeyPairs tradeKey;
+  final int keyIndex;
+  final bool fullPrivacy;
+  final DateTime startTime;
+  String? orderId;
+  /// Tracks the order that originated this session when it represents
+  /// the preemptive child generated from a range order release.
+  String? parentOrderId;
+  Role? role;
+  Peer? _peer;
+  NostrKeyPairs? _sharedKey;
+  String? _adminPubkey;
+  NostrKeyPairs? _adminSharedKey;
+  String? disputeId;
+
+  /// Transient marker (never persisted): set while a maker-created order is in
+  /// the anti-abuse bond limbo, so the shared pay-bond handler skips persisting
+  /// the still-uncommitted session. Cleared and persisted on confirmation.
+  bool bondPending = false;
+
+  Session({
+    required this.masterKey,
+    required this.tradeKey,
+    required this.keyIndex,
+    required this.fullPrivacy,
+    required this.startTime,
+    this.orderId,
+    this.parentOrderId,
+    this.role,
+    this.disputeId,
+    Peer? peer,
+    String? adminPubkey,
+  }) {
+    _peer = peer;
+    if (adminPubkey != null) {
+      if (adminPubkey.isEmpty || adminPubkey.length != 64) {
+        throw ArgumentError(
+          'Invalid admin pubkey: expected 64-char hex, got ${adminPubkey.length} chars',
+        );
+      }
+      _adminPubkey = adminPubkey;
+    }
+  }
+
+  Map<String, dynamic> toJson() => {
+        'trade_key': tradeKey.public,
+        'key_index': keyIndex,
+        'full_privacy': fullPrivacy,
+        'start_time': startTime.toIso8601String(),
+        'order_id': orderId,
+        'parent_order_id': parentOrderId,
+        'role': role?.value,
+        'peer': peer?.publicKey,
+        'admin_peer': _adminPubkey,
+        'dispute_id': disputeId,
+      };
+
+  factory Session.fromJson(Map<String, dynamic> json) {
+    try {
+      // Validate required fields
+      final requiredFields = ['master_key', 'trade_key', 'key_index', 'full_privacy', 'start_time'];
+      for (final field in requiredFields) {
+        if (!json.containsKey(field) || json[field] == null) {
+          throw FormatException('Missing required field: $field');
+        }
+      }
+
+      // Parse keyIndex
+      final keyIndexValue = json['key_index'];
+      int keyIndex;
+      if (keyIndexValue is int) {
+        keyIndex = keyIndexValue;
+      } else if (keyIndexValue is String) {
+        keyIndex = int.tryParse(keyIndexValue) ??
+            (throw FormatException('Invalid key_index format: $keyIndexValue'));
+      } else {
+        throw FormatException('Invalid key_index type: ${keyIndexValue.runtimeType}');
+      }
+
+      if (keyIndex < 0) {
+        throw FormatException('Key index cannot be negative: $keyIndex');
+      }
+
+      // Validate key pair fields  
+      final masterKeyValue = json['master_key'];  
+      final tradeKeyValue = json['trade_key'];  
+      if (masterKeyValue is! NostrKeyPairs) {  
+        throw FormatException('Invalid master_key type: ${masterKeyValue.runtimeType}');  
+      }  
+      if (tradeKeyValue is! NostrKeyPairs) {  
+        throw FormatException('Invalid trade_key type: ${tradeKeyValue.runtimeType}');  
+      }  
+
+      // Parse fullPrivacy
+      final fullPrivacyValue = json['full_privacy'];
+      bool fullPrivacy;
+      if (fullPrivacyValue is bool) {
+        fullPrivacy = fullPrivacyValue;
+      } else if (fullPrivacyValue is String) {
+        fullPrivacy = fullPrivacyValue.toLowerCase() == 'true';
+      } else {
+        throw FormatException('Invalid full_privacy type: ${fullPrivacyValue.runtimeType}');
+      }
+
+      // Parse startTime
+      final startTimeValue = json['start_time'];
+      DateTime startTime;
+      if (startTimeValue is String) {
+        if (startTimeValue.isEmpty) {
+          throw FormatException('Start time string cannot be empty');
+        }
+        startTime = DateTime.tryParse(startTimeValue) ??
+            (throw FormatException('Invalid start_time format: $startTimeValue'));
+      } else {
+        throw FormatException('Invalid start_time type: ${startTimeValue.runtimeType}');
+      }
+
+      // Parse optional role
+      Role? role;
+      final roleValue = json['role'];
+      if (roleValue != null) {
+        if (roleValue is String && roleValue.isNotEmpty) {
+          role = Role.fromString(roleValue);
+        } else if (roleValue is! String) {
+          throw FormatException('Invalid role type: ${roleValue.runtimeType}');
+        }
+      }
+
+      // Parse optional peer
+      Peer? peer;
+      final peerValue = json['peer'];
+      if (peerValue != null) {
+        if (peerValue is String && peerValue.isNotEmpty) {
+          peer = Peer(publicKey: peerValue);
+        } else if (peerValue is! String) {
+          throw FormatException('Invalid peer type: ${peerValue.runtimeType}');
+        }
+      }
+
+      // Parent order reference (only set for range order child sessions)
+      String? parentOrderId;
+      final parentOrderValue = json['parent_order_id'];
+      if (parentOrderValue != null) {
+        if (parentOrderValue is String && parentOrderValue.isNotEmpty) {
+          parentOrderId = parentOrderValue;
+        } else if (parentOrderValue is! String) {
+          throw FormatException(
+            'Invalid parent_order_id type: ${parentOrderValue.runtimeType}',
+          );
+        }
+      }
+
+      // Parse optional admin pubkey
+      String? adminPubkey;
+      final adminPeerValue = json['admin_peer'];
+      if (adminPeerValue != null) {
+        if (adminPeerValue is String && adminPeerValue.isNotEmpty) {
+          adminPubkey = adminPeerValue;
+        } else if (adminPeerValue is! String) {
+          throw FormatException(
+            'Invalid admin_peer type: ${adminPeerValue.runtimeType}',
+          );
+        }
+      }
+
+      // Parse optional dispute ID
+      String? disputeId;
+      final disputeIdValue = json['dispute_id'];
+      if (disputeIdValue != null && disputeIdValue is String && disputeIdValue.isNotEmpty) {
+        disputeId = disputeIdValue;
+      }
+
+      return Session(
+        masterKey: masterKeyValue,
+        tradeKey: tradeKeyValue,
+        keyIndex: keyIndex,
+        fullPrivacy: fullPrivacy,
+        startTime: startTime,
+        orderId: json['order_id']?.toString(),
+        parentOrderId: parentOrderId,
+        role: role,
+        peer: peer,
+        adminPubkey: adminPubkey,
+        disputeId: disputeId,
+      );
+    } catch (e) {
+      throw FormatException('Failed to parse Session from JSON: $e');
+    }
+  }
+
+  /// Lazy: ECDH costs an EC multiplication and used to run in the
+  /// constructor for every decoded session at startup and on each cleanup.
+  NostrKeyPairs? get sharedKey {
+    if (_sharedKey == null && _peer != null) {
+      _sharedKey = NostrUtils.computeSharedKey(
+        tradeKey.private,
+        _peer!.publicKey,
+      );
+    }
+    return _sharedKey;
+  }
+
+  String? get adminPubkey => _adminPubkey;
+  NostrKeyPairs? get adminSharedKey {
+    if (_adminSharedKey == null && _adminPubkey != null) {
+      _adminSharedKey = NostrUtils.computeSharedKey(
+        tradeKey.private,
+        _adminPubkey!,
+      );
+    }
+    return _adminSharedKey;
+  }
+
+  /// Inner event signers accepted in the dispute chat conversation.
+  /// adminPubkey is always set when adminSharedKey is (see setAdminPeer).
+  List<String> get disputeChatAllowedSigners => [
+        tradeKey.public,
+        if (_adminPubkey != null) _adminPubkey!,
+      ];
+
+  /// Inner event signers accepted in the peer chat conversation.
+  /// The peer is always set when sharedKey is (see the peer setter).
+  List<String> get peerChatAllowedSigners => [
+        tradeKey.public,
+        if (_peer != null) _peer!.publicKey,
+      ];
+
+  /// Compute and store the admin shared key via ECDH
+  void setAdminPeer(String adminPubkey) {
+    if (adminPubkey.isEmpty || adminPubkey.length != 64) {
+      throw ArgumentError(
+        'Invalid admin pubkey: expected 64-char hex, got ${adminPubkey.length} chars',
+      );
+    }
+    _adminPubkey = adminPubkey;
+    _adminSharedKey = null; // recomputed lazily on next access
+  }
+
+  Peer? get peer => _peer;
+
+  set peer(Peer? newPeer) {
+    if (newPeer == null) {
+      _peer = null;
+      _sharedKey = null;
+      return;
+    }
+    _peer = newPeer;
+    _sharedKey = null; // recomputed lazily on next access
+  }
+}

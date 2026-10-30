@@ -1,0 +1,306 @@
+import 'dart:convert';
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, visibleForTesting;
+import 'package:http/http.dart' as http;
+import 'package:mostro_mobile/services/logger_service.dart';
+
+import 'package:mostro_mobile/core/config.dart';
+import 'package:mostro_mobile/services/fcm_service.dart';
+
+/// Safely truncate a pubkey for logging, avoiding RangeError on short strings.
+String _shortenPubkey(String pubkey, [int maxLength = 16]) {
+  if (pubkey.length <= maxLength) return pubkey;
+  return '${pubkey.substring(0, maxLength)}...';
+}
+
+/// Service for registering push notification tokens with the Mostro push server.
+///
+/// Current implementation: Plaintext token registration (Phase 3)
+/// - Device tokens are sent over HTTPS (encrypted in transit)
+/// - Server stores mapping: trade_pubkey -> device_token
+///
+/// Future implementation: Encrypted token registration (Phase 5)
+/// - Will add ECDH + ChaCha20-Poly1305 encryption for privacy-preserving tokens
+class PushNotificationService {
+  final FCMService _fcmService;
+  final String _pushServerUrl;
+  final http.Client _httpClient;
+  final bool? _isSupportedOverride;
+  final String? _platformOverride;
+
+  bool _isInitialized = false;
+
+  /// Callback to check if push notifications are enabled in settings
+  /// Set this from the app to integrate with user preferences
+  bool Function()? isPushEnabledInSettings;
+
+  /// Callback returning the active Mostro instance pubkey (64 hex chars).
+  /// Sent in the `mostro_pubkey` field of `/api/register` so the push server
+  /// can apply its trusted-instance whitelist when enabled.
+  String Function()? getMostroPubkey;
+
+  PushNotificationService({
+    required FCMService fcmService,
+    String? pushServerUrl,
+    http.Client? httpClient,
+    @visibleForTesting bool? isSupportedOverride,
+    @visibleForTesting String? platformOverride,
+  })  : _fcmService = fcmService,
+        _pushServerUrl = pushServerUrl ?? Config.pushServerUrl,
+        _httpClient = httpClient ?? http.Client(),
+        _isSupportedOverride = isSupportedOverride,
+        _platformOverride = platformOverride;
+
+  /// Check if push notifications are supported on this platform
+  bool get isSupported {
+    if (_isSupportedOverride != null) return _isSupportedOverride;
+    if (kIsWeb) return false;
+    return Platform.isAndroid || Platform.isIOS;
+  }
+
+  bool get isInitialized => _isInitialized;
+
+  /// Get the current platform identifier
+  String get _platform =>
+      _platformOverride ?? (Platform.isIOS ? 'ios' : 'android');
+
+  /// Initialize the service
+  Future<bool> initialize() async {
+    if (_isInitialized) return true;
+
+    if (!isSupported) {
+      debugPrint('PushService: Not supported on this platform');
+      return false;
+    }
+
+    try {
+      debugPrint('PushService: Checking server health...');
+
+      final response = await _httpClient
+          .get(Uri.parse('$_pushServerUrl/api/health'))
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        _isInitialized = true;
+        debugPrint('PushService: Initialized successfully');
+        return true;
+      } else {
+        logger.e('Server health check failed: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      logger.e('Failed to initialize push service: $e');
+      return false;
+    }
+  }
+
+  /// Register a device token for a specific trade
+  ///
+  /// [tradePubkey] - The public key of the trade (hex, 64 chars)
+  /// This is the key that Mostro daemon uses in the 'p' tag when sending events
+  Future<bool> registerToken(String tradePubkey) async {
+    final fcmToken = await _prepareRegistration();
+    if (fcmToken == null) return false;
+    return _register(tradePubkey, fcmToken);
+  }
+
+  /// Registers every trade pubkey in [tradePubkeys], one request at a time.
+  /// The FCM token and the server check are resolved once for the whole
+  /// sweep, not per trade.
+  ///
+  /// The server expires registrations after a TTL counted from the last one,
+  /// so callers pass the full set of live trades each time rather than
+  /// relying on anything registered earlier. Returns how many succeeded.
+  Future<int> registerTokens(Iterable<String> tradePubkeys) async {
+    final fcmToken = await _prepareRegistration();
+    if (fcmToken == null) return 0;
+
+    var registered = 0;
+    for (final tradePubkey in tradePubkeys.toSet()) {
+      // The user may turn push off while a sweep is running.
+      if (isPushEnabledInSettings?.call() == false) break;
+      if (await _register(tradePubkey, fcmToken)) registered++;
+    }
+    return registered;
+  }
+
+  /// Checks that registering is possible (platform, push setting, server)
+  /// and returns the current FCM token, or null when it is not.
+  Future<String?> _prepareRegistration() async {
+    if (!isSupported) {
+      return null;
+    }
+
+    // Check if push notifications are enabled in settings
+    if (isPushEnabledInSettings != null && !isPushEnabledInSettings!()) {
+      debugPrint(
+          'PushService: Push notifications disabled in settings, skipping registration');
+      return null;
+    }
+
+    if (!_isInitialized) {
+      logger.w('Push service not initialized');
+      final initialized = await initialize();
+      if (!initialized) return null;
+    }
+
+    try {
+      final fcmToken = await _fcmService.getToken();
+      if (fcmToken == null) {
+        logger.w('FCM token is null, cannot register');
+      }
+      return fcmToken;
+    } catch (e) {
+      logger.e('Error getting FCM token: $e');
+      return null;
+    }
+  }
+
+  Future<bool> _register(String tradePubkey, String fcmToken) async {
+    try {
+      debugPrint(
+          'PushService: Registering token for trade ${_shortenPubkey(tradePubkey)}');
+
+      // Send plaintext token to server (Phase 3 - unencrypted).
+      // `mostro_pubkey` enables the server-side trusted-instance whitelist
+      // (gated by TRUSTED_WHITELIST_ENABLED on the server). Servers without
+      // the flag enabled simply ignore the field.
+      final body = <String, dynamic>{
+        'trade_pubkey': tradePubkey,
+        'token': fcmToken,
+        'platform': _platform,
+      };
+      final mostroPubkey = getMostroPubkey?.call();
+      if (mostroPubkey != null && mostroPubkey.isNotEmpty) {
+        body['mostro_pubkey'] = mostroPubkey;
+      }
+
+      final response = await _httpClient
+          .post(
+            Uri.parse('$_pushServerUrl/api/register'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      // 202 Accepted: treat as success without body parsing. The push server
+      // may switch /api/register to an async/queued ack in the future; accept
+      // it defensively so the client stays forward-compatible.
+      if (response.statusCode == 202) {
+        debugPrint(
+            'PushService: Token registered for trade ${_shortenPubkey(tradePubkey)}');
+        return true;
+      }
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          debugPrint(
+              'PushService: Token registered for trade ${_shortenPubkey(tradePubkey)}');
+          return true;
+        }
+      }
+
+      logger.e('Failed to register token: ${response.body}');
+      return false;
+    } catch (e) {
+      logger.e('Error registering token: $e');
+      return false;
+    }
+  }
+
+  /// Unregisters every trade pubkey in [tradePubkeys].
+  /// Called when the user disables push notifications in settings.
+  ///
+  /// Requests go one at a time, each with a 10 s timeout, so a large set
+  /// offline takes a while; the caller deletes the FCM token afterwards, which
+  /// makes any row left behind undeliverable. Returns how many succeeded.
+  Future<int> unregisterTokens(Iterable<String> tradePubkeys) async {
+    if (!isSupported) return 0;
+    var unregistered = 0;
+    for (final tradePubkey in tradePubkeys.toSet()) {
+      if (await unregisterToken(tradePubkey)) unregistered++;
+    }
+    return unregistered;
+  }
+
+  /// Wake the peer's device by triggering a silent push via `/api/notify`.
+  ///
+  /// Used after sending a P2P chat message: the push server's Nostr listener
+  /// only matches events addressed to the recipient's `tradeKey.public`, and
+  /// the kind-14 chat envelope is authored by `K_sign` and tagged to
+  /// `pub(K_conv)`. This sender-triggered call closes that gap without
+  /// registering conversation keys server-side.
+  ///
+  /// Intentionally NOT gated on `isPushEnabledInSettings`: that flag is the
+  /// local *receive* preference and controls this device's own token
+  /// registration. Whether the peer is woken is governed by the peer's own
+  /// registration state, server-side. Suppressing outgoing notify calls based
+  /// on the sender's local preference would silently break delivery for a
+  /// correctly opted-in recipient.
+  ///
+  /// Strictly fire-and-forget. The server contract (see mostro-push-server
+  /// docs/api.md) guarantees indistinguishable responses for registered vs
+  /// unregistered pubkeys, so the caller cannot — and must not try to —
+  /// branch on the outcome:
+  ///
+  /// - 202 `{"accepted":true}` on parse-valid input (always).
+  /// - 400 on malformed pubkey (logged as a client bug).
+  /// - 429 on rate-limit hit (dropped silently, no retry).
+  Future<void> notifyPeer(String peerTradePubkey) async {
+    if (!isSupported) return;
+
+    try {
+      final response = await _httpClient
+          .post(
+            Uri.parse('$_pushServerUrl/api/notify'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'trade_pubkey': peerTradePubkey}),
+          )
+          .timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 400) {
+        logger.w(
+            'notifyPeer: invalid pubkey rejected by server (${_shortenPubkey(peerTradePubkey)})');
+      }
+    } catch (e) {
+      // Network error / timeout: never fail the chat send because of this.
+      logger.w('PushService: notifyPeer transport error (ignored): $e');
+    }
+  }
+
+  /// Unregister a device token for a specific trade
+  Future<bool> unregisterToken(String tradePubkey) async {
+    if (!isSupported) {
+      return false;
+    }
+
+    try {
+      debugPrint(
+          'PushService: Unregistering token for trade ${_shortenPubkey(tradePubkey)}');
+
+      final response = await _httpClient
+          .post(
+            Uri.parse('$_pushServerUrl/api/unregister'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'trade_pubkey': tradePubkey,
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        debugPrint(
+            'PushService: Token unregistered for trade ${_shortenPubkey(tradePubkey)}');
+        return true;
+      }
+
+      logger.w('Failed to unregister token: ${response.body}');
+      return false;
+    } catch (e) {
+      logger.e('Error unregistering token: $e');
+      return false;
+    }
+  }
+}

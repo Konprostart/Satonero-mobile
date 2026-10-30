@@ -1,0 +1,756 @@
+import 'package:mostro_mobile/features/notifications/services/background_session_cache.dart';
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:dart_nostr/nostr/model/event/event.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:mostro_mobile/core/app.dart';
+import 'package:mostro_mobile/core/config.dart';
+import 'package:mostro_mobile/data/models/mostro_message.dart';
+import 'package:mostro_mobile/data/models/nostr_event.dart';
+import 'package:mostro_mobile/data/models/order.dart';
+import 'package:mostro_mobile/data/models/peer.dart';
+import 'package:mostro_mobile/data/models/session.dart';
+import 'package:mostro_mobile/data/models/enums/action.dart' as mostro_action;
+import 'package:mostro_mobile/data/models/enums/role.dart';
+import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
+import 'package:mostro_mobile/data/repositories/session_storage.dart';
+import 'package:mostro_mobile/features/settings/settings.dart';
+import 'package:mostro_mobile/features/key_manager/key_derivator.dart';
+import 'package:mostro_mobile/features/key_manager/key_manager.dart';
+import 'package:mostro_mobile/features/key_manager/key_storage.dart';
+import 'package:mostro_mobile/features/notifications/utils/notification_data_extractor.dart';
+import 'package:mostro_mobile/shared/utils/chat_keys.dart';
+import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:mostro_mobile/features/notifications/utils/notification_message_mapper.dart';
+import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:mostro_mobile/generated/l10n_de.dart';
+import 'package:mostro_mobile/generated/l10n_en.dart';
+import 'package:mostro_mobile/generated/l10n_es.dart';
+import 'package:mostro_mobile/generated/l10n_fr.dart';
+import 'package:mostro_mobile/generated/l10n_it.dart';
+import 'package:mostro_mobile/generated/l10n_nl.dart';
+import 'package:mostro_mobile/generated/l10n_pt.dart';
+import 'package:mostro_mobile/background/background.dart' as bg;
+import 'package:mostro_mobile/shared/providers/mostro_database_provider.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+Future<void> initializeNotifications() async {
+  const android = AndroidInitializationSettings('@drawable/ic_bg_service_small');
+  const ios = DarwinInitializationSettings();
+  const linux = LinuxInitializationSettings(defaultActionName: 'Open');
+  const initSettings = InitializationSettings(android: android, iOS: ios, linux: linux, macOS: ios);
+  
+  await flutterLocalNotificationsPlugin.initialize(initSettings, onDidReceiveNotificationResponse: _onNotificationTap);
+}
+
+/// Check if the app was launched by tapping a notification.
+/// Returns the order ID from the notification payload, or null.
+Future<String?> getNotificationLaunchOrderId() async {
+  try {
+    final details = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (details != null &&
+        details.didNotificationLaunchApp &&
+        details.notificationResponse != null) {
+      final payload = details.notificationResponse!.payload;
+      if (payload != null && payload.isNotEmpty) {
+        return payload;
+      }
+    }
+  } catch (e) {
+    logger.e('Error checking notification launch details: $e');
+  }
+  return null;
+}
+
+/// Payload `type` marking a peer-to-peer (buyer <-> seller) chat message.
+const String peerChatPayloadType = 'peer_chat';
+
+/// Payload `type` marking an admin/solver DM, which belongs to a dispute chat.
+const String adminDmPayloadType = 'admin_dm';
+
+/// Builds the notification payload for a notification about [orderId].
+///
+/// Chat actions get a structured JSON payload so the tap handler can open the
+/// conversation itself; every other action keeps the legacy plain orderId
+/// payload, which resolves to the trade detail screen.
+String buildNotificationPayload({
+  required mostro_action.Action action,
+  required String? orderId,
+  required String? disputeId,
+}) {
+  if (action == mostro_action.Action.chatMessage) {
+    return jsonEncode({
+      'type': peerChatPayloadType,
+      'orderId': orderId,
+    });
+  }
+
+  if (action == mostro_action.Action.sendDm) {
+    return jsonEncode({
+      'type': adminDmPayloadType,
+      'orderId': orderId,
+      'disputeId': disputeId,
+    });
+  }
+
+  return orderId ?? '';
+}
+
+/// Resolves the navigation route from a notification payload string.
+///
+/// Returns the route path to navigate to. Pure function, no side effects.
+String resolveNotificationRoute(String? payload) {
+  if (payload == null || payload.isEmpty) {
+    return '/notifications';
+  }
+
+  try {
+    final decoded = jsonDecode(payload);
+    if (decoded is! Map<String, dynamic>) {
+      return '/notifications';
+    }
+
+    final type = decoded['type'] as String?;
+    final orderId = decoded['orderId'] as String?;
+    final disputeId = decoded['disputeId'] as String?;
+
+    // Chat notifications open the conversation they belong to.
+    if (type == peerChatPayloadType && orderId != null) {
+      return '/chat_room/$orderId';
+    }
+
+    if (type == adminDmPayloadType && orderId != null) {
+      // Solver (dispute) chat when the session knows its dispute; otherwise
+      // the trade detail is the only place the user can reach it from.
+      if (disputeId != null) {
+        return '/dispute_details/$disputeId';
+      }
+      return '/trade_detail/$orderId';
+    }
+
+    // Valid JSON but unknown type — use orderId if available, else notifications
+    if (orderId != null) {
+      return '/trade_detail/$orderId';
+    }
+    return '/notifications';
+  } on FormatException {
+    // Not JSON — treat as plain orderId (legacy format)
+  } catch (e) {
+    logger.e('Unexpected error parsing notification payload: $e');
+    return '/notifications';
+  }
+
+  return '/trade_detail/$payload';
+}
+
+void _onNotificationTap(NotificationResponse response) {
+  try {
+    final context = MostroApp.navigatorKey.currentContext;
+    if (context == null) {
+      logger.w('No context available for notification navigation');
+      return;
+    }
+
+    final route = resolveNotificationRoute(response.payload);
+    context.push(route);
+    logger.i('Navigated to: $route');
+  } catch (e) {
+    logger.e('Navigation error: $e');
+  }
+}
+
+Future<void> showLocalNotification(NostrEvent event) async {
+  try {
+    final mostroMessage = await _decryptAndProcessEvent(event);
+    if (mostroMessage == null) return;
+
+    final sessions = await backgroundSessionCache.sessions(_loadSessionsFromDatabase);
+    final matchingSession = sessions.cast<Session?>().firstWhere(
+      (session) => session?.orderId == mostroMessage.id,
+      orElse: () => null,
+    );
+
+    final notificationData = await NotificationDataExtractor.extractFromMostroMessage(mostroMessage, null, session: matchingSession);
+
+    if (notificationData == null || notificationData.isTemporary) {
+      return;
+    }
+
+    final notificationText = await _getLocalizedNotificationText(notificationData.action, notificationData.values);
+    final expandedText = _getExpandedText(notificationData.values);
+
+    final details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'mostro_notifications',
+        'Mostro Notifications',
+        channelDescription: 'Notifications for Mostro trades and messages',
+        importance: Importance.max,
+        priority: Priority.high,
+        visibility: NotificationVisibility.public,
+        playSound: true,
+        enableVibration: true,
+        ticker: notificationText.title,
+        icon: '@drawable/ic_notification',
+        tag: 'mostro-trade',
+        groupKey: 'mostro-trade',
+        styleInformation: expandedText != null
+            ? BigTextStyleInformation(expandedText, contentTitle: notificationText.title)
+            : null,
+        category: AndroidNotificationCategory.message,
+        autoCancel: true,
+      ),
+      iOS: DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+        interruptionLevel: InterruptionLevel.critical,
+        subtitle: expandedText,
+        threadIdentifier: 'mostro-trade',
+      ),
+    );
+
+    // Build payload: JSON for chat notifications (so the tap opens the
+    // conversation), plain orderId for standard trade notifications.
+    final notificationPayload = buildNotificationPayload(
+      action: notificationData.action,
+      orderId: mostroMessage.id,
+      disputeId: matchingSession?.disputeId,
+    );
+
+    // Unique id per event so each notification is independent: dismissing one
+    // does not suppress the heads-up of the next (which was the observed bug
+    // when reusing a single id), while groupKey keeps them grouped visually.
+    final notificationId = (event.id?.hashCode ?? 0) & 0x7FFFFFFF;
+
+    await flutterLocalNotificationsPlugin.show(
+      notificationId,
+      notificationText.title,
+      notificationText.body,
+      details,
+      payload: notificationPayload,
+    );
+
+    logger.i('Shown: ${notificationText.title} - ${notificationText.body}');
+  } catch (e) {
+    logger.e('Notification error: $e');
+  }
+}
+
+
+Future<MostroMessage?> _decryptAndProcessEvent(NostrEvent event) async {
+  try {
+    if (event.kind != 4 && event.kind != 1059 && event.kind != 14) {
+      return null;
+    }
+
+    final recipient = event.recipient;
+    if (recipient == null) {
+      return null;
+    }
+
+    final sessions = await backgroundSessionCache.sessions(_loadSessionsFromDatabase);
+
+    // Chat (kind 14 envelope): the outer author is the K_sign key derived
+    // from the conversation's shared key, so match by author, not recipient.
+    // These branches must run before the tradeKey match: Mostro protocol
+    // events are also kind 14 but authored by the node.
+    if (event.kind == 14) {
+      for (final session in sessions) {
+        final adminShared = session.adminSharedKey;
+        if (adminShared == null) continue;
+        final chatKeys = backgroundSessionCache.chatKeysFor(adminShared);
+        if (event.pubkey == chatKeys.sign.public) {
+          return _processAdminDm(event, session, chatKeys);
+        }
+      }
+      for (final session in sessions) {
+        final shared = session.sharedKey;
+        if (shared == null) continue;
+        final chatKeys = backgroundSessionCache.chatKeysFor(shared);
+        if (event.pubkey == chatKeys.sign.public) {
+          return _processPeerChat(event, session, chatKeys);
+        }
+      }
+    }
+
+    // Standard Mostro message: match by tradeKey
+    final matchingSession = sessions.cast<Session?>().firstWhere(
+      (s) => s?.tradeKey.public == recipient,
+      orElse: () => null,
+    );
+
+    if (matchingSession != null) {
+      return _handleTradeKeyEvent(event, matchingSession);
+    }
+
+    return null;
+  } catch (e) {
+    logger.e('Decrypt error: $e');
+    return null;
+  }
+}
+
+Future<MostroMessage?> _processAdminDm(
+  NostrEvent event,
+  Session session,
+  ChatKeys chatKeys,
+) async {
+  try {
+    final unwrapped = await event.chatUnwrap(
+      chatKeys,
+      session.disputeChatAllowedSigners,
+    );
+
+    // Durable accepted-event marker, written only after chatUnwrap accepts:
+    // dedups across background-service restarts and lets the foreground load
+    // the message from disk instead of depending on a relay refetch
+    final disputeId = session.disputeId;
+    if (disputeId != null && event.id != null) {
+      await bg.persistChatEventFromBackground?.call(
+        event.id!,
+        event.disputeChatRecord(disputeId),
+      );
+    }
+
+    if (unwrapped.content == null || unwrapped.content!.isEmpty) {
+      return null;
+    }
+
+    if (session.orderId == null) {
+      logger.w('Admin DM received but session has no orderId (recipient: ${event.recipient}), skipping notification');
+      return null;
+    }
+
+    return MostroMessage(
+      action: mostro_action.Action.sendDm,
+      id: session.orderId,
+      timestamp: event.createdAt?.millisecondsSinceEpoch,
+    );
+  } catch (e) {
+    logger.e('Admin DM decrypt error: $e');
+    return null;
+  }
+}
+
+/// Handle events matched by tradeKey (Mostro protocol + admin/dispute DMs)
+Future<MostroMessage?> _handleTradeKeyEvent(NostrEvent event, Session session) async {
+  // Transport branch (§5 Phase A): v1 gift wrap (kind 1059) yields an inner
+  // rumor whose content is the message tuple; v2 NIP-44 direct (kind 14)
+  // decrypts straight to the tuple. Both converge on jsonDecode below.
+  final String? content;
+  if (event.kind == 14) {
+    final mostroPubkey =
+        await backgroundSessionCache.mostroPubkey(_loadMostroPubkey);
+    if (mostroPubkey == null) {
+      logger.w('No Mostro pubkey available, cannot decrypt kind-14 event');
+      return null;
+    }
+    content = await NostrUtils.decryptNIP44DirectEvent(
+      event,
+      session.tradeKey.private,
+      expectedAuthor: mostroPubkey,
+    );
+  } else {
+    content = (await event.unWrap(session.tradeKey.private)).content;
+  }
+  if (content == null) {
+    return null;
+  }
+
+  final result = jsonDecode(content);
+  if (result is! List || result.isEmpty) {
+    return null;
+  }
+
+  // Detect admin/dispute DM format that arrived via tradeKey
+  final firstItem = result[0];
+  if (NostrUtils.isDmPayload(firstItem)) {
+    if (session.orderId == null) {
+      logger.w('DM received but session has no orderId (recipient: ${event.recipient}), skipping notification');
+      return null;
+    }
+    return MostroMessage(
+      action: mostro_action.Action.sendDm,
+      id: session.orderId,
+      timestamp: event.createdAt?.millisecondsSinceEpoch,
+    );
+  }
+
+  final mostroMessage = MostroMessage.fromJson(result[0]);
+  mostroMessage.timestamp = event.createdAt?.millisecondsSinceEpoch;
+
+  // If this message belongs to a pending range-order child session, link it to
+  // the child order id right here. The foreground link
+  // (MostroService._maybeLinkChildOrder) never runs while the app is
+  // backgrounded or killed, and this and later events for the child order need
+  // the session stored under its orderId (e.g. role-gated notifications).
+  await _maybeLinkChildOrder(mostroMessage, session);
+
+  // If this event transitions the order to Active, learn the counterpart's
+  // tradeKey from the Order payload and persist it on the session so the
+  // background service can immediately subscribe to P2P chat events.
+  // Without this, DMs arriving while the app is in background are never
+  // notified until the user reopens the app and the foreground re-processes
+  // this event.
+  await _maybeUpdateSessionWithPeer(mostroMessage, session);
+
+  return mostroMessage;
+}
+
+/// Links a pending range-order child session to its concrete child order id
+/// when a message for that child arrives while the app is backgrounded.
+/// Mirrors MostroService._maybeLinkChildOrder for the background isolate:
+/// stores the session under its orderId and drops the pending record.
+///
+/// The trigger is any message carrying an order id, not just the child
+/// new-order confirmation: the device may well be woken (FCM) by a later
+/// event — the very take-order message this notification path exists for —
+/// while the new-order message was never delivered to this isolate. The child
+/// trade key is used by exactly one order, so any id other than the parent's
+/// identifies it.
+Future<void> _maybeLinkChildOrder(
+  MostroMessage message,
+  Session session,
+) async {
+  final childOrderId = message.id;
+  if (childOrderId == null || childOrderId.isEmpty) return;
+  if (session.orderId != null || session.parentOrderId == null) return;
+  if (childOrderId == session.parentOrderId) return;
+
+  try {
+    session.orderId = childOrderId;
+
+    final sessionStorage = await _openSessionStorage();
+    // Store under the orderId and drop the pending record in one transaction
+    // so a crash in between cannot lose the session.
+    await sessionStorage.promotePendingChildSession(session);
+    // Local write: the cached session list is stale now.
+    backgroundSessionCache.invalidate();
+
+    logger.i(
+      'Background linked child order $childOrderId to parent ${session.parentOrderId}',
+    );
+  } catch (e, stackTrace) {
+    // Keep the in-memory session pending so the next attempt (background or
+    // foreground) retries the link instead of assuming a stored orderId.
+    session.orderId = null;
+    logger.e(
+      'Failed to link child order in background: $e',
+      stackTrace: stackTrace,
+    );
+  }
+}
+
+/// Persists the peer on the given session when [message] is an action that
+/// reveals the counterpart's tradeKey (buyer took order / hold invoice
+/// payment accepted), and triggers a live chat subscription in the
+/// background service.
+Future<void> _maybeUpdateSessionWithPeer(
+  MostroMessage message,
+  Session session,
+) async {
+  final action = message.action;
+  if (action != mostro_action.Action.buyerTookOrder &&
+      action != mostro_action.Action.holdInvoicePaymentAccepted) {
+    return;
+  }
+
+  // Already learned the peer — nothing to do.
+  if (session.peer != null) {
+    return;
+  }
+
+  if (session.orderId == null) {
+    logger.w('Cannot update peer: session has no orderId');
+    return;
+  }
+
+  try {
+    final order = message.getPayload<Order>();
+    if (order == null) {
+      logger.w('${action.value} event has no Order payload');
+      return;
+    }
+
+    String? peerPubkey;
+    if (session.role == Role.buyer) {
+      peerPubkey = order.sellerTradePubkey;
+    } else if (session.role == Role.seller) {
+      peerPubkey = order.buyerTradePubkey;
+    }
+
+    if (peerPubkey == null || peerPubkey.isEmpty) {
+      logger.w('${action.value} payload missing peer tradeKey for role ${session.role}');
+      return;
+    }
+
+    // Setting peer on the session computes the shared key via ECDH.
+    session.peer = Peer(publicKey: peerPubkey);
+
+    final sessionStorage = await _openSessionStorage();
+    await sessionStorage.putSession(session);
+    // Local write: the cached session list is stale now.
+    backgroundSessionCache.invalidate();
+
+    logger.i('Background persisted peer for order ${session.orderId}');
+
+    // The live chat subscription filters by the conversation's K_sign author;
+    // the order id lets it pick up this conversation's persisted since cursor
+    final shared = session.sharedKey;
+    if (shared != null) {
+      bg.addChatSubscriptionFromBackground?.call(
+        backgroundSessionCache.chatKeysFor(shared).sign.public,
+        session.orderId,
+      );
+    }
+  } catch (e, stackTrace) {
+    logger.e(
+      'Failed to update session with peer in background: $e',
+      stackTrace: stackTrace,
+    );
+  }
+}
+
+/// Handle P2P chat events matched by the peer conversation's K_sign author
+Future<MostroMessage?> _processPeerChat(
+  NostrEvent event,
+  Session session,
+  ChatKeys chatKeys,
+) async {
+  try {
+    final decryptedEvent = await event.chatUnwrap(
+      chatKeys,
+      session.peerChatAllowedSigners,
+    );
+
+    // Durable accepted-event marker, written only after chatUnwrap accepts:
+    // dedups across background-service restarts and lets the foreground load
+    // the message from disk instead of depending on a relay refetch
+    final orderId = session.orderId;
+    if (orderId != null && event.id != null) {
+      await bg.persistChatEventFromBackground?.call(
+        event.id!,
+        event.peerChatRecord(orderId),
+      );
+    }
+
+    if (decryptedEvent.content == null || decryptedEvent.content!.isEmpty) {
+      return null;
+    }
+
+    // Skip notifications for messages sent by the user themselves. The relay
+    // echoes back any message we publish, and without this check the background
+    // service would notify the user of their own outgoing messages.
+    if (decryptedEvent.pubkey == session.tradeKey.public) {
+      return null;
+    }
+
+    if (session.orderId == null) {
+      logger.w('P2P chat received but session has no orderId, skipping notification');
+      return null;
+    }
+
+    return MostroMessage(
+      action: mostro_action.Action.chatMessage,
+      id: session.orderId,
+      timestamp: event.createdAt?.millisecondsSinceEpoch,
+    );
+  } catch (e) {
+    logger.e('P2P chat decrypt error: $e');
+    return null;
+  }
+}
+
+/// Reads the connected Mostro node pubkey from persisted settings. Needed in
+/// the background isolate to verify the author of v2 (kind-14) replies, since
+/// there is no Riverpod settings provider available here.
+Future<String?> _loadMostroPubkey() async {
+  try {
+    final sharedPrefs = SharedPreferencesAsync();
+    final settingsJson =
+        await sharedPrefs.getString(SharedPreferencesKeys.appSettings.value);
+    if (settingsJson == null) {
+      return null;
+    }
+    return Settings.fromJson(jsonDecode(settingsJson)).mostroPublicKey;
+  } catch (e) {
+    // Rethrow for the same reason as _loadSessionsFromDatabase: a cached null
+    // means "no pubkey configured", not "the read blew up this once".
+    logger.e('Failed to load Mostro pubkey in background: $e');
+    rethrow;
+  }
+}
+
+/// Isolate-wide cache: reads go through it, local writes invalidate it.
+final BackgroundSessionCache backgroundSessionCache = BackgroundSessionCache();
+
+/// Opens a SessionStorage bound to the background isolate's own database and
+/// key manager handles. The isolate has no Riverpod container, so every
+/// persistence helper here has to build its own.
+Future<SessionStorage> _openSessionStorage() async {
+  final db = await openMostroDatabase('mostro.db');
+  const secureStorage = FlutterSecureStorage();
+  final sharedPrefs = SharedPreferencesAsync();
+  final keyStorage = KeyStorage(
+    secureStorage: secureStorage,
+    sharedPrefs: sharedPrefs,
+  );
+  final keyDerivator = KeyDerivator(Config.keyDerivationPath);
+  final keyManager = KeyManager(keyStorage, keyDerivator);
+  await keyManager.init();
+  return SessionStorage(keyManager, db: db);
+}
+
+Future<List<Session>> _loadSessionsFromDatabase() async {
+  try {
+    final sessionStorage = await _openSessionStorage();
+    return await sessionStorage.getAll();
+  } catch (e) {
+    // Rethrow: an empty list is a valid answer the cache keeps for a whole TTL
+    // window, so returning [] here would silently discard every event that
+    // arrives during a transient database/secure-storage failure.
+    logger.e('Session load error: $e');
+    rethrow;
+  }
+}
+
+class NotificationText {
+  final String title;
+  final String body;
+  NotificationText({required this.title, required this.body});
+}
+
+Future<NotificationText> _getLocalizedNotificationText(mostro_action.Action action, Map<String, dynamic> values) async {
+  try {
+    final languageCode = bg.currentLanguage;
+    
+    final S localizations = switch (languageCode) {
+      'es' => SEs(),
+      'it' => SIt(),
+      'de' => SDe(),
+      'fr' => SFr(),
+      'pt' => SPt(),
+      'nl' => SNl(),
+      _ => SEn(),
+    };
+
+    final title = NotificationMessageMapper.getLocalizedTitleWithInstance(localizations, action);
+    final body = NotificationMessageMapper.getLocalizedMessageWithInstance(localizations, action, values: values);
+    
+    return NotificationText(title: title, body: body);
+  } catch (e) {
+    final fallback = SEn();
+    return NotificationText(
+      title: NotificationMessageMapper.getLocalizedTitleWithInstance(fallback, action),
+      body: NotificationMessageMapper.getLocalizedMessageWithInstance(fallback, action, values: values),
+    );
+  }
+}
+
+
+
+// Get expanded text showing additional values
+String? _getExpandedText(Map<String, dynamic> values) {
+  if (values.isEmpty) return null;
+  
+  final List<String> details = [];
+  final languageCode = bg.currentLanguage;
+  
+  final S localizations = switch (languageCode) {
+    'es' => SEs(),
+    'it' => SIt(),
+    'de' => SDe(),
+    'fr' => SFr(),
+    'pt' => SPt(),
+    'nl' => SNl(),
+    _ => SEn(),
+  };
+
+  // Contact buyer/seller information
+  if (values.containsKey('buyer_npub') && values['buyer_npub'] != null) {
+    details.add('${localizations.notificationBuyer}: ${values['buyer_npub']}');
+  }
+  
+  if (values.containsKey('seller_npub') && values['seller_npub'] != null) {
+    details.add('${localizations.notificationSeller}: ${values['seller_npub']}');
+  }
+  
+  // Payment information
+  if (values.containsKey('fiat_amount') && values.containsKey('fiat_code')) {
+    details.add('${localizations.notificationAmount}: ${values['fiat_amount']} ${values['fiat_code']}');
+  }
+  
+  if (values.containsKey('payment_method') && values['payment_method'] != null) {
+    details.add('${localizations.notificationPaymentMethod}: ${values['payment_method']}');
+  }
+  
+  // Expiration information
+  if (values.containsKey('expiration_seconds')) {
+    final seconds = values['expiration_seconds'];
+    final minutes = seconds ~/ 60;
+    details.add('${localizations.notificationExpiresIn}: ${minutes}m ${seconds % 60}s');
+  }
+  
+  // Lightning amount
+  if (values.containsKey('amount_msat')) {
+    final msat = values['amount_msat'];
+    final sats = msat ~/ 1000;
+    details.add('${localizations.notificationAmount}: $sats sats');
+  }
+  
+  // Payment retry information  
+  if (values.containsKey('payment_attempts') && values['payment_attempts'] != null) {
+    details.add('${localizations.notificationAttempts}: ${values['payment_attempts']}');
+  }
+  
+  if (values.containsKey('payment_retries_interval') && values['payment_retries_interval'] != null) {
+    details.add('${localizations.notificationRetryInterval}: ${values['payment_retries_interval']}s');
+  }
+  
+  // Dispute information
+  if (values.containsKey('user_token') && values['user_token'] != null) {
+    details.add('${localizations.notificationToken}: ${values['user_token']}');
+  }
+  
+  // Other information
+  if (values.containsKey('reason')) {
+    details.add('${localizations.notificationReason}: ${values['reason']}');
+  }
+  
+  if (values.containsKey('rate')) {
+    details.add('${localizations.notificationRate}: ${values['rate']}/5');
+  }
+  
+  return details.isNotEmpty ? details.join('\n') : null;
+}
+
+
+Future<void> retryNotification(NostrEvent event, {int maxAttempts = 3}) async {
+  int attempt = 0;
+  bool success = false;
+
+  while (!success && attempt < maxAttempts) {
+    try {
+      await showLocalNotification(event);
+      success = true;
+    } catch (e) {
+      attempt++;
+      if (attempt >= maxAttempts) {
+        logger.e('Failed to show notification after $maxAttempts attempts: $e');
+        break;
+      }
+
+      // Exponential backoff: 1s, 2s, 4s, etc.
+      final backoffSeconds = pow(2, attempt - 1).toInt();
+      logger.e('Notification attempt $attempt failed: $e. Retrying in ${backoffSeconds}s');
+      await Future.delayed(Duration(seconds: backoffSeconds));
+    }
+  }
+}  

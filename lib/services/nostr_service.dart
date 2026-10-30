@@ -1,0 +1,649 @@
+import 'dart:async';
+
+import 'package:collection/collection.dart';
+import 'package:dart_nostr/dart_nostr.dart';
+import 'package:flutter/foundation.dart';
+import 'package:dart_nostr/nostr/model/ease.dart';
+import 'package:dart_nostr/nostr/model/ok.dart';
+import 'package:dart_nostr/nostr/model/relay_informations.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:mostro_mobile/core/config.dart';
+import 'package:mostro_mobile/data/models/order.dart';
+import 'package:mostro_mobile/data/models/enums/order_type.dart';
+import 'package:mostro_mobile/features/settings/settings.dart';
+import 'package:mostro_mobile/services/deep_link_service.dart';
+import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+
+class NostrService {
+  Settings? _settings;
+  final Nostr _nostr = Nostr.instance;
+
+  bool _isInitialized = false;
+
+  /// Relays from which we have received data (proven alive). Maintained from
+  /// the relay connection callbacks; used to detect "no live relay" situations.
+  final Set<String> _connectedRelays = {};
+
+  /// Bumped every time a relay transitions to alive: first data after the
+  /// initial connect, after a silent socket reconnect (retryOnClose), or from
+  /// a relay added later by the kind 10002 sync. dart_nostr sends a REQ only
+  /// to the sockets registered at subscription time and never replays it on
+  /// reconnect, so each bump means some relay may be missing the app's open
+  /// subscriptions until they are re-issued.
+  int _relayGeneration = 0;
+  final StreamController<int> _relayGenerationController =
+      StreamController<int>.broadcast();
+
+  /// Per-relay probes waiting for a dropped socket to come back. A relay with
+  /// no REQs sends nothing, so `onRelayListening` alone can never observe the
+  /// reconnect this class exists to repair — the registry has to be polled.
+  final Map<String, Timer> _reconnectProbes = {};
+
+  /// How often a dropped relay is polled for reconnection, and for how many
+  /// attempts before giving up. dart_nostr makes one immediate reconnect
+  /// attempt per drop (bounded by [Config.relayConnectionTimeout]), so a
+  /// probe outliving that window can never observe a success; longer outages
+  /// are covered by the relay health monitor and foreground resume.
+  /// Overridable in tests.
+  @visibleForTesting
+  Duration reconnectProbeInterval = const Duration(seconds: 2);
+  static const int _maxReconnectProbes = 10; // 20 s per drop
+
+  /// Test seam for the socket-open check, which otherwise reads the global
+  /// [Nostr.instance] registry.
+  @visibleForTesting
+  bool Function(String relayUrl)? relaySocketProbeOverride;
+
+  NostrService();
+
+  /// Safe getter for settings with fallback
+  Settings get settings =>
+      _settings ??
+      Settings(relays: [], fullPrivacyMode: false, mostroPublicKey: '');
+
+  /// Relays currently considered alive (have sent us data since connecting).
+  Set<String> get connectedRelays => Set.unmodifiable(_connectedRelays);
+
+  /// Number of relays currently considered alive.
+  int get liveRelayCount => _connectedRelays.length;
+
+  /// Monotonic counter of relay come-alive transitions. Part of the
+  /// subscription filter identity so a REQ is re-issued when the relay layer
+  /// changed even though the filter content did not.
+  int get relayGeneration => _relayGeneration;
+
+  /// Emits after every [relayGeneration] bump.
+  Stream<int> get relayGenerationStream => _relayGenerationController.stream;
+
+  /// Records [relayUrl] as alive and bumps the generation on the transition
+  /// from unknown/disconnected to alive.
+  void _markRelayAlive(String relayUrl) {
+    if (_connectedRelays.add(relayUrl)) {
+      _relayGeneration++;
+      if (!_relayGenerationController.isClosed) {
+        _relayGenerationController.add(_relayGeneration);
+      }
+    }
+  }
+
+  /// Whether dart_nostr currently holds an open websocket for [relayUrl].
+  /// True only after `onConnectionSuccess` re-registered the channel, i.e.
+  /// after a reconnect actually completed.
+  bool _isRelaySocketOpen(String relayUrl) {
+    final override = relaySocketProbeOverride;
+    if (override != null) {
+      return override(relayUrl);
+    }
+    try {
+      return _nostr.services.relays.nostrRegistry
+          .isRelayRegisteredAndConnectedSuccesfully(relayUrl);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Polls the registry until the dropped [relayUrl] is connected again, then
+  /// marks it alive (bumping [relayGeneration]). An idle reconnected socket
+  /// carries no REQs and therefore sends no data, so waiting for
+  /// `onRelayListening` would deadlock: the REQ replay is what would produce
+  /// the first frame. Bounded so a relay that stays down does not keep a
+  /// timer forever.
+  @visibleForTesting
+  void watchRelayReconnect(String relayUrl) {
+    _reconnectProbes.remove(relayUrl)?.cancel();
+    var attempts = 0;
+    _reconnectProbes[relayUrl] = Timer.periodic(reconnectProbeInterval, (t) {
+      attempts++;
+      if (_isRelaySocketOpen(relayUrl)) {
+        t.cancel();
+        _reconnectProbes.remove(relayUrl);
+        _markRelayAlive(relayUrl);
+      } else if (attempts >= _maxReconnectProbes) {
+        t.cancel();
+        _reconnectProbes.remove(relayUrl);
+        logger.w('Relay $relayUrl did not reconnect; probe abandoned');
+      }
+    });
+  }
+
+  /// Relays to connect to: the configured relays, or the defensive bootstrap
+  /// relays as a fail-safe when none are configured (cold start before any kind
+  /// 10002 discovery), so init never fails on an empty list.
+  @visibleForTesting
+  static List<String> effectiveRelays(List<String> configured) =>
+      configured.isEmpty ? Config.discoveryRelays : configured;
+
+  Future<void> init(Settings settings) async {
+    if (!Config.verboseLogging) {
+      // dart_nostr ships with logging enabled and builds 2-3 full-payload
+      // strings per relay frame for dart:developer.log.
+      _nostr.disableLogs();
+    }
+    final relays = effectiveRelays(settings.relays);
+    if (settings.relays.isEmpty) {
+      logger.w(
+        'No relays configured; falling back to bootstrap relays for discovery',
+      );
+    }
+    final effectiveSettings = settings.copyWith(relays: relays);
+
+    logger.i(
+        'Initializing NostrService with relays: ${effectiveSettings.relays}');
+    _settings = effectiveSettings;
+
+    try {
+      await _nostr.services.relays.init(
+        relaysUrl: effectiveSettings.relays,
+        connectionTimeout: Config.relayConnectionTimeout,
+        shouldReconnectToRelayOnNotice: true,
+        retryOnClose: true,
+        retryOnError: true,
+        onRelayListening: (relayUrl, receivedData, channel) {
+          // Any data from a relay proves it is alive.
+          _markRelayAlive(relayUrl);
+          if (receivedData is NostrEvent) {
+            logger.d('Event from $relayUrl: ${receivedData.id}');
+          } else if (receivedData is NostrNotice) {
+            logger.i('Notice from $relayUrl: ${receivedData.message}');
+          } else if (receivedData is NostrEventOkCommand) {
+            logger.d(
+              'OK from $relayUrl: ${receivedData.eventId} (accepted: ${receivedData.isEventAccepted})',
+            );
+          } else if (receivedData is NostrRequestEoseCommand) {
+            logger.d(
+              'EOSE from $relayUrl for subscription: ${receivedData.subscriptionId}',
+            );
+          } else if (receivedData is NostrCountResponse) {
+            logger.d('Count from $relayUrl: ${receivedData.count}');
+          }
+        },
+        onRelayConnectionError: (relay, error, channel) {
+          _connectedRelays.remove(relay);
+          logger.w('Failed to connect to relay $relay: $error');
+          // retryOnError reconnects silently; watch for the new socket so
+          // the open REQs get replayed onto it.
+          watchRelayReconnect(relay);
+        },
+        onRelayConnectionDone: (relay, socket) {
+          // Fired when the relay websocket is closed (disconnected).
+          _connectedRelays.remove(relay);
+          logger.i('Relay disconnected (socket closed): $relay');
+          // retryOnClose reconnects silently; watch for the new socket so
+          // the open REQs get replayed onto it.
+          watchRelayReconnect(relay);
+        },
+      );
+
+      // Relays that just connected for the first time (cold start, or added
+      // later by the kind 10002 sync via additive init) also start with no
+      // REQs on their socket; watching them bumps the generation once the
+      // registry confirms the connection.
+      for (final relay in effectiveSettings.relays) {
+        if (!_connectedRelays.contains(relay)) {
+          watchRelayReconnect(relay);
+        }
+      }
+
+      _isInitialized = true;
+      logger.i(
+        'NostrService initialized successfully with ${effectiveSettings.relays.length} relays',
+      );
+    } catch (e) {
+      _isInitialized = false;
+      logger.e('Failed to initialize NostrService: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateSettings(Settings newSettings) async {
+    if (!ListEquality().equals(settings.relays, newSettings.relays)) {
+      logger.i(
+        'Updating relays from ${settings.relays} to ${newSettings.relays}',
+      );
+
+      if (newSettings.relays.isEmpty) {
+        logger.w('Warning: Attempting to update with empty relay list');
+        return;
+      }
+
+      // Additive init: dart_nostr skips already-connected relays, so existing
+      // connections and active subscriptions remain untouched. Only new relays
+      // get connected. _isInitialized stays true throughout.
+      final previousSettings = _settings;
+      try {
+        await init(newSettings);
+        logger.i('Successfully added new relays: ${newSettings.relays}');
+      } catch (e) {
+        // init() failed on new relays but existing connections are still live.
+        // Restore previous settings and keep the service operational.
+        logger.w(
+          'Failed to connect to new relays, current relays remain active: $e',
+        );
+        _settings = previousSettings;
+        _isInitialized = true;
+      }
+    } else {
+      logger.d('Relay list unchanged, skipping update');
+    }
+  }
+
+  Future<RelayInformations?> getRelayInfo(String relayUrl) async {
+    return await Nostr.instance.services.relays.relayInformationsDocumentNip11(
+      relayUrl: relayUrl,
+    );
+  }
+
+  Future<void> publishEvent(NostrEvent event) async {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    // Defensive check: ensure relay list is not empty
+    if (settings.relays.isEmpty) {
+      throw Exception(
+        'Cannot publish event: No relays configured. Please add at least one relay.',
+      );
+    }
+
+    try {
+      logger.i('Publishing event ${event.id} to relays: ${settings.relays}');
+
+      await _nostr.services.relays.sendEventToRelaysAsync(
+        event,
+        timeout: Config.nostrOperationTimeout,
+      );
+
+      logger.i('Successfully published event ${event.id}');
+    } catch (e) {
+      logger.w('Failed to publish event ${event.id}: $e');
+
+      // If it's the empty relay list assertion error, provide better context
+      if (e.toString().contains('relaysUrl.isNotEmpty')) {
+        throw Exception(
+          'Cannot publish event: Relay list is empty or not properly initialized. Current relays: ${settings.relays}',
+        );
+      }
+
+      rethrow;
+    }
+  }
+
+  Future<List<NostrEvent>> fetchEvents(
+    NostrFilter filter, {
+    List<String>? specificRelays,
+  }) async {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    // If specific relays are provided, use the relay-specific fetching logic
+    if (specificRelays != null && specificRelays.isNotEmpty) {
+      return await _fetchFromSpecificRelays(filter, specificRelays);
+    }
+
+    // Default behavior: use all configured relays
+    final request = NostrRequest(filters: [filter]);
+    return await _nostr.services.relays.startEventsSubscriptionAsync(
+      request: request,
+      timeout: Config.nostrOperationTimeout,
+    );
+  }
+
+  /// Opens a REQ. [onEose] fires once per relay that finishes replaying its
+  /// stored events, which is the only signal that a replay is complete —
+  /// callers that resume from a cursor need it to know the gap was covered.
+  Stream<NostrEvent> subscribeToEvents(
+    NostrRequest request, {
+    void Function(String relay)? onEose,
+  }) {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    final subscription = _nostr.services.relays.startEventsSubscription(
+      request: request,
+      onEose: onEose == null ? null : (relay, _) => onEose(relay),
+    );
+
+    return subscription.stream;
+  }
+
+  Future<void> disconnectFromRelays() async {
+    if (!_isInitialized) return;
+
+    await _nostr.services.relays.disconnectFromRelays();
+    _isInitialized = false;
+    logger.i('Disconnected from all relays');
+  }
+
+  /// Connects the defensive bootstrap relays without dropping any existing
+  /// connection (additive init). Idempotent: returns early when they are
+  /// already part of the active relay set. Used as a fallback to keep relay
+  /// discovery possible when no discovered relay is reachable.
+  Future<void> ensureBootstrapConnectivity() async {
+    final current = settings.relays;
+    final merged = {...current, ...Config.discoveryRelays}.toList();
+
+    if (ListEquality().equals(current, merged)) {
+      logger.d('Bootstrap relays already part of the active relay set');
+      return;
+    }
+
+    logger.i(
+      'Bootstrap: connecting to defensive relays: ${Config.discoveryRelays}',
+    );
+    await updateSettings(settings.copyWith(relays: merged));
+  }
+
+  bool get isInitialized => _isInitialized;
+
+  Future<NostrKeyPairs> generateKeyPair() async {
+    final keyPair = NostrUtils.generateKeyPair();
+    return keyPair;
+  }
+
+  NostrKeyPairs generateKeyPairFromPrivateKey(String privateKey) {
+    return NostrUtils.generateKeyPairFromPrivateKey(privateKey);
+  }
+
+  String getMostroPubKey() {
+    return settings.mostroPublicKey;
+  }
+
+  Future<NostrEvent> createNIP59Event(
+    String content,
+    String recipientPubKey,
+    String senderPrivateKey, {
+    int difficulty = 0,
+  }) async {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    return NostrUtils.createNIP59Event(
+      content,
+      recipientPubKey,
+      senderPrivateKey,
+      difficulty: difficulty,
+    );
+  }
+
+  Future<NostrEvent> decryptNIP59Event(
+    NostrEvent event,
+    String privateKey,
+  ) async {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    return NostrUtils.decryptNIP59Event(event, privateKey);
+  }
+
+  Future<String> createRumor(
+    NostrKeyPairs senderKeyPair,
+    String wrapperKey,
+    String recipientPubKey,
+    String content,
+  ) async {
+    return NostrUtils.createRumor(
+      senderKeyPair,
+      wrapperKey,
+      recipientPubKey,
+      content,
+    );
+  }
+
+  Future<String> createSeal(
+    NostrKeyPairs senderKeyPair,
+    String wrapperKey,
+    String recipientPubKey,
+    String encryptedContent,
+  ) async {
+    return NostrUtils.createSeal(
+      senderKeyPair,
+      wrapperKey,
+      recipientPubKey,
+      encryptedContent,
+    );
+  }
+
+  Future<NostrEvent> createWrap(
+    NostrKeyPairs wrapperKeyPair,
+    String sealedContent,
+    String recipientPubKey,
+  ) async {
+    return NostrUtils.createWrap(
+      wrapperKeyPair,
+      sealedContent,
+      recipientPubKey,
+    );
+  }
+
+  void unsubscribe(String id) {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    _nostr.services.relays.closeEventsSubscription(id);
+  }
+
+  /// Fetches an event by its ID from specified relays or default relays
+  /// Returns an Order if the event is a valid NIP-69 order, null otherwise
+  Future<Order?> fetchEventById(
+    String eventId, [
+    List<String>? specificRelays,
+  ]) async {
+    if (!_isInitialized) {
+      throw Exception('Nostr is not initialized. Call init() first.');
+    }
+
+    try {
+      logger.i('Fetching event with ID: $eventId');
+
+      // Create filter to fetch the specific event
+      final filter = NostrFilter(
+        ids: [eventId],
+        kinds: [38383], // NIP-69 order events
+      );
+
+      List<NostrEvent> events;
+
+      if (specificRelays != null && specificRelays.isNotEmpty) {
+        // Temporarily connect to specific relays for fetching
+        events = await _fetchFromSpecificRelays(filter, specificRelays);
+      } else {
+        // Use default relays
+        events = await fetchEvents(filter);
+      }
+
+      if (events.isEmpty) {
+        logger.w('No event found with ID: $eventId');
+        return null;
+      }
+
+      // Find the event with the exact ID
+      final event = events.firstWhere(
+        (e) => e.id == eventId,
+        orElse: () => throw StateError('Event not found'),
+      );
+
+      // Validate it's a proper order event
+      if (event.kind != 38383) {
+        logger.w('Event $eventId is not an order event (kind: ${event.kind})');
+        return null;
+      }
+
+      // Check if it's from a valid Mostro instance
+      if (event.pubkey != settings.mostroPublicKey) {
+        logger.w('Event $eventId is not from the configured Mostro instance');
+        return null;
+      }
+
+      logger.i('Successfully found order event: ${event.id}');
+      return Order.fromEvent(event);
+    } catch (e) {
+      logger.e('Error fetching event by ID: $e');
+      return null;
+    }
+  }
+
+  /// Fetches order information from an event by extracting the 'd' tag (order ID) and 'k' tag (order type)
+  /// This is specifically for deep link handling where the mostro: URL provides order information
+  Future<OrderInfo?> fetchOrderInfoByEventId(
+    String eventId, [
+    List<String>? specificRelays,
+  ]) async {
+    try {
+      logger.i('Fetching order ID from event: $eventId');
+
+      final filter = NostrFilter(
+        ids: [eventId],
+        kinds: [38383], // NIP-69 order events
+      );
+
+      List<NostrEvent> events;
+
+      if (specificRelays != null && specificRelays.isNotEmpty) {
+        // Temporarily connect to specific relays for fetching
+        events = await _fetchFromSpecificRelays(filter, specificRelays);
+      } else {
+        // Use default relays
+        events = await fetchEvents(filter);
+      }
+
+      if (events.isEmpty) {
+        logger.w('No event found with ID: $eventId');
+        return null;
+      }
+
+      // Find the event with the exact ID
+      final event = events.firstWhere(
+        (e) => e.id == eventId,
+        orElse: () => throw StateError('Event not found'),
+      );
+
+      // Validate it's a proper order event
+      if (event.kind != 38383) {
+        logger.w('Event $eventId is not an order event (kind: ${event.kind})');
+        return null;
+      }
+
+      // Check if it's from a valid Mostro instance
+      if (event.pubkey != settings.mostroPublicKey) {
+        logger.w('Event $eventId is not from the configured Mostro instance');
+        return null;
+      }
+
+      // Extract the order ID from the 'd' tag
+      final dTag = event.tags
+          ?.where((tag) => tag.isNotEmpty && tag[0] == 'd')
+          .map((tag) => tag.length > 1 ? tag[1] : null)
+          .where((value) => value != null)
+          .cast<String>()
+          .firstOrNull;
+
+      if (dTag == null || dTag.isEmpty) {
+        logger.w('Event $eventId does not contain a valid d tag');
+        return null;
+      }
+
+      // Extract the order type from the 'k' tag
+      final kTag = event.tags
+          ?.where((tag) => tag.isNotEmpty && tag[0] == 'k')
+          .map((tag) => tag.length > 1 ? tag[1] : null)
+          .where((value) => value != null)
+          .cast<String>()
+          .firstOrNull;
+
+      if (kTag == null || kTag.isEmpty) {
+        logger.w('Event $eventId does not contain a valid k tag (order type)');
+        return null;
+      }
+
+      OrderType orderType;
+      try {
+        orderType = OrderType.fromString(kTag);
+      } catch (e) {
+        logger.w('Event $eventId contains invalid order type: $kTag');
+        return null;
+      }
+
+      logger.i(
+        'Successfully extracted order info - ID: $dTag, Type: ${orderType.value} from event: $eventId',
+      );
+      return OrderInfo(orderId: dTag, orderType: orderType);
+    } catch (e) {
+      logger.e('Error fetching order ID from event: $e');
+      return null;
+    }
+  }
+
+  /// Fetches events from specific relays temporarily
+  Future<List<NostrEvent>> _fetchFromSpecificRelays(
+    NostrFilter filter,
+    List<String> relays,
+  ) async {
+    try {
+      // Store current relays
+      final originalRelays = List<String>.from(settings.relays);
+
+      // Temporarily add specific relays if not already present
+      final allRelays = <String>{...originalRelays, ...relays}.toList();
+
+      if (!ListEquality().equals(originalRelays, allRelays)) {
+        logger.i('Temporarily connecting to additional relays: $relays');
+
+        // Update settings with additional relays
+        final tempSettings = Settings(
+          relays: allRelays,
+          mostroPublicKey: settings.mostroPublicKey,
+          fullPrivacyMode: settings.fullPrivacyMode,
+          defaultFiatCode: settings.defaultFiatCode,
+          selectedLanguage: settings.selectedLanguage,
+        );
+
+        await updateSettings(tempSettings);
+
+        // Fetch the events
+        final events = await fetchEvents(filter);
+
+        // Restore original relays
+        await updateSettings(settings);
+
+        return events;
+      } else {
+        // No new relays to add, use normal fetch
+        return await fetchEvents(filter);
+      }
+    } catch (e) {
+      logger.e('Error fetching from specific relays: $e');
+      // Ensure we restore original settings even on error
+      try {
+        await updateSettings(settings);
+      } catch (restoreError) {
+        logger.e('Failed to restore original relay settings: $restoreError');
+      }
+      rethrow;
+    }
+  }
+}

@@ -1,0 +1,839 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [v1.5.0] - 2026-10-02
+
+### Added
+- feat: show days on Mostro from the since date (#740) (4c347e0f)
+- feat: add complete Dutch (nl) translation (#736) (9d3a543b)
+- Add 'Satispay' to EUR payment methods (#733) (46c0fda6)
+
+### Fixed
+- fix: re-register push tokens so trades survive push server restarts (#738) (ec89a09a)
+
+
+## [v1.4.2] - 2026-09-04
+
+### Fixed
+- fix: order message history by event time and drop late setup messages (#723) (468dc22d)
+- fix: persist pending range-order child sessions across isolates and restarts (#641) (4a4e2acf)
+- fix: stop sharing an in-flight session load across an invalidate (fd776333)
+- fix: do not cache a session load that raced a background write (8f43efdb)
+- fix: widen the NWC skew budget and stop freezing a time-dependent memo (5e029a37)
+
+### Changed
+- perf: prune unbounded local storage growth (#716) (a67d1677)
+- perf: serve mostro message queries from a single in-memory index (#715) (e531df88)
+- perf: lazy notifiers for terminal orders and a bounded media cache (#717) (e8222d71)
+- perf: single dispute-chat REQ and constant-time session resolution (#714) (753a6efc)
+- perf: cache sessions and chat keys in the background isolate (#713) (fed47b50)
+- perf: back off relay recovery and stop reconnecting on NOTICE (#712) (aa761254)
+- perf: resume the order book from the last received event (#711) (9b6581c6)
+- perf: bound the orders subscription replay with a persisted since cursor (#708) (cbb1ed49)
+- perf: bound NWC response replay and memoize the countdown state lookup (31067098)
+
+
+## [v1.4.1] - 2026-09-01
+
+### Added
+- feat(notifications): open the chat when a chat notification is tapped (#681) (11365d54)
+
+### Fixed
+- fix: stop one chat conversation from showing as two chat rooms (#709) (0381ff85)
+- fix: re-issue open REQs when a relay comes back alive (#707) (4c0e57cc)
+- fix: expose order.status on a pending order you created (#680) (e84a30af)
+- fix: reset the replay budget for each new recovery generation (fe78cc6e)
+- fix: drop rejected admin messages before they disarm the take timeout (b5015250)
+- fix: reject admin resolutions naming a dispute this order does not track (26d75584)
+- fix: cap chained sync replays to prevent unbounded history reads from rejected resolutions (b7097101)
+- fix: remove sync replay cap to prevent premature hydration with pending resolutions (cc8f4cf1)
+- fix: prevent failed sync from claiming hydration and dropping recovery for rejected admin resolutions (e8c463a7)
+- fix: require tracked Dispute object to authorize admin resolutions, not just dispute status (500ae811)
+- fix: suppress side effects when admin dispute actions are rejected for lack of evidence (02c4f5ef)
+- fix: reword dispute resolution messages to attribute outcomes to admin and prompt wallet confirmation (864a7257)
+- fix: keep admin-canceled orders visible under the canceled filter (26648033)
+- fix: reject forged or replayed admin resolutions without dispute evidence (efa241d7)
+
+### Documentation
+- docs: clarify MostroFSM is not wired and explain actual order status derivation (5ae7cae3)
+
+### Changed
+- perf: default the orders transport to v2 (NIP-44 kind 14) (#704) (ef3aad30)
+- perf: run per-message verify and decrypt off the main isolate (#705) (8385a8e4)
+- perf: skip re-verifying and re-decrypting already-unwrapped envelopes (#702) (2406e473)
+- perf: run media sanitizing and file crypto off the main isolate (#703) (65a5801a)
+- perf: cache NIP-44 conversation keys per key pair (#701) (cd7533a4)
+- perf: cache key derivation and make session ECDH lazy (#700) (4fdbed3b)
+- perf: unread indicators through providers instead of per-build futures (#699) (87f72aba)
+- perf: cut per-build chat render costs (#697) (1c8a5238)
+- perf: cheaper order cards and scoped list tickers (#698) (fc1543ad)
+- perf: skip resubscribing when the session filter identity is unchanged (#696) (0a15a863)
+- perf: recompute the trades list only when its real inputs change (#695) (c65cc5dd)
+- perf: value equality for Order/PaymentFailed and no-op state guards (#694) (c2166a50)
+- perf: timer hygiene for settings poll, countdown and NWC health (#690) (ecf8c13c)
+- perf: dedupe and coalesce order book emissions (#691) (fbd3e93d)
+- perf: O(1) order event lookups and per-order public event listeners (#693) (0a210cc2)
+- perf: value equality for Settings and scoped settings watchers (#689) (473a1e9f)
+- perf: debounce background switch and ignore inactive lifecycle blips (#688) (c237a18a)
+- perf: remove dead work from event and rebuild hot paths (#687) (c5ef3392)
+- perf: honour log level and remove per-call logging cost (#686) (0d208335)
+- perf: switch bottom nav tabs with go instead of push (#685) (bae9c07d)
+- perf: build AppTheme.theme once instead of per access (#684) (708ca213)
+- perf: reuse the shared SubscriptionManager in RelaysNotifier (#683) (b9a066f2)
+- test: pin the guard order against the taker-reputation notice (df6a4bfb)
+- i18n: clarify admin attribution in dispute resolution messages across all locales (70cd782b)
+
+
+## [v1.4.0] - 2026-08-24
+
+### Added
+- feat(relays): allow insecure ws:// relays in debug builds (#666) (fd860328)
+- feat(communities): add Argentina and Brasil trusted communities (#678) (9c2e641a)
+- feat(trades): keep the invoice available while the order is settled (8dc4004c)
+- feat(order): dedicated screen to collect the sats of a settled order (525f5aac)
+
+### Fixed
+- fix(settings): the settings back control carries its automation identifier (#677) (e7b42935)
+- fix(disputes): reload dispute chats when the app returns to foreground (#675) (66b57889)
+- fix(order): keep the payout invoice reachable after the invoice-updated ack (2813313a)
+- fix: let the read-status service absorb its own storage failures (bf67637e)
+- fix(order): keep the order snapshot when the message stream has none (7cefdff9)
+- fix: never let marking a dispute read block opening it (c340a1a2)
+- fix(order): detect the payout add-invoice from the message payload (ca094cab)
+- fix(trades): don't block order details waiting for the public event (9aebae00)
+
+### Changed
+- test(trades): cover the order detail without the public event (6d613ecc)
+
+
+## [v1.3.3] - 2026-08-20
+
+### Added
+- feat(ui): show the taker reputation to the maker (e803e41b)
+- feat(order): track taker reputation in order state (432a8c10)
+- feat(chat): migrate P2P peer chat to the kind-14 chat envelope (9a30ccbb)
+- feat(chat): add nonce tag to chat rumor construction (fbb1e9d7)
+- feat: show when order book filters are active (24009dff)
+- feat: add BBVA and QR Santander payment methods for EUR (#648) (d9852bfc)
+- feat: Mortsom automation contract (#650) (d651ed2a)
+
+### Fixed
+- fix(chat): persist accepted chat envelopes from the background (cfefb993)
+- fix(chat): bound the background peer-chat subscription backlog (a359a6dc)
+- fix(chat): disclose K_conv instead of the raw ECDH secret (5538c7b2)
+- fix(ui): only tell the maker that someone took their order (0d2a758e)
+- fix(order): drop the taker reputation when the order goes back to pending (1ffe0d73)
+- fix(order): treat the taker-reputation notice as informational only (f9b6cf28)
+- fix(ui): show zeros instead of a no-history message (ba58810c)
+- fix(models): parse the daemon's taker-reputation Peer payload (d0c8d302)
+- fix(chat): authenticate envelopes before persisting their outer id (66978e0b)
+- fix: reset the days field to the shared default (768a858a)
+
+### Documentation
+- docs: correct the localization locale set (a8f718b0)
+
+### Changed
+- test(models): pin the reputation-notice predicate to the empty pubkey (abc9b587)
+- refactor: derive filter activity from a single predicate (80e36027)
+- refactor(chat): generalize the dispute chat cursor store (7f2739d2)
+- test: raise line coverage from 12.6% to 33.0% (#651) (2a7a558f)
+
+
+## [v1.3.2] - 2026-08-13
+
+### Added
+- feat: add Mostro chat kind-14 envelope primitives (ab2b8aa9)
+
+### Fixed
+- fix: back dispute chat filters with durable cursors on cold start (3a46ec1c)
+- fix: bound dispute chat backlog with a durable per-conversation cursor (cafae858)
+- fix: address review feedback on kind-14 dispute chat (f6f75bf3)
+- fix: migrate dispute chat from gift wrap to kind-14 chat envelope (27b85a99)
+
+### Documentation
+- docs: document dispute chat kind-14 envelope migration (a8d05a65)
+
+
+## [v1.3.1] - 2026-08-13
+
+### Added
+- feat: add complete Portuguese (pt) translation (68b7e018)
+
+### Fixed
+- fix: restore desktop release binaries by pinning Windows runner (#644) (cd309ef6)
+- fix: guard language selector against unknown stored language codes (19bc22e4)
+- fix: switch to blossom servers that accept encrypted chat attachments and retain blobs indefinitely (fb8e7e66)
+- fix: register push token for range-order child trade keys (#640) (35df5742)
+- fix(invoice): make Add Lightning Invoice screen scrollable so Submit stays reachable with keyboard open (3f661129)
+
+
+## [v1.3.0] - 2026-07-03
+
+### Added
+- feat: finalize transport v2 migration (Phase C) (#637) (88a4967a)
+- feat: re-apply dual send for transport v2 (Phase B) without Riverpod 3.x (#632) (ac6e946b)
+- feat: add KES, MZN, TZS, UGX, ZAR, ZMW payment methods; expand NGN (#627) (9b275ec6)
+- feat(restore): wait for node connectivity before issuing restore requests (3ef51544)
+- feat: add MWK (Malawi Kwacha) payment methods (#625) (a7331501)
+- feat: add MWK (Malawi Kwacha) payment methods (#625) (0c3676df)
+- feat: add dual send for transport v2 (Phase B) (#624) (51539941)
+- feat: migrate to Riverpod 3.x (#613) (498d8d43)
+- feat(bond): cause-aware bond-slashed handling (dispute vs timeout) (#619) (fe3a897f)
+- feat(transport): implement protocol_version auto-detection and dual-receive for NIP-44 direct messages (Phase A) (d8d09fc9)
+- feat(transport): add dual-receive support for NIP-44 direct messages in background isolate (Phase A) (d28250d5)
+- feat(transport): add dual-receive support for NIP-44 direct messages (Phase A) (20f1b55c)
+
+### Documentation
+- docs: refine transport v2 migration spec with Transport enum and explicit downgrade logging (d020ac2d)
+- docs: fix markdown formatting in transport v2 migration spec (77949cde)
+- docs: add transport v2 migration specification for NIP-44 direct messages (37554a7d)
+
+### Changed
+- Update lib/features/relays/relays_notifier.dart (f3ab6134)
+- Revert "feat: migrate to Riverpod 3.x (#613)" (44556d64)
+- Revert "feat: add dual send for transport v2 (Phase B) (#624)" (c0a00cb5)
+- Revert "feat: add MWK (Malawi Kwacha) payment methods (#625)" (541ab7ea)
+- i18n(nwc): add nwcShowInvoice label and refresh balance button (#622) (0241894a)
+
+
+## [v1.2.9] - 2026-06-16
+
+### Added
+- feat(about): show anti-abuse bond policy from node info event (#617) (fe4fe4ab)
+
+### Documentation
+- docs: add anti-abuse bond documentation (#616) (23f13366)
+
+
+## [v1.2.8] - 2026-06-12
+
+### Added
+- feat(notifications): persist order cancellations in history with context (#602) (fbad36c5)
+- feat(bond): maker anti-abuse bond on order creation (Phase 5) (#608) (9a6f8a8c)
+- feat(relays): bootstrap relay discovery instead of pinned default relays (#610) (e776adca)
+- feat(order): show amount limits in fiat in the create order screen (#605) (338b48f0)
+- feat(bond): defer session deletion on cancel to receive bond-slashed   - canceled handler: if the order had a bond, defer deleting the session 60s so a trailing bond-slashed notice can still be received and decrypted; otherwise delete immediately as before   - Add bondSlashed handler: cancels the deferred deletion and releases the session once the notice arrives   - Out-of-order safe: if bond-slashed arrives first, the later canceled finds no session and no-ops (da7016d8)
+- feat(bond): surface bond-slashed notification with detail dialog (bb3a702c)
+- feat(bond): recognize bond-slashed action   - Add Action.bondSlashed so the slash forfeiture notice parses instead of being dropped in MostroMessage.fromJson   - order_state.dart: its SmallOrder has a null status and bond-sized amount; preserve the tracked order's real status amount instead of overwriting   - notifications: add bondSlashed as no-op to the exhaustive switches, grouped with the other not-yet-wired bond actions (9377971d)
+- feat(bond): strengthen bondPolicy parsing and guard against malformed tag arrays (835d1516)
+- feat: validate and sanitize anti-abuse bond policy fields from Mostro info events (ab51fdc1)
+- feat: parse anti-abuse bond policy from Mostro info events (913717d5)
+- feat(bond): Phase 3.5 payout confirmation actions on mobile (75b7bba7)
+- add invoice amount to winner (794c12d5)
+- feat(bond): bond payout banner in Trade Details with claim button (0a52114b)
+- feat(bond): show PAYOUT PENDING badge on My Trades for unanswered claims (727410b3)
+- feat(bond): bond payout claim screen with auto-navigation on add-bond-invoice (ac75aa9a)
+- feat(bond): publish bond payout invoice on Action::AddBondInvoice (fcdc91a5)
+- feat(bond): recognize Action::AddBondInvoice and BondPayoutRequest payload (577c485c)
+
+### Fixed
+- fix(bond): delete session immediately on user-initiated cancel (41b5dffa)
+- fix(bond): reconcile orphaned canceled bonded sessions on restart (5c80a1ed)
+- fix(bond): isolate bond-slashed tap case from the no-op switch group (b226af3c)
+- fix(bond): propagate persistence error in sendBondPayoutInvoice (f57c075a)
+- fix(bond): apply barrel imports and amount-loading fallback (8ccc8385)
+- fix(bond): tighten ordering and error UX in bond payout flow (49b587e9)
+
+### Changed
+- test(bond): cover restart/voluntary-cancel/retake; drop stale timer on retake (70f40da5)
+- refactor(bond): bond-slashed dialog as prose with a green close button (507c0226)
+- test(bond): bond-slashed must not overwrite the tracked order (5575c213)
+- test(bond): add unit tests for latestBondPayoutRequest and hasPendingBondClaim (4e79a050)
+- coderabbit suggestions (fef4c547)
+- render the claim button outside the FSM gating (d2dc6207)
+
+
+## [v1.2.7] - 2026-05-21
+
+### Added
+- feat: add Venezuela community node (#599) (6d23e45c)
+- feat: P2P chat push wake-up + register mostro_pubkey whitelist field (#590) (a79ff882)
+- feat(restore): differentiate restore outcomes by cant-do reason (#588) (cc6fe3a6)
+
+### Changed
+- Revert "chore: update changelog and version for v1.2.6 (#597)" (#598) (ad59fbcc)
+- flatten pay-invoice and add-invoice screens (#593) (48d4bb5d)
+-   feat(bond): support Phase 1.5 anti-abuse bond invoice flow (#592) (35a544ae)
+- Restore dispute chats (#561) (b8bbee92)
+
+
+## [v1.2.5] - 2026-04-23
+
+### Added
+- feat: filter offers by maker's account age in order book   - New Days of use filter in the order book filter dialog, reading the days field from the rating tag of kind 38383 events.   - Slider 0..20 with the same gray palette as the reputation and premium filters, adjacent text input accepts higher values (clamped to 0..9999).   - Right-side label switches from Days: 20 to the typed value when the user enters a higher number.   - New minDaysFilterProvider in home_order_providers.dart; offers are excluded when rating.days < minDays.   - Localization keys daysOfUse and days added to en, es, it, de and fr. (bfcba519)
+- feat: in-app snackbar notifications for chat messages outside chat screen (#578) (38ed8eef)
+- feat: add configurable trade history retention in settings (#571) (8116311d)
+- Add P2P chat background notifications (Phase 2) (#529) (4dc0a311)
+
+### Fixed
+- fix: prevent wrong role text on canceled order detail screen (#580) (8007b354)
+- fix: context-aware buttons during cooperative cancellation (#576) (c885098e)
+
+### Changed
+- style(days-filter): align label colors with other filters and clamp thumb label (a323e703)
+
+
+## [v1.2.4] - 2026-04-09
+
+### Added
+- feat: add timestamp to P2P chat message bubbles (#565) (a1fbf600)
+- feat: add community discovery and node selector on first launch (#564) (728abfe3)
+
+### Fixed
+- fix(ci): use client_payload.version in desktop workflow (#559) (2eded43b)
+- fix: add tooManyRequests i18n key to DE and FR locales (#568) (9def78bf)
+- fix: preserve app settings during key import/creation (#567) (bb245751)
+- fix: resolve trade index desync, session lookup crash (#566) (e96671b9)
+- fix: upgrade dart_nostr to main with parallel relay connections and per-relay timeout   - Switch dart_nostr from pub.dev 9.1.1 to git ref ca07ddd   - Split nostrConnectionTimeout (30s) into relayConnectionTimeout (5s) and nostrOperationTimeout (20s)   - Remove bip340 dependency_override (no longer needed with bip340 ^0.3.0 from upstream) (2b1aab64)
+
+### Documentation
+- docs coderabbit suggestions (e2afb35a)
+- docs coderabbit suggestions (86053574)
+- docs: add dart_nostr upgrade analysis for relay connection blocking fix (0abe8a38)
+
+### Changed
+-   feat: increase session expiration from 72 hours to 30 days (#569) (3be5ed35)
+
+
+## [v1.2.3] - 2026-04-01
+
+### Added
+- feat: handle deep links from different Mostro instances (#552) (2518c377)
+- feat: detect admin/dispute DMs in background notification pipeline (#498) (62ea948a)
+- feat: fetch exchange rates from Nostr with HTTP/cache fallback (#551) (1bde6341)
+
+### Fixed
+- fix(ci): remove direct push to main from release workflow (#556) (b0445a42)
+- fix: commit premium field value before order submission (#555) (a4a9b642)
+- fix: remove fictional SessionFileCache docs and rewrite Future Improvements (#545) (3e276a2a)
+- fix: rename notfiers → notifiers directory (#547) (22a0fbdf)
+
+### Documentation
+- docs: add branch protection rules (#549) (30f69852)
+
+### Changed
+- chore: remove unused WelcomeScreen, RegisterScreen, LoginScreen (#553) (09b72174)
+
+
+## [v1.2.2] - 2026-03-23
+
+### Added
+- feat: Add complete German (de) translation (#531) (0af6476c)
+- feat: implement NIP-13 proof-of-work mining for Mostro events (#519) (d693cfeb)
+
+### Fixed
+- fix: start background service from FCM handler when service is dead (#489) (fe0cd793)
+- fix: resolve chat history loss after reconnection or app restart (#538) (8b46931c)
+- fix: P2P chat messages with images block rendering until download completes (#526) (4a0f2bfb)
+
+### Documentation
+- docs: reorganize documentation structure and remove local protocol copy (#540) (f76ab3d5)
+
+### Changed
+- chore: remove debug APK build from CI, keep analyze + test (#525) (902a650f)
+- Check initiator to restored dispute data (#497) (aae48c2c)
+
+
+## [v1.2.1] - 2026-03-09
+
+### Added
+- feat: enable QR scanner for NWC wallet import (#516) (12eaee4d)
+- feat: add multimedia rendering in dispute chat (Phase 4) (#514) (795302e5)
+- feat: auto-close dispute UI when order reaches terminal state  (#503) (e4ebe4ab)
+- feat: add Venezuelan-themed nouns to handle generator (#510) (e8d61c42)
+- feat: add mutation testing for test quality assurance (#505) (bd26b248)
+- feat: migrate dispute chat to shared key encryption Phase 1 (#495) (5e8b542d)
+- add HalCash, remove SEPA payment method (#493) (3aa870b1)
+- feat: add French translation (#500) (dfab8f7f)
+- feat: add automatic navigation to trade detail for key order actions (38f37742)
+- feat: consolidate notification tap handling in background_notification_service (c87104c7)
+- feat: implement FCM notification tap handling for background and terminated states (abea608c)
+
+### Fixed
+- fix: release workflow — prevent double build number and fix changelog generation (#524) (3d651e0f)
+- fix: strip build number from desktop release version (#522) (7f75ae76)
+- fix: override bip340 dependency to 0.2.0 to fix Schnorr signature padding bug (#496) (195b6fad)
+- fix(chat): retain input focus after sending a message (#483) (31499730)
+- fix: replace Stack layout with Column in chat screen to prevent input bar overlap (#466) (11754595)
+- fix: display selected fiat amount instead of range for taken orders (#477) (236459ab)
+- fix: dispose invoiceController and remove unused amount parameter (#479) (75f0f6de)
+- fix: use black text on green buttons for consistency (#473) (d749733b)
+- fix: prevent restore crash and revert loop on node switching (#468) (fe415115)
+- fix: update supported NIPs list in zapstore.yaml (#464) (89e5b57e)
+- fix: add mounted check before navigation in notification launch handler (931380c2)
+
+### Documentation
+- docs: add PWA migration plan for web compilation support (#499) (4870ca2f)
+- docs: fix Spanish typo and clarify in-app notification localization pattern (#XXX) (1d4dfad4)
+- docs: add technical plan for chat notifications across all app states (#XXX) (a1902739)
+- docs: add technical plan for dispute chat shared key and multimedia support (#478) (e00259de)
+
+### Changed
+- chore: remove empty v1.2.1 changelog entry before re-release (4e025d89)
+- ci: generate release body and update changelog (#523) (fdb706a6)
+- Revert "chore: update version for v1.2.1" (a273208c)
+- Revert "chore: update version for v1.2.1" (b1a9f6f8)
+- refactor: unify release workflow to tag-based trigger (#521) (e6e5c22f)
+- phase 5 Chat user-admin cleanup and code deduplication for dispute chat multimedia (#515) (40fcd2e7)
+- phase 3 add multimedia sending to dispute chat (#509) 12 (55262105)
+- Phase 2 user-admin chat: unify dispute chat message model with NostrEvent and gift  wrap storage (#501) (5e5d1894)
+- Improve UX by showing human-readable status labels in Order Details (#502) (4f1bde5e)
+- chore: bump version to 1.2.0+2 (#484) (e0e1bb64)
+- refactor: clean up chat room screen — extract side effects and deduplicate (#481) (3e680008)
+- refactor: pass isPending to _displayFiatAmount instead of re-deriving (#480) (9a8ac505)
+- UX: Add confirmation step before using Lightning Address to receive sats (#475) (00afba26)
+- [NWC] Phase 5: Payment notifications and enhanced UX (#472) (0da34dc7)
+- [NWC] Phase 4: Automatic invoice generation for buyers via NWC (#469) (f220dcf2)
+- refactor: remove banks from payment methods, keep only actual payment methods (#471) (b62a6d40)
+- [NWC] Phase 3: Automatic hold invoice payment for sellers via NWC (#467) (1308d90b)
+- [NWC] Phase 2: Wallet connection management UI (#463) (47326575)
+- [NWC] Phase 1: Core NWC protocol library (#461) (52b199c2)
+- Update zapstore config file (#462) (0314031d)
+
+
+## [v1.1.1]
+
+### Added
+- **Multi-Mostro Instance Support** (#436, #437, #440, #443, #444): Complete multi-node architecture allowing users to connect to multiple Mostro instances
+  - Data model and trusted nodes registry with backward-compatible auto-import (Phase 1)
+  - Kind 0 metadata fetching with signature verification and graceful fallback (Phase 2)
+  - Node selector UI with bottom sheet, custom node dialog, avatars, and trusted badges (Phase 3)
+  - Integration test suite with 10+ test scenarios (Phase 4)
+  - Performance stress tests and documentation polish (Phase 5)
+- **Editable Premium/Discount Indicator** (#454): Replaced static premium display with interactive input field and dynamic price range slider
+- **Expanded Payment Methods** (#455): Extended payment methods list with always-visible custom input field and improved form validation
+- **Updated Screenshots** (#432): Refreshed all app screenshots and added 3 new ones
+
+### Fixed
+- **Kind 0 Metadata Verification** (#453): Apply metadata even when signature verification fails for graceful degradation
+- **Kind 0 Metadata Persistence** (#450): Trusted node metadata now persists across app restarts
+- **Fixed Price with Range Orders** (#439): Prevent combining fixed price with range orders in order creation
+- **Chat Restoration Error** (#438): Fixed error restoring chat sessions with new ChatErrorScreen widget
+- **Payment Submit Validation** (#455): Disabled submit button when amount field is empty, allow submission with only custom payment method
+
+### Changed
+- **Settings Screen Node Selector** (#440): Replaced text input with visual node selector for Mostro instance configuration
+
+### Documentation
+- **Multi-Mostro Support Guide** (#452): Comprehensive documentation covering architecture, API, and backward compatibility
+- **AGENTS.md**: Code block language specifier for MD040 compliance
+
+## [v1.1.0]
+
+### Added
+- **Logger Singleton Migration** (#429): Migrated entire codebase to singleton logger pattern for consistent logging
+- **Logger Background Integration** (#406): Logger service with background isolate support
+- **Share and Save Log Files** (#412): Export and share application logs
+- **Logs Recording Indicator**: Visual indicator showing when log capture is active
+- **Notification Settings Screen** (#408): Push notification preferences UI (Phase 4)
+- **Android Background Permissions** (#421): Added permissions for background service reliability
+- **About Screen Improvements** (#411): Enhanced about screen with additional info
+
+### Fixed
+- **Background Notifications Not Showing** (#428): Resolved SendPort serialization issue preventing background notifications
+- **NostrService Relay Updates** (#426): Replaced disconnect-reconnect with additive initialization in `updateSettings`
+- **SnackBar Navigation Overlap** (#413): Moved SnackBars to top of screen to avoid blocking bottom navigation
+
+### Changed
+- **UI Improvements Phase 2** (#419): Visual refinements and layout enhancements
+- **Toggles and Buttons** (#430): Improved toggle switches and button styling with shared MostroSwitch widget
+- **Drawer Mostro Logo** (#431): Updated drawer logo
+- **Internationalized SnackBar Messages** (#424): Replaced hardcoded SnackBar strings with localized versions
+- **Auto-Generated Files** (#417): Updated gitignore and documentation for generated files
+
+## [v1.0.7]
+
+### Added
+- **In-App Logging System** (#403, #398): Complete logging service with UI components and settings integration
+  - Logger service with basic integration for debugging and troubleshooting
+  - Logging UI components with toggle controls and log viewer
+  - Multi-language support for logging features
+- **Push Notification System** (#391, #394, #396): Full Firebase Cloud Messaging integration
+  - Firebase basic configuration for push notifications
+  - FCM service with background integration (Phase 2)
+  - PushNotificationService with encrypted token registration (Phase 3)
+- **Encrypted File Messaging** (#367): Support for encrypted file attachments in chat
+- **Backup Account Reminder** (#383): Notification system to remind users to backup their account
+- **FVM Configuration** (#376): Flutter Version Management configuration for consistent development environment
+
+### Fixed
+- **Order Creation Time Display** (#386): Fixed bug in order creation time display
+- **Background Notifications** (#378): Fixed background notifications failing in release builds
+- **Localization Entries**: Fixed invalidKeyFormat entry in Italian and Spanish ARB files
+- **Logging Toggle State**: Fixed toggle resetting to OFF on app restart
+- **Build Workflow** (#375): Added missing build_runner step to flutter.yml workflow
+
+### Changed
+- **Brand Colors Unification** (#407): Unified brand colors and consolidated color variants (Phase 1)
+- **UI Buttons and Opacity** (#402): Improved button styling and opacity handling
+- **Mostro Instance Configuration** (#390): Enhanced UX for Mostro instance configuration
+- **Order Expiration** (#392): Removed hardcoded 24h order expiration, now uses expiration_hours for trade messages and new orders
+- **Info Event Kind** (#410): Updated info event kind from 38383 to 38385
+
+### Documentation
+- **Session Recovery Guide** (#366): Added session recovery documentation
+- **Logging System Documentation** (#393): Added in-app logging system documentation
+
+## [v1.0.6]
+
+### Fixed
+- **GitHub Actions APK Verification** (#364): Fixed unquoted variable with spaces in file redirections that broke the signing verification step
+  - Sanitized temporary filenames to avoid shell expansion issues with spaces
+  - Resolved ambiguous redirect error in jarsigner verification process
+
+## [v1.0.5]
+
+### Added
+- **Restore Orders Feature** (#355): Complete session restoration system with protocol-compliant implementation
+  - Added restore-session action for recovering user sessions from Mostro
+  - Implemented EmptyPayload class for proper null payload serialization
+  - Support for both reputation and full privacy modes in restore requests
+  - Protocol-compliant message serialization with correct wrapper keys ("restore" for Action.restore, "order" for other actions)
+  - RestoreService with comprehensive session restore workflow including data cleanup and temporary subscriptions
+
+### Changed
+- **Split APK Architecture** (#360): Enhanced build system to generate architecture-specific APKs for better distribution
+  - Updated GitHub Actions to build separate APKs for armeabi-v7a and arm64-v8a architectures
+  - Replaced universal APK with split APKs for optimized app size per architecture
+  - Enhanced APK naming convention: mostro-v{VERSION}-{architecture}.apk format
+  - Improved verification process for both architecture variants using jarsigner and apksigner
+- **Zapstore Distribution** (#362): Updated zapstore configuration for split APK support
+  - Configured zapstore.yaml to distribute arm64-v8a APKs
+  - Removed armeabi-v7a from zapstore distribution as it's not supported by the platform
+
+## [v1.0.4]
+
+### Added
+- **Dynamic Countdown Timer System** (#354): Intelligent countdown widget with automatic day/hour scaling for pending orders
+  - Uses exact `order_expires_at` timestamps from Mostro protocol for precision
+  - Day scale (>24h): Shows "14d 20h 06m" format with day-based circular progress
+  - Hour scale (≤24h): Shows "HH:MM:SS" format with hour-based circular progress
+  - Automatic transition at 24:00:00 remaining with localized display
+  - Created shared `DynamicCountdownWidget` to eliminate code duplication
+  - Safe parsing with edge case handling for expired/invalid timestamps
+- **Lightning Address Usage Notification** (#349): Automatic notification when configured Lightning address is used for payments
+  - Detects buyerInvoice usage in order confirmation messages
+  - Informs buy order makers when their configured address was automatically used
+  - Integrated with existing notification system for consistent UX
+
+### Fixed
+- **Payment Method Reset** (#353): Payment methods now properly reset when fiat currency changes (#352)
+  - Clears selected payment methods and custom fields on currency change
+  - Prevents invalid payment methods being sent for wrong currency
+- **Desktop Build Process** (#350): Resolved GitHub Actions workflow issues for Windows and Mac desktop builds
+
+### Documentation
+- **Android Signing Setup** (#347): Enhanced documentation and examples for Android APK signing configuration
+  - Improved key.properties.example with detailed explanations
+  - Added DEBUG_RELEASE_CONFLICT.md guide for troubleshooting build issues
+
+## [v1.0.3]
+
+### Added
+- **Release Build Features** (#341): Chat and disputes features now enabled in production/release builds (previously debug-only)
+
+### Fixed
+- **P2P Chat Message Encryption** (#343): Restored simplified NIP-59 implementation for secure peer-to-peer messaging
+- **Desktop Build Artifacts** (#344): Fixed inconsistent artifact naming for desktop builds
+
+### Changed
+- **Build Naming Convention** (#346): Standardized build artifact naming to use dash separators for consistency across all platforms
+- **Debug Mode Restrictions**: Removed debug-only limitations for chat tabs and disputes view, making features fully accessible in release builds
+
+### Documentation
+- **Configuration Updates** (#345): Updated changelog and zapstore configuration file with latest project information
+
+## [v1.0.2]
+
+### Added
+- **Desktop Application Support** (#340): Complete implementation for Windows and Mac desktop platforms
+- **Dispute Chat System** (#329): Full-featured dispute chat implementation with role-specific messaging and real-time updates
+- **Lightning Address Auto-Send** (#336): Automatic Lightning address transmission on add-invoice for waiting-buyer-invoice status
+- **Invalid Fiat Currency Handling** (#331): Comprehensive error handling for invalid fiat currency with session cleanup and user feedback
+- **Custom Mostro Public Key Support** (#315): Environment variable support for configuring custom Mostro public keys
+- **Create Order Timeout Protection** (#318): Orphan session cleanup system with 10-second timeout for order creation
+- **Dispute Action Button** (#323): VIEW DISPUTE button integration for orders in dispute states in order details screen
+- **Admin-Canceled Dispute Status**: Enhanced dispute status handling for admin-canceled disputes with proper user notifications
+- **Dispute Resolution Tracking**: Role-specific dispute resolution messages and admin assignment flow improvements
+
+### Fixed
+- **Invoice Payment Confirmation** (#337): Restored invoice payment confirmation in PayLightningInvoiceWidget
+- **Exchange Rate Fetching** (#332): Fixed exchange rate fetching issue in Create Order screen for accurate pricing
+- **Linux Build Configuration** (#321): Fixed Linux build with host-toolchain bootstrap in CMakeLists.txt and updated README
+- **Chat Tab UI** (#320): Improved chat tab UI contrast, corrected shared key display, and fixed status badge rendering
+- **Dispute Status Handling**: Case-insensitive dispute status processing with additional terminal states for admin counterparty
+- **Price Type Switch UI** (#335): Enhanced visual contrast for better UX in price type switch component
+- **Button Text Colors** (#333): Updated red button text color to white for improved readability
+- **Switch Button Colors**: Fixed switch button color consistency across the application
+- **Dispute Status Badge**: Corrected status badge display in dispute-related screens
+
+### Changed
+- **Session Deletion Timeout** (#330): Increased automatic session deletion from 36 to 72 hours for better user experience
+- **NIP44 Dependency** (#338): Migrated to Mostro fork of nip44 dependency for improved protocol compatibility
+- **Order Status Flow** (#327): Refactored flow from waiting to pending status for clearer state transitions
+- **Dispute Status System** (#310): Complete overhaul with comprehensive localization support across all languages
+- **Dispute Protocol**: Migrated dispute protocol from NIP-17 to NIP-59 for enhanced security and standardization
+- **Dispute Data Handling**: Converted userDisputeDataProvider to handle async state with preserved message timestamps
+- **Dispute UI Layout**: Optimized dispute chat layout with CustomScrollView and SafeArea for better mobile experience
+- **Dispute Message Sorting**: Disputes now sorted by creation date in descending order for easier navigation
+
+### Removed
+- **Unused Session Peer Logic**: Removed unused session peer fallback logic in dispute chat for code cleanup
+- **Mock Dispute Data**: Replaced mock dispute data with real provider implementation throughout the application
+- **Debug Logging**: Removed debug logs from dispute resolution and role determination code
+
+### Security
+- **Enhanced Dispute Privacy**: Improved dispute protocol security with NIP-59 encrypted messaging
+- **Session Cleanup Protection**: Automatic cleanup of orphaned sessions prevents security vulnerabilities in order creation flow
+
+### Documentation
+- **Dispute System Documentation**: Comprehensive documentation for dispute chat implementation and protocol changes
+- **Desktop Platform Guide**: Setup and build instructions for Windows and Mac desktop applications
+- **Linux Build Guide**: Updated README with Linux-specific build instructions and requirements
+
+## [1.0.1]
+
+### Added
+- **Enhanced Child Order Session Management** (#311): Complete implementation of pre-emptive session creation for range order child orders with proper session lifecycle management
+- **Dispute System Enhancements** (#304): Full dispute listing and management system with comprehensive UI for active orders
+- **Background Push Notifications** (#297): Complete push notification integration with background support for real-time order updates
+- **Orphan Session Cleanup System** (#305): 10-second timeout detection and automatic cleanup to prevent orphaned sessions when Mostro instances are unresponsive
+- **Subscription Initialization Fix** (#309): Critical fix ensuring existing sessions properly load and display after app restart
+- **Rating Validation System** (#312): Enhanced rating system with proper validation in notification navigation flow
+- **Request ID Analysis Documentation** (#306): Comprehensive debugging documentation for troubleshooting order flow issues
+- **Zapstore Distribution Support** (#302): Added zapstore spec file for alternative app distribution
+- **Malawi Kwacha Currency Support** (#300): Added MWK fiat currency for Malawi users
+- **Centralized Key Derivation Configuration** (#301): Improved key management architecture with centralized derivation path handling
+
+### Fixed
+- **Hold Invoice Payment Status Mapping** (#314): Correct status mapping for hold-invoice-payment-settled action to success status
+- **Child Range Order Recognition** (#311): Complete fix for child orders not appearing in "My Trades" after range order completion - child orders now seamlessly link to parent sessions
+- **Session Timeout Detection** (#305): Proper cleanup of orphaned sessions with 10-second timeout when no response from Mostro
+- **Rating Navigation Flow** (#312): Fixed rating validation preventing proper navigation in notification flows
+- **Subscription Manager Initialization** (#309): Fixed critical issue where existing sessions weren't properly loaded on app startup, causing orders to disappear from "My Trades"
+- **Session State Persistence**: Enhanced session state management to prevent data loss during app lifecycle events
+
+### Changed
+- **Session Management Architecture**: Complete overhaul with pending child session tracking, proper lifecycle management, and automatic cleanup mechanisms
+- **Child Order Flow**: Seamless transition from parent range orders to child orders with proper session linking and role inheritance
+- **Error Handling**: Improved cant-do error processing with better user feedback and custom error messages
+- **Order State Management**: Enhanced order state transitions with proper session cleanup and timeout detection
+- **Subscription Management**: Improved subscription handling with automatic session-based subscription updates
+
+### Security
+- **Session Isolation**: Enhanced session cleanup to prevent data leakage between different order sessions
+- **Timeout Protection**: Automatic cleanup of unresponsive sessions to prevent security vulnerabilities
+- **Key Management**: Centralized key derivation path configuration with improved security practices
+- **Session Privacy**: Enhanced session cleanup and timeout detection to prevent sensitive data persistence
+
+### Documentation
+- **Child Order Implementation Guide**: Comprehensive documentation of pre-emptive child order session creation system
+- **Session Management Documentation**: Detailed technical documentation covering session lifecycle, cleanup, and timeout detection
+- **Request ID Analysis**: Complete troubleshooting guide for debugging order flow issues
+- **Technical Architecture Updates**: Enhanced system documentation including timeout detection and session cleanup processes
+
+## [1.0.0+14]
+
+### Added
+- **Documentation System Overhaul** (#296): Complete reorganization of project documentation with improved structure
+- **Protocol Documentation Integration**: Added comprehensive docs/protocol/ subtree with complete Mostro protocol specifications
+- **Session and Key Management Documentation**: Detailed technical documentation for cryptographic key handling and session management
+- **Automatic Relay Synchronization**: Complete relay management system with real-time sync to Mostro instances, blacklist support, and URL normalization
+- **Enhanced Notifications Screen** (#257): Brand new notifications interface with improved user experience
+- **Dispute System UI** (#285, #289): Enhanced dispute creation and management interface for active orders
+- **Secure APK Signing for CI/CD**: Comprehensive GitHub Actions setup for secure release builds with proper certificate management
+- **Enhanced Message Signing and Verification**: Comprehensive logging system for cryptographic operations with protocol compliance verification
+- **Technical Architecture Documentation**: Complete system documentation including timeout detection, session cleanup, and order creation processes
+
+### Fixed
+- **Message Structure Protocol Compliance** (#295): Fixed message formatting to properly follow Mostro protocol specifications
+- **Session Cleanup for Error Responses** (#287): Proper session cleanup for pending_order_exists cant-do responses
+- **Range Order Release Payload** (#283): Correct next trade key handling for range order releases using proper trade pubkey instead of master key
+- **Android Compilation Warnings** (#278): Resolved multiple Android build warnings and compilation issues
+- **Relay Management Issues**: Fixed URL normalization, duplicate prevention, blacklist bypass prevention, and proper relay persistence
+- **Key Derivation in Tests**: Added proper KeyManager stubbing for deterministic test results
+- **Relay Synchronization Race Conditions**: Improved relay sync with proper deduplication and blacklist handling
+- **Relay URL Normalization**: Consistent trailing slash removal and format standardization across all relay operations
+- **User Relay Deletion**: Fixed duplicate keys and proper settings preservation during relay management operations
+
+### Changed
+- **Optimized Error Handling** (#292): Enhanced cant-do error processing with better user feedback and custom error messages
+- **Improved Relay Selection UI**: Redesigned relay screen with switch toggles and enhanced user experience
+- **Enhanced Relay Validation**: Two-tier validation system with Nostr protocol testing and WebSocket fallback connectivity checks
+- **Streamlined Documentation Structure**: Reorganized technical documentation with improved accessibility and cross-references
+- **Enhanced Message Logging**: Comprehensive cryptographic operation logging with verification status and debugging information
+
+### Removed
+- **Dispute Token Functionality** (#294): Removed unused dispute token system and related translations for code cleanup
+- **Seller/Buyer Token System** (#293): Streamlined token handling by removing redundant seller/buyer token functionality
+- **Relay Timer Leaks**: Proper cleanup of periodic timers in RelaysNotifier to prevent memory leaks
+- **Instance Contamination**: Prevention of relay contamination between different Mostro instances with proper isolation
+
+### Security
+- **Enhanced Key Management**: Improved cryptographic key derivation and storage with comprehensive session isolation
+- **Relay Instance Isolation**: Prevention of cross-contamination between different Mostro instances
+- **Secure Build Pipeline**: Complete APK signing infrastructure with certificate fingerprint verification
+- **Session Privacy**: Enhanced session cleanup and timeout detection to prevent data leakage
+
+### Documentation
+- **Complete Protocol Specifications**: Added comprehensive protocol documentation covering all Mostro operations
+- **Technical Architecture Guides**: Detailed system documentation for developers including key management, session handling, and relay synchronization
+- **Development Guidelines**: Updated development practices and code quality standards
+- **Security Documentation**: Enhanced security practices and key management guidelines
+
+## [1.0.0+13]
+
+### Added
+- Comprehensive sats range validation for add order screen with real-time error messages
+- Enhanced form validation system with centralized error handling and proper error display
+- Flutter gen-l10n step to GitHub Actions CI/CD pipeline for consistent localization builds
+- Proper null callback handling in MostroReactiveButton for improved button state management
+
+### Fixed
+- Submit button loading state when validation errors are present (now properly disabled)
+- MostroReactiveButton null callback handling to prevent unintended loading states
+- Unnecessary 'this.' qualifier removed from mostro_message.dart for code quality
+- Conditional assignment optimization in mostro_storage.dart for cleaner code
+- Deprecated `activeColor` parameters replaced with `activeThumbColor` in Switch widgets (4 files)
+- Deprecated `synthetic-package` argument removed from l10n.yaml configuration
+- Missing localization getters regenerated for validation error messages
+- All Flutter analyzer issues resolved maintaining zero-issue codebase
+- Resolved the Flutter build error by updating all deprecated Switch properties
+- GitHub Actions workflow simplified
+
+### Changed
+- Enhanced validation system now follows payment method validation pattern for consistency
+- Improved button state management to prevent loading when form is invalid
+- Code quality improvements with modern Flutter best practices implementation
+
+### Removed
+- Unused privacy_switch_widget.dart file (dead code cleanup)
+
+## [1.0.0+6]
+
+### Added
+- Enhanced UI/UX for order amount input and lightning invoice screens
+- Improved timeout detection system for better order state management
+- Additional Latin nouns to randomized user pseudonyms (nym generation)
+- Placeholder descriptions to ARB files for metadata compliance
+
+### Fixed
+- Pending status inclusion in cancellation detection logic
+- Canceled order cleanup and timeout detection improvements
+- Out-of-range sats amount error handling with session cleanup and retry mechanism
+- Direct enum comparison for CantDoReason checks
+
+### Changed
+- Camel case formatting for compound words in codebase
+- Enhanced error handling for amount validation flows
+
+## [1.0.0+5]
+
+### Added
+- Info icon and help dialog for Lightning Address settings card
+- Enhanced user guidance for Lightning Address functionality with multi-language support
+
+### Fixed
+- Order cancellation detection for orders in waiting states
+- Localized cancellation notification messages
+- Improved cancellation cleanup and user feedback
+
+### Changed
+- Spanish translation updated: "lightning address" to "dirección lightning"
+- Enhanced Lightning Address settings UI consistency with other settings cards
+
+## [1.0.0+4]
+
+### Added
+- Comprehensive relay URL validation with proper WebSocket protocol checking
+- Real-time relay connectivity testing using direct WebSocket connections
+- Loading indicators during relay validation and testing process
+- Enhanced error messages for invalid relay URLs with helpful formatting hints
+- Debug-only display mode for Current Trade Index Card (hidden in release builds)
+
+### Fixed
+- Relay connectivity testing now accurately detects non-existent or unreachable relays
+- Invalid relay URLs (like "holahola" or "wss://xrelay.damus.io") now properly show as unhealthy
+- Relay health status now reflects actual Nostr protocol compatibility
+- False positive connectivity results for non-working relays eliminated
+- Proper cleanup of WebSocket connections during relay testing
+
+### Changed
+- Replaced dart_nostr library-based testing with direct WebSocket implementation
+- Improved relay validation logic with ws:// and wss:// protocol requirements
+- Enhanced relay testing with real Nostr REQ/response message cycles
+- Updated relay health checking to use actual connectivity verification
+- Optimized relay testing timeouts for better user experience
+
+### Security
+- Current Trade Index Card now hidden in production builds for enhanced privacy
+- Relay testing isolated from main app Nostr connections to prevent interference
+
+## [1.0.0+3]
+
+### Fixed
+- Button text truncation issues in dialog boxes across multiple screens
+- Generate New User button text wrapping and proper icon alignment
+- Dialog button layouts with improved spacing and flexible sizing
+- Yes/No button text cutoff in trade cancellation confirmation dialogs
+- Add Relay dialog button text display issues
+- Proper horizontal padding and text overflow handling in buttons
+
+### Changed
+- Enhanced dialog button implementations with Flexible widgets for better text accommodation
+- Improved button padding and spacing for better visual consistency
+- Updated text wrapping behavior in buttons to prevent content cutoff
+
+## [1.0.0+2]
+
+### Added
+- Status filter dropdown to trades screen with comprehensive localization support
+- Reactive order state updates in trades provider with improved UI colors
+- Cooperative cancel flow and enhanced order state management
+- Horizontal swipe gestures for order type switching and drawer closing
+- Action-to-status mapping functionality with updated Mostro's public key
+- Custom drawer overlay with slide animation and state management
+- Back button handling to close drawer before exiting app
+- Subscription manager for centralized Nostr event handling
+- Session-based subscription management and cleanup functionality
+
+### Changed
+- Updated trades screen background color for better visual consistency
+- Improved trade status filtering with OrderState integration
+- Simplified trade filtering and removed unused translation keys
+- Replaced DropdownButton with PopupMenuButton in status filter widget
+- Enhanced session validation and error handling across data models
+- Optimized session lookup for better performance
+
+### Fixed
+- Currency selection dialog state management issues
+- Mounted check and provider usage in currency selector
+- Rate button logic and status transitions in trade detail screen
+- Error handling for status success rate functionality
+- Proper action validation to reactive button widget
+
+### Removed
+- Deprecated filteredTradesProvider and updated lifecycle manager references
+- Unused myActiveTrades label and related translation keys
+- Duplicate and unused code in trade detail screen components
+
+## Release Notes
+
+### Version Naming Convention
+This project uses semantic versioning with alpha/beta release phases:
+- `1.0.0-alpha.x` - Alpha releases with new features and breaking changes
+- `1.0.0+1-alpha-x` - Alpha builds with incremental improvements
+- `1.0.0` - Stable release (planned)
+
+### Current Development Focus
+The project is actively developed with focus on:
+- **Localization Excellence**: Complete multi-language support
+- **UI/UX Improvements**: Modern, intuitive design patterns  
+- **Code Quality**: Zero analyzer issues and best practices
+- **Testing Coverage**: Comprehensive test suite
+- **Documentation**: Detailed technical and user guides
+- **Security**: Enhanced privacy and key management features

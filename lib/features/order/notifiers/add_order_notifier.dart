@@ -1,0 +1,170 @@
+import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mostro_mobile/data/enums.dart';
+import 'package:mostro_mobile/data/models.dart';
+import 'package:mostro_mobile/shared/providers.dart';
+import 'package:mostro_mobile/features/order/notifiers/abstract_mostro_notifier.dart';
+import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:mostro_mobile/features/order/models/order_state.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:mostro_mobile/services/mostro_service.dart';
+
+class AddOrderNotifier extends AbstractMostroNotifier {
+  late final MostroService mostroService;
+  late int requestId;
+
+  AddOrderNotifier(super.orderId, super.ref) {
+    mostroService = ref.read(mostroServiceProvider);
+    requestId = _requestIdFromOrderId(orderId);
+    subscribe();
+  }
+
+  int _requestIdFromOrderId(String orderId) {
+    final uuid = orderId.replaceAll('-', '');
+    final timestamp = DateTime.now().microsecondsSinceEpoch;
+    return (int.parse(uuid.substring(0, 8), radix: 16) ^ timestamp) &
+        0x7FFFFFFF;
+  }
+
+  @override
+  void subscribe() {
+    subscription = ref.listen(
+      addOrderEventsProvider(requestId),
+      (_, next) {
+        next.when(
+          data: (msg) {
+            if (msg != null) {
+              if (msg.action == Action.payBondInvoice &&
+                  msg.payload is PaymentRequest) {
+                _handleMakerBondInvoice(msg);
+              } else if (msg.payload is Order) {
+                if (msg.action == Action.newOrder) {
+                  _confirmOrder(msg);
+                } else {
+                  logger.i('AddOrderNotifier: received ${msg.action}');
+                }
+              } else if (msg.payload is CantDo) {
+                // Cancel timer on ANY response from Mostro
+                AbstractMostroNotifier.cancelSessionTimeoutCleanupForRequestId(requestId);
+                
+                unawaited(handleEvent(msg));
+                
+                // Reset for retry if out_of_range_sats_amount, or cleanup for terminal errors
+                final cantDo = msg.getPayload<CantDo>();
+                if (cantDo?.cantDoReason == CantDoReason.outOfRangeSatsAmount) {
+                  _resetForRetry();
+                } else if (cantDo?.cantDoReason == CantDoReason.invalidFiatCurrency ||
+                           cantDo?.cantDoReason == CantDoReason.invalidTradeIndex) {
+                  _cleanupSessionAndNavigateBack();
+                }
+              }
+            }
+          },
+          error: (error, stack) => handleError(error, stack),
+          loading: () {},
+        );
+      },
+    );
+  }
+
+  Future<void> _confirmOrder(MostroMessage message) async {
+    // Cancel timeout timer - order was successfully created
+    AbstractMostroNotifier.cancelSessionTimeoutCleanupForRequestId(requestId);
+    
+    state = state.updateWith(message);
+    session.orderId = message.id;
+    // Order confirmed (bond locked and published, or no bond): persist for real.
+    session.bondPending = false;
+    ref.read(sessionNotifierProvider.notifier).saveSession(session);
+    ref.read(orderNotifierProvider(message.id!).notifier).subscribe();
+    ref.read(navigationProvider.notifier).go(
+          '/order_confirmed/${message.id!}',
+        );
+    ref.invalidateSelf();
+  }
+
+  /// Maker anti-abuse bond: Mostro parked the order at WaitingMakerBond and is
+  /// asking the maker to pay a bond before publishing it. Show the pay-bond
+  /// screen and keep this notifier alive — the bond bolt11 and the publication
+  /// ack both return on this requestId, so _confirmOrder fires once the bond
+  /// locks. The session stays in memory only (ephemeral) until then.
+  void _handleMakerBondInvoice(MostroMessage message) {
+    // A response arrived: stop the create-order timeout cleanup.
+    AbstractMostroNotifier.cancelSessionTimeoutCleanupForRequestId(requestId);
+
+    state = state.updateWith(message);
+    session.orderId = message.id;
+    session.bondPending = true;
+    ref.read(sessionNotifierProvider.notifier).registerSessionInMemory(session);
+    ref.read(navigationProvider.notifier).go('/pay_bond/${message.id!}');
+  }
+
+  Future<void> submitOrder(Order order) async {
+    final message = MostroMessage<Order>(
+      action: Action.newOrder,
+      id: null,
+      requestId: requestId,
+      payload: order,
+    );
+
+    // A node-switch restore resets all sessions (RestoreService._clearAll).
+    // Serialize the whole create critical section (session creation + publish)
+    // with the restore behind the shared session lock so the new session cannot
+    // be wiped by an interleaving reset (TOCTOU-safe): while we hold the lock no
+    // reset runs, and if a restore is in progress we block until it releases.
+    await ref.read(sessionLifecycleLockProvider).withSessionLock(() async {
+      final sessionNotifier = ref.read(sessionNotifierProvider.notifier);
+      session = await sessionNotifier.newSession(
+        requestId: requestId,
+        role: order.kind == OrderType.buy ? Role.buyer : Role.seller,
+      );
+
+      // Start 10s timeout cleanup timer for create orders
+      AbstractMostroNotifier.startSessionTimeoutCleanupForRequestId(
+          requestId, ref);
+
+      await mostroService.submitOrder(message);
+      state = state.updateWith(message);
+    });
+  }
+
+  /// Reset notifier state for retry after out_of_range_sats_amount error
+  void _resetForRetry() {
+    logger.i('Resetting AddOrderNotifier for retry after out_of_range_sats_amount');
+    
+    // Generate new requestId for next attempt
+    requestId = _requestIdFromOrderId(orderId);
+    
+    // Reset state to initial clean state
+    state = OrderState(
+      action: Action.newOrder,
+      status: Status.pending,
+      order: null,
+    );
+    
+    // Re-subscribe with new requestId
+    subscription?.close();
+    subscribe();
+  }
+
+  /// Clean up session and navigate back for terminal errors
+  void _cleanupSessionAndNavigateBack() {
+    logger.i('Cleaning up session and navigating back after terminal error');
+    
+    // Delete the session from SessionNotifier
+    ref.read(sessionNotifierProvider.notifier).deleteSessionByRequestId(requestId);
+    
+    // Navigate back to home/order book
+    ref.read(navigationProvider.notifier).go('/');
+    
+    // Invalidate this provider to clean up
+    ref.invalidateSelf();
+  }
+  
+  @override
+  void dispose() {
+    // Cancel timer for requestId when notifier is disposed
+    AbstractMostroNotifier.cancelSessionTimeoutCleanupForRequestId(requestId);
+    super.dispose();
+  }
+}

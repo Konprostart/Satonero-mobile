@@ -1,0 +1,141 @@
+import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mostro_mobile/data/models/dispute.dart';
+import 'package:mostro_mobile/data/models/mostro_message.dart';
+import 'package:mostro_mobile/data/models/enums/action.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
+import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
+import 'package:mostro_mobile/services/nostr_service.dart';
+import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
+
+/// Repository for managing dispute creation
+class DisputeRepository {
+  final NostrService _nostrService;
+  final String _mostroPubkey;
+  final Ref _ref;
+
+  DisputeRepository(this._nostrService, this._mostroPubkey, this._ref);
+
+  /// Create a new dispute for an order
+  Future<bool> createDispute(String orderId) async {
+    try {
+      logger.d('Creating dispute for order: $orderId');
+
+      // Get user's session for the order to get the trade key
+      final sessions = _ref.read(sessionNotifierProvider);
+      final session = sessions.firstWhereOrNull((s) => s.orderId == orderId);
+
+      if (session == null) {
+        logger.e('No session found for order: $orderId, cannot create dispute');
+        return false;
+      }
+
+      // Validate trade key is present
+      if (session.tradeKey.private.isEmpty) {
+        logger.e(
+          'Trade key is empty for order: $orderId, cannot create dispute',
+        );
+        return false;
+      }
+
+      // Create dispute message
+      final disputeMessage = MostroMessage(action: Action.dispute, id: orderId);
+
+      // Wrap the message for the transport advertised by the connected node
+      // (v1 gift wrap kind 1059 / v2 NIP-44 direct kind 14), with PoW from the
+      // Mostro instance. In reputation mode the master key and key index bind
+      // the identity proof; full privacy omits both.
+      final mostroInstance =
+          await _ref.read(orderRepositoryProvider).awaitMostroInstance();
+      if (mostroInstance == null) {
+        logger.w(
+          'Mostro instance info unavailable, sending dispute with PoW 0 — '
+          'event may be rejected if node requires PoW',
+        );
+      }
+      final mostroPow = mostroInstance?.pow ?? 0;
+      final event = await disputeMessage.wrapForTransport(
+        protocolVersion: mostroInstance?.protocolVersion,
+        tradeKey: session.tradeKey,
+        recipientPubKey: _mostroPubkey,
+        masterKey: session.fullPrivacy ? null : session.masterKey,
+        keyIndex: session.fullPrivacy ? null : session.keyIndex,
+        difficulty: mostroPow,
+      );
+
+      // Send the wrapped event to Mostro
+      await _nostrService.publishEvent(event);
+
+      logger.d('Successfully sent dispute creation for order: $orderId');
+      return true;
+    } catch (e) {
+      logger.e('Failed to create dispute: $e');
+      return false;
+    }
+  }
+
+  Future<List<Dispute>> getUserDisputes() async {
+    try {
+      logger.d('Getting user disputes from sessions');
+
+      // Get all user sessions and check their order states for disputes
+      final sessions = _ref.read(sessionNotifierProvider);
+      final disputes = <Dispute>[];
+
+      for (final session in sessions) {
+        if (session.orderId != null) {
+          try {
+            // Get the order state for this session
+            final orderState = _ref.read(
+              orderNotifierProvider(session.orderId!),
+            );
+
+            if (orderState.dispute != null) {
+              disputes.add(orderState.dispute!);
+            }
+          } catch (e) {
+            logger.w(
+              'Failed to get order state for order ${session.orderId}: $e',
+            );
+          }
+        }
+      }
+
+      logger.d('Found ${disputes.length} disputes from sessions');
+      return disputes;
+    } catch (e) {
+      logger.e('Failed to get user disputes: $e');
+      return [];
+    }
+  }
+
+  Future<Dispute?> getDispute(String disputeId) async {
+    try {
+      logger.d('Getting dispute by ID: $disputeId');
+
+      // Get all user disputes and find the one with matching ID
+      final disputes = await getUserDisputes();
+      final dispute = disputes.firstWhereOrNull(
+        (d) => d.disputeId == disputeId,
+      );
+
+      if (dispute != null) {
+        logger.d('Found dispute with ID: $disputeId');
+      } else {
+        logger.w('No dispute found with ID: $disputeId');
+      }
+
+      return dispute;
+    } catch (e) {
+      logger.e('Failed to get dispute by ID $disputeId: $e');
+      return null;
+    }
+  }
+
+  Future<void> sendDisputeMessage(String disputeId, String message) async {
+    // Mock implementation
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
+}

@@ -1,0 +1,79 @@
+enum Action {
+  newOrder('new-order'),
+  takeSell('take-sell'),
+  takeBuy('take-buy'),
+  payInvoice('pay-invoice'),
+  payBondInvoice('pay-bond-invoice'),
+  addBondInvoice('add-bond-invoice'),
+  bondInvoiceAccepted('bond-invoice-accepted'),
+  bondPayoutCompleted('bond-payout-completed'),
+  bondSlashed('bond-slashed'),
+  fiatSent('fiat-sent'),
+  fiatSentOk('fiat-sent-ok'),
+  release('release'),
+  released('released'),
+  cancel('cancel'),
+  canceled('canceled'),
+  cooperativeCancelInitiatedByYou('cooperative-cancel-initiated-by-you'),
+  cooperativeCancelInitiatedByPeer('cooperative-cancel-initiated-by-peer'),
+  cooperativeCancelNoFiatByYou('cooperative-cancel-no-fiat-by-you'),
+  cooperativeCancelNoFiatByPeer('cooperative-cancel-no-fiat-by-peer'),
+  cooperativeCancelFiatSentByYou('cooperative-cancel-fiat-sent-by-you'),
+  cooperativeCancelFiatSentByPeer('cooperative-cancel-fiat-sent-by-peer'),
+  disputeInitiatedByYou('dispute-initiated-by-you'),
+  disputeInitiatedByPeer('dispute-initiated-by-peer'),
+  cooperativeCancelAccepted('cooperative-cancel-accepted'),
+  buyerInvoiceAccepted('buyer-invoice-accepted'),
+  purchaseCompleted('purchase-completed'),
+  holdInvoicePaymentAccepted('hold-invoice-payment-accepted'),
+  holdInvoicePaymentSettled('hold-invoice-payment-settled'),
+  holdInvoicePaymentCanceled('hold-invoice-payment-canceled'),
+  waitingSellerToPay('waiting-seller-to-pay'),
+  waitingBuyerInvoice('waiting-buyer-invoice'),
+  addInvoice('add-invoice'),
+  buyerTookOrder('buyer-took-order'),
+  rate('rate'),
+  rateUser('rate-user'),
+  rateReceived('rate-received'),
+  cantDo('cant-do'),
+  dispute('dispute'),
+  adminCancel('admin-cancel'),
+  adminCanceled('admin-canceled'),
+  adminSettle('admin-settle'),
+  adminSettled('admin-settled'),
+  adminAddSolver('admin-add-solver'),
+  adminTakeDispute('admin-take-dispute'),
+  adminTookDispute('admin-took-dispute'),
+  paymentFailed('payment-failed'),
+  invoiceUpdated('invoice-updated'),
+  sendDm('send-dm'),
+  chatMessage('chat-message'),
+  tradePubkey('trade-pubkey'),
+  restore('restore-session'),
+  orders('orders'),
+  lastTradeIndex('last-trade-index');
+
+  final String value;
+
+  const Action(this.value);
+
+  /// Converts a string value to its corresponding Action enum value.
+  ///
+  /// Throws an ArgumentError if the string doesn't match any Action value.
+  static final _valueMap = {
+    for (var action in Action.values) action.value: action,
+  };
+
+  static Action fromString(String value) {
+    final action = _valueMap[value];
+    if (action == null) {
+      throw ArgumentError('Invalid Action: $value');
+    }
+    return action;
+  }
+
+  @override
+  String toString() {
+    return value;
+  }
+}

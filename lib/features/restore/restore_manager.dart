@@ -1,0 +1,1202 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:dart_nostr/nostr/core/key_pairs.dart';
+import 'package:dart_nostr/nostr/model/event/event.dart';
+import 'package:dart_nostr/nostr/model/request/filter.dart';
+import 'package:dart_nostr/nostr/model/request/request.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mostro_mobile/core/config.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
+import 'package:mostro_mobile/data/models/enums/action.dart';
+import 'package:mostro_mobile/data/models/enums/cant_do_reason.dart';
+import 'package:mostro_mobile/data/models/enums/role.dart';
+import 'package:mostro_mobile/data/models/enums/order_type.dart';
+import 'package:mostro_mobile/data/models/enums/status.dart';
+import 'package:mostro_mobile/data/models/order.dart';
+import 'package:mostro_mobile/data/models/last_trade_index_response.dart';
+import 'package:mostro_mobile/data/models/mostro_message.dart';
+import 'package:mostro_mobile/data/models/dispute.dart';
+import 'package:mostro_mobile/data/models/nostr_event.dart';
+import 'package:mostro_mobile/data/models/orders_request.dart';
+import 'package:mostro_mobile/data/models/orders_response.dart';
+import 'package:mostro_mobile/data/models/payload.dart';
+import 'package:mostro_mobile/data/models/peer.dart';
+import 'package:mostro_mobile/data/models/restore_response.dart';
+import 'package:mostro_mobile/data/models/session.dart';
+import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:mostro_mobile/features/key_manager/key_manager_provider.dart';
+import 'package:mostro_mobile/features/restore/restore_progress_notifier.dart';
+import 'package:mostro_mobile/features/restore/restore_progress_state.dart';
+import 'package:mostro_mobile/features/restore/restore_mode_provider.dart';
+import 'package:mostro_mobile/features/settings/settings_provider.dart';
+import 'package:mostro_mobile/shared/providers/mostro_service_provider.dart';
+import 'package:mostro_mobile/shared/providers/mostro_storage_provider.dart';
+import 'package:mostro_mobile/shared/providers/navigation_notifier_provider.dart';
+import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:mostro_mobile/shared/providers/notifications_history_repository_provider.dart';
+import 'package:mostro_mobile/features/mostro/transport.dart';
+import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
+import 'package:mostro_mobile/shared/providers/session_lifecycle_lock_provider.dart';
+import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+
+
+enum RestoreStage {
+  gettingRestoreData,
+  gettingOrdersDetails,
+  gettingTradeIndex,
+}
+
+class RestoreService {
+  final Ref ref;
+  StreamSubscription<NostrEvent>? _tempSubscription;
+  Completer<NostrEvent>? _currentCompleter;
+  RestoreStage _currentStage = RestoreStage.gettingRestoreData;
+  NostrKeyPairs?
+  _tempTradeKey; // Temporary trade key (index 1) used during restore process
+  NostrKeyPairs? _masterKey; // Master key pair used during restore process
+  bool _operationInProgress = false;
+  Completer<bool>? _operationCompleter;
+
+  RestoreService(this.ref);
+
+  Future<void> importMnemonicAndRestore(String mnemonic) async {
+    logger.i('Restore: importing mnemonic');
+
+    // Import the mnemonic - this saves to storage
+    final keyManager = ref.read(keyManagerProvider);
+    await keyManager.importMnemonic(mnemonic);
+    logger.i('Restore: mnemonic imported and saved to storage');
+
+    // Invalidate keyManagerProvider to force re-initialization
+    // This ensures all providers get a fresh instance with the new key
+    ref.invalidate(keyManagerProvider);
+
+    // Get the new instance and initialize it
+    final newKeyManager = ref.read(keyManagerProvider);
+    await newKeyManager.init();
+
+    await initRestoreProcess();
+  }
+
+  Future<void> _clearAll() async {
+    try {
+      logger.i('Restore: clearing all existing data before restore');
+
+      // Get current chat orderIds and disputesIds before clearing
+      final currentChats = ref.read(chatRoomsNotifierProvider);
+      final chatOrderIds = currentChats.map((c) => c.orderId).toList();
+      final disputeIds = ref
+          .read(sessionNotifierProvider)
+          .where((s) => s.disputeId != null)
+          .map((s) => s.disputeId!)
+          .toList();
+
+      // Clear storage
+      await ref.read(sessionNotifierProvider.notifier).reset();
+      await ref.read(mostroStorageProvider).deleteAll();
+      await ref.read(eventStorageProvider).deleteAll();
+      await ref.read(notificationsRepositoryProvider).clearAll();
+      ref.read(orderRepositoryProvider).clearCache();
+
+      // Invalidate chat providers to clear memory
+      ref.invalidate(chatRoomsNotifierProvider);
+      for (final orderId in chatOrderIds) {
+        ref.invalidate(chatRoomsProvider(orderId));
+        ref.invalidate(chatRoomInitializedProvider(orderId));
+      }
+
+      // Invalidate dispute chat providers to cancel stale subscriptions
+      for (final disputeId in disputeIds) {
+        ref.invalidate(disputeChatNotifierProvider(disputeId));
+      }
+
+      logger.i(
+        'Restore: cleared ${chatOrderIds.length} chat providers, '
+        '${disputeIds.length} dispute chat providers',
+      );
+    } catch (e) {
+      logger.w('Restore: cleanup error', error: e);
+    }
+  }
+
+  /// Ensures the app is actually connected to the freshly selected node before
+  /// issuing restore requests. Since the move to bootstrap relay discovery
+  /// (#610) the relay list is reset on instance switch and the node's relays
+  /// are rediscovered asynchronously via kind 10002, so firing the request
+  /// immediately races relay connectivity and times out.
+  ///
+  /// Engages the bootstrap relays right away (instead of waiting for the
+  /// periodic relay watchdog) and waits for the node's info event (kind 38385),
+  /// which proves we are connected to a relay the node publishes on. Falls back
+  /// to a best-effort attempt with a live-relay floor if the info event does not
+  /// arrive within the discovery window.
+  Future<void> _waitForNodeConnectivity(String mostroPubkey) async {
+    final nostrService = ref.read(nostrServiceProvider);
+
+    try {
+      await nostrService.ensureBootstrapConnectivity();
+    } catch (e, stackTrace) {
+      logger.w('Restore: failed to engage bootstrap relays',
+          error: e, stackTrace: stackTrace);
+    }
+
+    final orderRepo = ref.read(orderRepositoryProvider);
+    const pollInterval = Duration(milliseconds: 250);
+    final maxWait = Config.relayDiscoveryTimeout + const Duration(seconds: 4);
+    final start = DateTime.now();
+
+    while (DateTime.now().difference(start) < maxWait) {
+      final instance = orderRepo.mostroInstance;
+      if (instance != null && instance.pubkey == mostroPubkey) {
+        logger.i(
+          'Restore: node $mostroPubkey reachable (info event received)',
+        );
+        return;
+      }
+      await Future.delayed(pollInterval);
+    }
+
+    logger.w(
+      'Restore: node info not received within ${maxWait.inSeconds}s; '
+      'proceeding on best-effort connectivity '
+      '(${nostrService.liveRelayCount} live relays)',
+    );
+  }
+
+  Future<NostrEvent> _waitForEvent(
+    RestoreStage stage, {
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
+    _currentStage = stage;
+    _currentCompleter = Completer<NostrEvent>();
+
+    try {
+      final event = await _currentCompleter!.future.timeout(
+        timeout,
+        onTimeout: () {
+          throw TimeoutException(
+            'Stage $stage timed out after ${timeout.inSeconds}s',
+          );
+        },
+      );
+      logger.i('Restore: stage $_currentStage completed - Event: ${event.id}');
+      return event;
+    } catch (e) {
+      logger.e('Restore: stage $_currentStage failed', error: e);
+      rethrow;
+    }
+  }
+
+  void _handleTempSubscriptionsResponse(NostrEvent event) {
+    // Check if event matches current stage criteria
+    if (_currentCompleter != null && !_currentCompleter!.isCompleted) {
+      _currentCompleter!.complete(event);
+    }
+  }
+
+  /// Decrypts a restore response into its message map, reading the temp trade
+  /// key and node pubkey from the manager state. Delegates the transport branch
+  /// to the top-level [decodeRestoreMessage].
+  Future<Map<String, dynamic>> _decodeRestoreMessage(NostrEvent event) {
+    if (_tempTradeKey == null) {
+      throw Exception('Temp trade key not initialized');
+    }
+    return decodeRestoreMessage(
+      event,
+      _tempTradeKey!,
+      ref.read(settingsProvider).mostroPublicKey,
+    );
+  }
+
+  Future<StreamSubscription<NostrEvent>> _createTempSubscription() async {
+    //use temporary trade key 1 to subscribe to restore notifications
+    if (_tempTradeKey == null) {
+      throw Exception('Temp trade key not initialized');
+    }
+
+    // Resolve the node's transport and open a single filter for it.
+    // _waitForNodeConnectivity() has already polled for the kind-38385 info
+    // event by this point, so protocol_version is normally known here.
+    // (limit 0: only new events, no history.)
+    final mostroPubkey = ref.read(settingsProvider).mostroPublicKey;
+    final advertisedVersion =
+        ref.read(orderRepositoryProvider).mostroInstance?.protocolVersion;
+
+    final v2Filter = NostrFilter(
+      kinds: [14],
+      authors: [mostroPubkey],
+      p: [_tempTradeKey!.public],
+      limit: 0,
+    );
+    // No `authors` pin: NIP-59 signs the outer gift wrap with a per-event
+    // ephemeral key, so the node's pubkey never appears there. The sender is
+    // verified after decryption instead (decodeRestoreMessage).
+    final v1Filter = NostrFilter(
+      kinds: [1059],
+      p: [_tempTradeKey!.public],
+      limit: 0,
+    );
+
+    // Only when the info event never arrived do we fall back to listening on
+    // both transports, since the node then answers on whichever it speaks.
+    final filters = advertisedVersion == null
+        ? [v1Filter, v2Filter]
+        : switch (resolveTransport(advertisedVersion)) {
+            Transport.nip44 => [v2Filter],
+            Transport.giftWrap => [v1Filter],
+          };
+
+    final request = NostrRequest(filters: filters);
+    final stream = ref.read(nostrServiceProvider).subscribeToEvents(request);
+
+    final subscription = stream.listen(
+      _handleTempSubscriptionsResponse,
+      onError: (error, stackTrace) {
+        logger.e(
+          'Restore: subscription error',
+          error: error,
+          stackTrace: stackTrace,
+        );
+      },
+      cancelOnError: false,
+    );
+
+    logger.i('Restore: temporary subscription created');
+    return subscription;
+  }
+
+  Future<void> _sendRestoreRequest() async {
+    logger.i('Restore: sending restore data request');
+
+    if (_tempTradeKey == null && _masterKey == null) {
+      throw Exception('Temp trade key or master key not initialized');
+    }
+
+    final settings = ref.read(settingsProvider);
+
+    // Create restore message with EmptyPayload as protocol spec
+    final mostroMessage = MostroMessage<EmptyPayload>(
+      action: Action.restore,
+      payload: EmptyPayload(),
+    );
+
+    // Respect full privacy mode: if enabled, don't pass master key, wrap will be done just with trade key
+    final mostroInstance =
+        await ref.read(orderRepositoryProvider).awaitMostroInstance();
+    final mostroPow = mostroInstance?.pow ?? 0;
+    if (mostroInstance == null) {
+      logger.w(
+        'Mostro instance info unavailable, sending with PoW 0 — '
+        'event may be rejected if node requires PoW',
+      );
+    }
+    final wrappedEvent = await mostroMessage.wrapForTransport(
+      protocolVersion: mostroInstance?.protocolVersion,
+      tradeKey: _tempTradeKey!,
+      recipientPubKey: settings.mostroPublicKey,
+      masterKey: settings.fullPrivacyMode ? null : _masterKey,
+      difficulty: mostroPow,
+    );
+
+    await ref.read(nostrServiceProvider).publishEvent(wrappedEvent);
+    logger.i('Restore: request sent successfully');
+  }
+
+  //Extracts restore data, returns:
+  // Orders map {orderId: tradeIndex}
+  // List of disputes
+  Future<({Map<String, int> ordersMap, List<RestoredDispute> disputes})>
+  _extractRestoreData(NostrEvent event) async {
+    try {
+      final messageData = await _decodeRestoreMessage(event);
+
+      // Check if Mostro returned cant-do (not found)
+      if (messageData.containsKey('cant-do')) {
+        logger.w(
+          'Restore: Mostro returned cant-do for restore data (no orders found)',
+        );
+        return (ordersMap: <String, int>{}, disputes: <RestoredDispute>[]);
+      }
+
+      // Extract payload from restore wrapper
+      final restoreWrapper = messageData['restore'] as Map<String, dynamic>?;
+
+      if (restoreWrapper == null) {
+        logger.w('Restore: no restore wrapper found, returning empty orders');
+        return (ordersMap: <String, int>{}, disputes: <RestoredDispute>[]);
+      }
+
+      final payload = restoreWrapper['payload'] as Map<String, dynamic>?;
+
+      if (payload == null) {
+        logger.w(
+          'Restore: no payload found in restore wrapper, returning empty orders',
+        );
+        return (ordersMap: <String, int>{}, disputes: <RestoredDispute>[]);
+      }
+
+      final restoreData = RestoreData.fromJson(payload);
+
+      final Map<String, int> ordersMap = <String, int>{};
+
+      for (var order in restoreData.orders) {
+        ordersMap[order.id] = order.tradeIndex;
+      }
+
+      //Also orders with disputes must be included
+      for (var dispute in restoreData.disputes) {
+        ordersMap[dispute.orderId] = dispute.tradeIndex;
+      }
+
+      final List<RestoredDispute> disputesList = restoreData.disputes;
+
+      return (ordersMap: ordersMap, disputes: disputesList);
+    } catch (e, stack) {
+      logger.e(
+        'Restore: failed to extract restore data',
+        error: e,
+        stackTrace: stack,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> _sendOrdersDetailsRequest(List<String> orderIds) async {
+    logger.i(
+      'Restore: sending orders details request for ${orderIds.length} orders',
+    );
+
+    if (_tempTradeKey == null && _masterKey == null) {
+      throw Exception('Temp trade key or master key not initialized');
+    }
+
+    final settings = ref.read(settingsProvider);
+
+    final mostroMessage = MostroMessage<OrdersPayload>(
+      action: Action.orders,
+      requestId: DateTime.now().millisecondsSinceEpoch,
+      payload: OrdersPayload(ids: orderIds),
+    );
+
+    // Respect full privacy mode: if enabled, don't pass master key, wrap will be done just with trade key
+    final mostroInstance =
+        await ref.read(orderRepositoryProvider).awaitMostroInstance();
+    final mostroPow = mostroInstance?.pow ?? 0;
+    if (mostroInstance == null) {
+      logger.w(
+        'Mostro instance info unavailable, sending with PoW 0 — '
+        'event may be rejected if node requires PoW',
+      );
+    }
+    final wrappedEvent = await mostroMessage.wrapForTransport(
+      protocolVersion: mostroInstance?.protocolVersion,
+      tradeKey: _tempTradeKey!,
+      recipientPubKey: settings.mostroPublicKey,
+      masterKey: settings.fullPrivacyMode ? null : _masterKey,
+      difficulty: mostroPow,
+    );
+
+    await ref.read(nostrServiceProvider).publishEvent(wrappedEvent);
+    logger.i('Restore: orders details request sent successfully');
+  }
+
+  //Extracts orders details from gift wrap event, returns OrdersResponse
+  Future<OrdersResponse> _extractOrdersDetails(NostrEvent event) async {
+    try {
+      logger.i(
+        'Restore: extracting orders details from gift wrap event ${event.id}',
+      );
+
+      final messageData = await _decodeRestoreMessage(event);
+
+      // Check if Mostro returned cant-do
+      if (messageData.containsKey('cant-do')) {
+        logger.w('Restore: Mostro returned cant-do for orders details');
+        return OrdersResponse(orders: []);
+      }
+
+      // Extract payload from order wrapper
+      final orderWrapper = messageData['order'] as Map<String, dynamic>?;
+      if (orderWrapper == null) {
+        logger.w('Restore: no order wrapper found, returning empty response');
+        return OrdersResponse(orders: []);
+      }
+
+      final payload = orderWrapper['payload'] as Map<String, dynamic>?;
+      if (payload == null) {
+        logger.w(
+          'Restore: no payload in order wrapper, returning empty response',
+        );
+        return OrdersResponse(orders: []);
+      }
+
+      final ordersResponse = OrdersResponse.fromJson(payload);
+
+      logger.i('Restore: found ${ordersResponse.orders.length} order details');
+
+      return ordersResponse;
+    } catch (e, stack) {
+      logger.e(
+        'Restore: failed to extract orders details',
+        error: e,
+        stackTrace: stack,
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> _sendLastTradeIndexRequest() async {
+    logger.i('Restore: sending last trade index request');
+
+    if (_tempTradeKey == null && _masterKey == null) {
+      throw Exception('Temp trade key or master key not initialized');
+    }
+
+    final settings = ref.read(settingsProvider);
+
+    // Create last-trade-index message with EmptyPayload as protocol spec
+    final mostroMessage = MostroMessage<EmptyPayload>(
+      action: Action.lastTradeIndex,
+      payload: EmptyPayload(),
+    );
+
+    // Respect full privacy mode: if enabled, don't pass master key, wrap will be done just with trade key
+    final mostroInstance =
+        await ref.read(orderRepositoryProvider).awaitMostroInstance();
+    final mostroPow = mostroInstance?.pow ?? 0;
+    if (mostroInstance == null) {
+      logger.w(
+        'Mostro instance info unavailable, sending with PoW 0 — '
+        'event may be rejected if node requires PoW',
+      );
+    }
+    final wrappedEvent = await mostroMessage.wrapForTransport(
+      protocolVersion: mostroInstance?.protocolVersion,
+      tradeKey: _tempTradeKey!,
+      recipientPubKey: settings.mostroPublicKey,
+      masterKey: settings.fullPrivacyMode ? null : _masterKey,
+      difficulty: mostroPow,
+    );
+
+    await ref.read(nostrServiceProvider).publishEvent(wrappedEvent);
+    logger.i('Restore: last trade index request sent successfully');
+  }
+
+  Future<LastTradeIndexResponse> _extractLastTradeIndex(
+    NostrEvent event,
+  ) async {
+    try {
+      logger.i(
+        'Restore: extracting last trade index from gift wrap event ${event.id}',
+      );
+
+      final messageData = await _decodeRestoreMessage(event);
+
+      // Check if Mostro returned cant-do
+      if (messageData.containsKey('cant-do')) {
+        final cantDoWrapper = messageData['cant-do'] as Map<String, dynamic>?;
+        final cantDoPayload = cantDoWrapper?['payload'] as Map<String, dynamic>?;
+        final reasonStr = _extractCantDoReason(cantDoPayload);
+        if (reasonStr == CantDoReason.invalidTradeIndex.value) {
+          logger.w(
+            'Restore: Mostro returned cant-do: invalid_trade_index for last trade index',
+          );
+          throw const RestoreInvalidTradeIndexException();
+        }
+        if (reasonStr == CantDoReason.notFound.value) {
+          logger.w('Restore: no previous trade history found');
+          return const LastTradeIndexResponse(
+            tradeIndex: 0,
+            noHistoryFound: true,
+          );
+        }
+        throw Exception(
+          'Restore: cant-do on last trade index (reason: ${reasonStr ?? 'unknown'})',
+        );
+      }
+
+      // Extract trade_index from restore wrapper
+      final restoreWrapper = messageData['restore'] as Map<String, dynamic>?;
+
+      if (restoreWrapper == null) {
+        logger.w(
+          'Restore: no restore wrapper found, defaulting trade index to 0',
+        );
+        return LastTradeIndexResponse(tradeIndex: 0);
+      }
+
+      final response = LastTradeIndexResponse.fromJson(restoreWrapper);
+
+      logger.i('Restore: last trade index is ${response.tradeIndex}');
+
+      return response;
+    } catch (e, stack) {
+      logger.e(
+        'Restore: failed to extract last trade index',
+        error: e,
+        stackTrace: stack,
+      );
+      rethrow;
+    }
+  }
+
+  /// Maps Status to the appropriate Action for restored orders
+  Action _getActionFromStatus(Status status, Role? userRole) {
+    switch (status) {
+      case Status.pending:
+        return Action.newOrder;
+      case Status.waitingBuyerInvoice:
+        // If user is buyer, they need to add invoice
+        // If user is seller, they are waiting for buyer to add invoice
+        return userRole == Role.buyer
+            ? Action.addInvoice
+            : Action.waitingBuyerInvoice;
+      case Status.waitingPayment:
+        // If user is seller, they need to pay invoice
+        // If user is buyer, they are waiting for seller to pay
+        return userRole == Role.seller
+            ? Action.payInvoice
+            : Action.waitingSellerToPay;
+      case Status.waitingTakerBond:
+        // Order is in the anti-abuse bond payment window; taker pays the bond
+        return Action.payBondInvoice;
+      case Status.active:
+        // If user is buyer, they need to confirm fiat sent
+        // If user is seller, buyer took the order and seller waits
+        return userRole == Role.buyer
+            ? Action.holdInvoicePaymentAccepted
+            : Action.buyerTookOrder;
+      case Status.fiatSent:
+        return Action.fiatSentOk;
+      case Status.settledHoldInvoice:
+        // Buyer: sats payment still in progress, show intermediate state
+        // Seller: their part is done, show as success
+        return userRole == Role.buyer
+            ? Action.released
+            : Action.holdInvoicePaymentSettled;
+      case Status.success:
+        return Action.purchaseCompleted;
+      case Status.canceled:
+        return Action.canceled;
+      case Status.canceledByAdmin:
+        return Action.adminCanceled;
+      case Status.settledByAdmin:
+        return Action.adminSettled;
+      case Status.completedByAdmin:
+        return Action.adminSettled;
+      case Status.dispute:
+        return Action
+            .disputeInitiatedByPeer; //No should be used -  Default to peer-initiated
+      case Status.expired:
+        return Action.canceled;
+      case Status.paymentFailed:
+        return Action.paymentFailed;
+      case Status.cooperativelyCanceled:
+        // Return generic action; will be remapped by updateWith based on fiatWasSent
+        return Action.cooperativeCancelInitiatedByPeer;
+      case Status.inProgress:
+        return Action.buyerTookOrder;
+    }
+  }
+
+  Future<void> restore(
+    Map<String, int> ordersIds,
+    int lastTradeIndex,
+    OrdersResponse ordersResponse,
+    List<RestoredDispute> disputes,
+  ) async {
+    try {
+      if (_masterKey == null) {
+        throw Exception('Master key not initialized');
+      }
+
+      final keyManager = ref.read(keyManagerProvider);
+      final sessionNotifier = ref.read(sessionNotifierProvider.notifier);
+      final progress = ref.read(restoreProgressProvider.notifier);
+      final settings = ref.read(settingsProvider);
+
+      // Set the next trade key index
+      await keyManager.setCurrentKeyIndex(lastTradeIndex + 1);
+
+      // Enable restore mode to block all old message processing
+      ref.read(isRestoringProvider.notifier).state = true;
+      logger.i(
+        'Restore: enabled restore mode - blocking all old message processing',
+      );
+
+      // Restore each a session to get future messages
+      for (final entry in ordersIds.entries) {
+        final orderId = entry.key;
+        final tradeIndex = entry.value;
+
+        // Find the order detail for this orderId
+        final orderDetail = ordersResponse.orders.firstWhere(
+          (order) => order.id == orderId,
+          orElse: () =>
+              throw Exception('Order detail not found for orderId: $orderId'),
+        );
+
+        // Derive trade key for this trade index
+        final tradeKey = keyManager.deriveTradeKeyPair(tradeIndex);
+
+        // Determine role and peer by comparing trade keys
+        Role? role;
+        Peer? peer;
+        final userPubkey = tradeKey.public;
+
+        if (orderDetail.buyerTradePubkey != null &&
+            orderDetail.buyerTradePubkey == userPubkey) {
+          // User is buyer, seller is peer
+          role = Role.buyer;
+          if (orderDetail.sellerTradePubkey != null) {
+            peer = Peer(publicKey: orderDetail.sellerTradePubkey!);
+            logger.d(
+              'Restore: Order ${orderDetail.id} - User is buyer, peer (seller) is ${orderDetail.sellerTradePubkey}',
+            );
+          }
+        } else if (orderDetail.sellerTradePubkey != null &&
+            orderDetail.sellerTradePubkey == userPubkey) {
+          // User is seller, buyer is peer
+          role = Role.seller;
+          if (orderDetail.buyerTradePubkey != null) {
+            peer = Peer(publicKey: orderDetail.buyerTradePubkey!);
+            logger.d(
+              'Restore: Order ${orderDetail.id} - User is seller, peer (buyer) is ${orderDetail.buyerTradePubkey}',
+            );
+          }
+        } else {
+          logger.w(
+            'Restore: Could not determine role/peer for order ${orderDetail.id} - userPubkey: $userPubkey, buyer: ${orderDetail.buyerTradePubkey}, seller: ${orderDetail.sellerTradePubkey}',
+          );
+        }
+
+        final restoredDispute = disputes.where((d) => d.orderId == orderId).firstOrNull;
+        final adminPubkey = restoredDispute?.solverPubkey?.isNotEmpty == true
+            ? restoredDispute!.solverPubkey
+            : null;
+
+        final session = Session(
+          masterKey: _masterKey!,
+          tradeKey: tradeKey,
+          keyIndex: tradeIndex,
+          fullPrivacy: settings.fullPrivacyMode,
+          startTime: DateTime.now(),
+          orderId: orderDetail.id,
+          role: role,
+          peer: peer,
+          adminPubkey: adminPubkey,
+          disputeId: restoredDispute?.disputeId,
+        );
+
+        // Store session
+        await sessionNotifier.saveSession(session);
+
+        // Initialize chat subscription  after saving session
+        // This ensures the listener is active before historical messages arrive
+        // The broadcast stream loses events if no one is listening
+        if (peer != null) {
+          ref.read(chatRoomsProvider(orderDetail.id).notifier).subscribe();
+          logger.d(
+            'Restore: initialized chat listener for order ${orderDetail.id}',
+          );
+        }
+
+        progress.incrementProgress();
+      }
+
+      // Wait for historical messages to arrive and be saved to storage
+      logger.i(
+        'Restore: waiting 10 seconds for historical messages to be saved...',
+      );
+      //WARNING: It is very important to wait here to ensure all historical messages arrive before rebuilding state
+      // Relays could send them with delay
+      await Future.delayed(const Duration(seconds: 10));
+
+      // Build MostroMessages from ordersResponse and update state (source of truth from Mostro)
+      logger.i(
+        'Restore: building messages for ${ordersResponse.orders.length} orders from ordersResponse',
+      );
+      final storage = ref.read(mostroStorageProvider);
+
+      // Process each order detail
+      for (final orderDetail in ordersResponse.orders) {
+        try {
+          // Convert OrderDetail to Order
+          final order = Order(
+            id: orderDetail.id,
+            kind: OrderType.fromString(orderDetail.kind),
+            status: Status.fromString(orderDetail.status),
+            amount: orderDetail.amount,
+            fiatCode: orderDetail.fiatCode,
+            minAmount: orderDetail.minAmount,
+            maxAmount: orderDetail.maxAmount,
+            fiatAmount: orderDetail.fiatAmount,
+            paymentMethod: orderDetail.paymentMethod,
+            premium: orderDetail.premium,
+            buyerTradePubkey: orderDetail.buyerTradePubkey,
+            sellerTradePubkey: orderDetail.sellerTradePubkey,
+            createdAt: orderDetail.createdAt,
+            expiresAt: orderDetail.expiresAt,
+          );
+
+          // Check if this order has a dispute
+          final restoredDispute = disputes
+              .where((d) => d.orderId == orderDetail.id)
+              .firstOrNull;
+
+          // Determine action and create dispute if needed
+          Action action;
+          Dispute? dispute;
+
+          if (restoredDispute != null && order.status == Status.dispute) {
+            final session = ref
+                .read(sessionNotifierProvider.notifier)
+                .getSessionByOrderId(orderDetail.id);
+
+            final initiator = restoredDispute.initiator;
+            final bool userInitiated =
+                (initiator == 'buyer' && session?.role == Role.buyer) ||
+                (initiator == 'seller' && session?.role == Role.seller);
+
+            action = userInitiated
+                ? Action.disputeInitiatedByYou
+                : Action.disputeInitiatedByPeer;
+
+            // Create Dispute object
+            dispute = Dispute(
+              disputeId: restoredDispute.disputeId,
+              orderId: restoredDispute.orderId,
+              status: restoredDispute.status,
+              createdAt: orderDetail.createdAt != null
+                  ? DateTime.fromMillisecondsSinceEpoch(orderDetail.createdAt!)
+                  : DateTime.now(),
+              action: userInitiated
+                  ? 'dispute-initiated-by-you'
+                  : 'dispute-initiated-by-peer',
+            );
+
+            logger.i('Restore: dispute found for order ${orderDetail.id}');
+          } else {
+            // Regular order without dispute
+            final session = ref
+                .read(sessionNotifierProvider.notifier)
+                .getSessionByOrderId(orderDetail.id);
+            action = _getActionFromStatus(order.status, session?.role);
+          }
+
+          // Build MostroMessage with appropriate payload based on action
+          // For dispute actions, use Dispute payload; for others, use Order payload
+          final notifier = ref.read(
+            orderNotifierProvider(orderDetail.id).notifier,
+          );
+
+          if (dispute != null) {
+            // For disputed orders, check if fiat was sent before the dispute
+            // so future cooperative cancel actions get remapped correctly
+            final disputeMessages = await storage.getAllMessagesForOrderId(
+              orderDetail.id,
+            );
+            final hadFiatSent = disputeMessages.any(
+              (m) =>
+                  m.action == Action.fiatSent ||
+                  m.action == Action.fiatSentOk,
+            );
+            if (hadFiatSent) {
+              notifier.setFiatWasSent();
+              logger.i(
+                'Restore: fiatWasSent=true for disputed order ${orderDetail.id}',
+              );
+            }
+
+            // Create dispute message with Dispute payload (per Mostro protocol)
+            final disputeMessage = MostroMessage<Dispute>(
+              id: orderDetail.id,
+              action: action,
+              payload: dispute,
+              timestamp:
+                  orderDetail.createdAt ??
+                  DateTime.now().millisecondsSinceEpoch,
+            );
+
+            // Save dispute message to storage
+            final disputeKey =
+                '${orderDetail.id}_restore_${action.value}_${DateTime.now().millisecondsSinceEpoch}';
+            await storage.addMessage(disputeKey, disputeMessage);
+
+            // Update state with dispute message
+            notifier.updateStateFromMessage(disputeMessage);
+            logger.i(
+              'Restore: created dispute message for order ${orderDetail.id}',
+            );
+          } else {
+            // For cooperativelyCanceled orders, check message history to
+            // determine if fiat was sent before the cancel was initiated.
+            // This sets fiatWasSent so updateWith can remap to the correct
+            // semantic action variant.
+            if (order.status == Status.cooperativelyCanceled) {
+              final messages = await storage.getAllMessagesForOrderId(
+                orderDetail.id,
+              );
+              final hadFiatSent = messages.any(
+                (m) =>
+                    m.action == Action.fiatSent ||
+                    m.action == Action.fiatSentOk,
+              );
+              if (hadFiatSent) {
+                notifier.setFiatWasSent();
+                logger.i(
+                  'Restore: fiatWasSent=true for cooperativelyCanceled order ${orderDetail.id}',
+                );
+              }
+            }
+
+            // Create regular order message with Order payload
+            final mostroMessage = MostroMessage<Order>(
+              id: orderDetail.id,
+              action: action,
+              payload: order,
+              timestamp:
+                  orderDetail.createdAt ??
+                  DateTime.now().millisecondsSinceEpoch,
+            );
+
+            // Save order message to storage
+            final key =
+                '${orderDetail.id}_restore_${action.value}_${DateTime.now().millisecondsSinceEpoch}';
+            await storage.addMessage(key, mostroMessage);
+
+            // Update state with order message
+            notifier.updateStateFromMessage(mostroMessage);
+          }
+        } catch (e, stack) {
+          logger.e(
+            'Restore: failed to process order ${orderDetail.id}',
+            error: e,
+            stackTrace: stack,
+          );
+        }
+      }
+
+      logger.i('Restore: state update completed for all orders');
+
+      // Disable restore mode - back to normal message processing
+      ref.read(isRestoringProvider.notifier).state = false;
+      logger.i(
+        'Restore: disabled restore mode - re-enabling message processing',
+      );
+    } catch (e, stack) {
+      // Ensure flag is cleared even on error
+      ref.read(isRestoringProvider.notifier).state = false;
+      logger.e('Restore: error during restore', error: e, stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  //Workflow:
+  // 1. Clear existing data
+  // 2. Create temporary subscription to key index 1 for restore notifications
+  // 3. Send restore request and wait for response (Stage 1: GettingRestoreData)
+  // 4. Process restore data and request order details (Stage 2: GettingOrdersDetails)
+  // 5. Request last trade index (Stage 3: GettingTradeIndex)
+  // 6. Complete restore process
+  Future<bool> initRestoreProcess() async {
+    if (_operationInProgress) {
+      logger.w('initRestoreProcess: another operation in progress, awaiting');
+      if (_operationCompleter != null) {
+        return _operationCompleter!.future;
+      }
+      return false;
+    }
+
+    _operationInProgress = true;
+    _operationCompleter = Completer<bool>();
+    // Hold the shared session lock for the whole restore so order/take flows
+    // cannot interleave with the session reset (and rebuild) below.
+    final releaseSessionLock =
+        await ref.read(sessionLifecycleLockProvider).acquire();
+    bool success = false;
+    bool noHistoryFound = false;
+    try {
+      // Clear existing data
+      await _clearAll();
+
+      // Show restore overlay
+      final progress = ref.read(restoreProgressProvider.notifier);
+      progress.startRestore();
+
+      // Validate and initialize master key
+      final keyManager = ref.read(keyManagerProvider);
+      if (keyManager.masterKeyPair == null) {
+        logger.e('Restore: master key not found after import');
+        throw Exception('Master key not found');
+      }
+      _masterKey = keyManager.masterKeyPair;
+      logger.i('Restore: initialized master key');
+
+      // Validate Mostro public key
+      final settings = ref.read(settingsProvider);
+      if (settings.mostroPublicKey.isEmpty) {
+        logger.e('Restore: Mostro not configured');
+        throw Exception('Mostro not configured');
+      }
+
+      // Initialize temporary trade key (index 1) for entire restore process
+      _tempTradeKey = await keyManager.deriveTradeKeyFromIndex(1);
+      logger.i(
+        'Restore: initialized temp trade key with pubkey ${_tempTradeKey!.public}',
+      );
+
+      // Wait for connectivity to the freshly selected node before requesting.
+      // On instance switch the relay list is reset and the node's relays are
+      // rediscovered asynchronously (kind 10002), so issuing the request
+      // immediately races relay connectivity and times out.
+      await _waitForNodeConnectivity(settings.mostroPublicKey);
+
+      // Subscribe to temporary notifications
+      _tempSubscription = await _createTempSubscription();
+
+      // STAGE 1: Getting Restore Data
+      progress.updateStep(RestoreStep.requesting);
+      await _sendRestoreRequest();
+      final restoreDataEvent = await _waitForEvent(
+        RestoreStage.gettingRestoreData,
+      );
+      final extracted = await _extractRestoreData(restoreDataEvent);
+      final ordersMap = extracted.ordersMap;
+      final disputes = extracted.disputes;
+      progress.setOrdersReceived(ordersMap.length);
+
+      if (ordersMap.isEmpty) {
+        logger.w('Restore: no orders or disputes to restore');
+        await _sendLastTradeIndexRequest();
+        final lastTradeIndexEvent = await _waitForEvent(
+          RestoreStage.gettingTradeIndex,
+        );
+        final lastTradeIndexResponse = await _extractLastTradeIndex(
+          lastTradeIndexEvent,
+        );
+        final lastTradeIndex = lastTradeIndexResponse.tradeIndex;
+        await keyManager.setCurrentKeyIndex(lastTradeIndex + 1);
+        noHistoryFound = lastTradeIndexResponse.noHistoryFound;
+        success = true;
+        return true;
+      }
+
+      // STAGE 2: Getting Orders Details
+      progress.updateStep(RestoreStep.loadingDetails);
+      final ordersIdsList = ordersMap.keys.toList();
+      logger.i(
+        'Restore: requesting details for ${ordersIdsList.length} orders: $ordersIdsList',
+      );
+      await _sendOrdersDetailsRequest(ordersIdsList);
+      final ordersDetailsEvent = await _waitForEvent(
+        RestoreStage.gettingOrdersDetails,
+      );
+      final ordersResponse = await _extractOrdersDetails(ordersDetailsEvent);
+
+      // STAGE 3: Getting Last Trade Index
+      await _sendLastTradeIndexRequest();
+      final lastTradeIndexEvent = await _waitForEvent(
+        RestoreStage.gettingTradeIndex,
+      );
+      final lastTradeIndexResponse = await _extractLastTradeIndex(
+        lastTradeIndexEvent,
+      );
+      final lastTradeIndex = lastTradeIndexResponse.tradeIndex;
+      noHistoryFound = lastTradeIndexResponse.noHistoryFound;
+
+      // IMPORTANT: Cancel temporary subscription before proceeding to avoid interference
+      await _tempSubscription?.cancel();
+      _tempSubscription = null;
+
+      // STAGE 4: Processing and restoring sessions
+      progress.updateStep(RestoreStep.processingRoles);
+      await restore(ordersMap, lastTradeIndex, ordersResponse, disputes);
+
+      // Navigate to home and clear notification tray
+      final navProvider = ref.read(navigationProvider.notifier);
+      navProvider.go('/');
+
+      //While bulding subscriptions, some old notifications may have arrived - clear them all
+      final notifProvider = ref.read(notificationActionsProvider.notifier);
+      notifProvider.clearAll();
+
+      success = true;
+    } catch (e, stack) {
+      logger.e(
+        'Restore: error during restore process',
+        error: e,
+        stackTrace: stack,
+      );
+      final errorKey = e is RestoreInvalidTradeIndexException
+          ? 'invalid_trade_index'
+          : 'restore_error';
+      ref
+          .read(restoreProgressProvider.notifier)
+          .showError(errorKey); // overlay maps the key to a localized message
+    } finally {
+      releaseSessionLock();
+      // Cleanup: always cancel subscription and clear keys
+      logger.i('Restore: cleaning up subscription and keys');
+      await _tempSubscription?.cancel();
+      _tempSubscription = null;
+      _currentCompleter = null;
+      _tempTradeKey = null;
+      _masterKey = null;
+      _operationInProgress = false;
+      _operationCompleter?.complete(success);
+      _operationCompleter = null;
+
+      // Only call completeRestore if not in error state
+      final currentState = ref.read(restoreProgressProvider);
+      if (currentState.step != RestoreStep.error) {
+        if (noHistoryFound) {
+          ref.read(restoreProgressProvider.notifier).completeAsNewUser();
+        } else {
+          ref.read(restoreProgressProvider.notifier).completeRestore();
+        }
+      }
+    }
+
+    return success;
+  }
+
+  /// Lightweight trade index sync: fetches last-trade-index from Mostro
+  /// and updates local storage. Used when local trade index is stale
+  /// (e.g., SharedPreferences deleted but secure storage preserved).
+  Future<void> syncTradeIndex() async {
+    if (_operationInProgress) {
+      logger.w('syncTradeIndex: another operation in progress, skipping');
+      return;
+    }
+
+    final keyManager = ref.read(keyManagerProvider);
+    if (keyManager.masterKeyPair == null) {
+      logger.w('syncTradeIndex: no master key, skipping');
+      return;
+    }
+
+    _operationInProgress = true;
+    _operationCompleter = Completer<bool>();
+    // Hold the shared session lock across the whole index repair so order/take
+    // flows cannot create a session (and publish) reading a stale trade index
+    // while it is being updated by setCurrentKeyIndex below.
+    final releaseSessionLock =
+        await ref.read(sessionLifecycleLockProvider).acquire();
+    try {
+      _masterKey = keyManager.masterKeyPair;
+      _tempTradeKey = await keyManager.deriveTradeKeyFromIndex(1);
+
+      // Wait for the node info event (kind 38385) before sending: it carries
+      // the PoW difficulty and the protocol_version that selects the outbound
+      // transport, and it also lets _createTempSubscription() open a single
+      // filter instead of listening on both transports.
+      await _waitForNodeConnectivity(ref.read(settingsProvider).mostroPublicKey);
+
+      _tempSubscription = await _createTempSubscription();
+
+      // Arm the completer before sending the request to avoid a race where
+      // the reply arrives before _waitForEvent() sets up _currentCompleter.
+      _currentStage = RestoreStage.gettingTradeIndex;
+      _currentCompleter = Completer<NostrEvent>();
+
+      await _sendLastTradeIndexRequest();
+      final event = await _currentCompleter!.future.timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException(
+            'Stage ${RestoreStage.gettingTradeIndex} timed out after 10s',
+          );
+        },
+      );
+      final response = await _extractLastTradeIndex(event);
+
+      await keyManager.setCurrentKeyIndex(response.tradeIndex + 1);
+      logger.i(
+        'syncTradeIndex: updated local trade index to ${response.tradeIndex + 1}',
+      );
+    } catch (e, stack) {
+      logger.e('syncTradeIndex: failed', error: e, stackTrace: stack);
+    } finally {
+      releaseSessionLock();
+      await _tempSubscription?.cancel();
+      _tempSubscription = null;
+      _currentCompleter = null;
+      _tempTradeKey = null;
+      _masterKey = null;
+      _operationInProgress = false;
+      _operationCompleter?.complete(false);
+      _operationCompleter = null;
+    }
+  }
+
+  // Extracts the cant-do reason string from the inner payload.
+  // Mostro wire format: payload may be {"cant_do": "<reason>"} or
+  // {"cant_do": {"cant-do": "<reason>"}}.
+  String? _extractCantDoReason(Map<String, dynamic>? payload) {
+    if (payload == null) return null;
+    final raw = payload['cant_do'];
+    if (raw == null) return null;
+    if (raw is String) return raw;
+    if (raw is Map<String, dynamic>) {
+      final inner = raw['cant-do'];
+      return inner?.toString();
+    }
+    return null;
+  }
+}
+
+/// Decodes a restore response into its message map, handling both transports:
+/// v2 (kind 14, NIP-44 direct, decrypted straight to the tuple) and v1
+/// (kind 1059, gift wrap unwrapped to a rumor whose content is the tuple). Both
+/// converge on `tuple[0]`.
+///
+/// Top-level (not a private method) so the transport branch can be
+/// regression-tested without the full [RestoreService] / Riverpod orchestration.
+@visibleForTesting
+Future<Map<String, dynamic>> decodeRestoreMessage(
+  NostrEvent event,
+  NostrKeyPairs tempTradeKey,
+  String mostroPubkey,
+) async {
+  final String content;
+  if (event.kind == 14) {
+    content = await NostrUtils.decryptNIP44DirectEvent(
+      event,
+      tempTradeKey.private,
+      expectedAuthor: mostroPubkey,
+    );
+  } else {
+    final rumor = await event.mostroUnWrap(tempTradeKey);
+    content = rumor.content ?? '';
+  }
+
+  if (content.isEmpty) {
+    throw Exception('Restore message content is empty');
+  }
+
+  final contentList = jsonDecode(content) as List<dynamic>;
+  if (contentList.isEmpty) {
+    throw Exception('Restore message tuple is empty');
+  }
+  return contentList[0] as Map<String, dynamic>;
+}
+
+/// Thrown when Mostro responds with cant-do: invalid_trade_index to
+/// Action.lastTradeIndex during the restore flow.
+class RestoreInvalidTradeIndexException implements Exception {
+  const RestoreInvalidTradeIndexException();
+
+  @override
+  String toString() => 'RestoreInvalidTradeIndexException';
+}
+
+final restoreServiceProvider = Provider<RestoreService>((ref) {
+  return RestoreService(ref);
+});

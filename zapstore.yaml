@@ -1,0 +1,49 @@
+repository: https://github.com/mostroP2P/mobile
+description: |
+  A modern, secure mobile client for the Mostro peer-to-peer Bitcoin trading platform.
+
+  This is a fully-featured mobile application that enables secure, private, and decentralized Bitcoin trading over the Lightning Network using the Nostr protocol. Built with Flutter, it provides a native mobile experience for conducting peer-to-peer trades with advanced privacy features and modern UI/UX design.
+
+  Key Features:
+
+    - Privacy-First Architecture: Advanced encryption with NIP-59 gift wrapping for all trade communications
+    - Hierarchical Key Management: BIP-32/BIP-39 compliant key derivation with unique keys per trade
+    - Multi-Language Support: Full internationalization in English, Spanish, and Italian
+    - Lightning Network Integration: Seamless Bitcoin Lightning payments and invoicing
+    - Real-Time Trading: Live order book updates and instant messaging with counterparts
+    - Modern UI/UX: Card-based interfaces, smooth animations, and intuitive navigation
+    - Secure Storage: Hardware-backed secure storage for cryptographic keys
+    - Decentralized: No central authority, operates entirely on Nostr relays
+summary: Secure, private, and decentralized Bitcoin peer-to-peer platform on Nostr.
+tags:
+    - peer-to-peer
+    - p2p
+    - security
+    - privacy
+    - android
+    - bitcoin
+    - lightning
+    - nostr
+    - cryptography
+    - freedom-tech
+license: MIT
+website: https://mostro.network
+images:
+    - assets/images/screenshot-1.jpg
+    - assets/images/screenshot-2.jpg
+    - assets/images/screenshot-3.jpg
+    - assets/images/screenshot-4.jpg
+    - assets/images/screenshot-5.jpg
+    - assets/images/screenshot-6.jpg
+    - assets/images/screenshot-7.jpg
+    - assets/images/screenshot-8.jpg
+supported_nips:
+    - "01"
+    - "06"
+    - "44"
+    - "47"
+    - "59"
+    - "65"
+    - "69"
+metadata_sources:
+    - github

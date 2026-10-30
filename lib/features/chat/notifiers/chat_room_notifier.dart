@@ -1,0 +1,675 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:dart_nostr/dart_nostr.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:mostro_mobile/data/models/chat_room.dart';
+import 'package:mostro_mobile/data/models/nostr_event.dart';
+import 'package:mostro_mobile/data/models/session.dart';
+import 'package:mostro_mobile/services/chat_cursor_store.dart';
+import 'package:mostro_mobile/services/encrypted_image_upload_service.dart';
+import 'package:mostro_mobile/services/encrypted_file_upload_service.dart';
+import 'package:sembast/sembast.dart';
+
+import 'package:mostro_mobile/features/chat/providers/active_chat_screens_provider.dart';
+import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:mostro_mobile/features/subscriptions/subscription_manager_provider.dart';
+import 'package:mostro_mobile/shared/providers/mostro_service_provider.dart';
+import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:mostro_mobile/shared/providers/push_notification_service_provider.dart';
+import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:mostro_mobile/features/chat/utils/message_type_helpers.dart';
+import 'package:mostro_mobile/shared/mixins/media_cache_mixin.dart';
+import 'package:mostro_mobile/shared/utils/chat_keys.dart';
+import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+
+class ChatRoomNotifier extends StateNotifier<ChatRoom> with MediaCacheMixin {
+  static final EncryptedImageUploadService _imageUploadService =
+      EncryptedImageUploadService();
+  static final EncryptedFileUploadService _fileUploadService =
+      EncryptedFileUploadService();
+
+  /// Reload the chat room by loading historical messages and re-subscribing.
+  Future<void> reload() async {
+    await _subscription?.cancel();
+    await _loadHistoricalMessages();
+    subscribe();
+  }
+
+  
+  final String orderId;
+  final Ref ref;
+  StreamSubscription<NostrEvent>? _subscription;
+  ProviderSubscription<Session?>? _sessionListener;
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+  
+  /// Exposes the mounted status of the notifier
+  /// Returns true if the notifier is still active and hasn't been disposed
+  @override
+  bool get mounted => super.mounted;
+
+  ChatKeys? _chatKeys;
+  String? _chatKeysSource;
+
+  /// Unwrapped inner events by outer envelope id, keyed on the *in-flight*
+  /// future so the reservation is made synchronously. An envelope is verified
+  /// and decrypted (~5 EC multiplications) exactly once per notifier: relay
+  /// re-deliveries, concurrent deliveries and history reloads reuse the
+  /// result.
+  final Map<String, Future<NostrEvent>> _unwrapCache = {};
+  static const int _unwrapCacheLimit = 2000;
+
+  /// Test hook: number of chatUnwrap executions performed by this notifier.
+  @visibleForTesting
+  int debugUnwrapCount = 0;
+
+  /// Start the single unwrap of [event], or join the one already running.
+  /// The reservation happens synchronously — before any await — so a second
+  /// relay copy arriving while the first is still being verified shares its
+  /// result instead of paying for another verification. A failed unwrap is
+  /// never cached: the reservation is dropped so a later valid copy of the
+  /// envelope is verified normally.
+  Future<NostrEvent> _unwrapOnce(
+    NostrEvent event,
+    ChatKeys chatKeys,
+    Session session,
+  ) {
+    final outerId = event.id!;
+    final pending = _unwrapCache[outerId];
+    if (pending != null) return pending;
+    if (_unwrapCache.length >= _unwrapCacheLimit) {
+      _unwrapCache.clear();
+    }
+    debugUnwrapCount++;
+    // The map entry is written synchronously, before the first await inside
+    // chatUnwrap, so a second delivery arriving meanwhile joins this future.
+    final unwrap = _unwrapAndForgetOnFailure(event, chatKeys, session);
+    _unwrapCache[outerId] = unwrap;
+    return unwrap;
+  }
+
+  Future<NostrEvent> _unwrapAndForgetOnFailure(
+    NostrEvent event,
+    ChatKeys chatKeys,
+    Session session,
+  ) async {
+    try {
+      return await event.chatUnwrap(chatKeys, session.peerChatAllowedSigners);
+    } catch (_) {
+      // Never cache a rejection: a corrupted copy delivered first must not
+      // lock the envelope id out for the valid event that shares it.
+      _unwrapCache.remove(event.id!);
+      rethrow;
+    }
+  }
+
+  ChatRoomNotifier(
+    super.state,
+    this.orderId,
+    this.ref,
+  );
+
+  /// Derive (and cache) the K_conv/K_sign pair from the peer shared key.
+  ChatKeys _getChatKeys(Session session) {
+    final shared = session.sharedKey!;
+    if (_chatKeys == null || _chatKeysSource != shared.public) {
+      _chatKeys = ChatKeys.fromSharedKey(shared);
+      _chatKeysSource = shared.public;
+    }
+    return _chatKeys!;
+  }
+
+  /// Initialize the chat room by loading historical messages and subscribing to new events
+  Future<void> initialize() async {
+    await _loadHistoricalMessages();
+    subscribe();
+    _isInitialized = true;
+
+    // Refresh the chat list now that messages are loaded. loadChats() may have
+    // already run and filtered this chat out because its async initialization
+    // hadn't completed yet.
+    try {
+      ref.read(chatRoomsNotifierProvider.notifier).refreshChatList();
+    } catch (e) {
+      logger.w('Could not refresh chat list after init of $orderId: $e');
+    }
+  }
+
+  void subscribe() {
+    final session = ref.read(sessionProvider(orderId));
+    if (session == null) {
+      // Session not available yet, listen for when it becomes available
+      _listenForSession();
+      return;
+    }
+    if (session.sharedKey == null) {
+      // Session exists but shared key not available yet, listen for when it becomes available
+      _listenForSession();
+      return;
+    }
+
+    // Use SubscriptionManager to create a subscription for this specific chat room
+    final subscriptionManager = ref.read(subscriptionManagerProvider);
+    _subscription = subscriptionManager.chat.listen(_onChatEvent);
+  }
+
+  /// Listen for session changes and subscribe when session is ready
+  void _listenForSession() {
+    // Cancel any existing listener
+    _sessionListener?.close();
+
+    logger.i('Starting to listen for session changes for orderId: $orderId');
+
+    _sessionListener = ref.listen<Session?>(
+      sessionProvider(orderId),
+      (previous, next) {
+        logger.i(
+            'Session update received for orderId: $orderId, session is null: ${next == null}, sharedKey is null: ${next?.sharedKey == null}');
+
+        if (next != null && next.sharedKey != null) {
+          _sessionListener?.close();
+          _sessionListener = null;
+
+          unawaited(() async {
+            logger.i(
+                'Session with shared key is now available, loading history and subscribing for orderId: $orderId');
+            await _loadHistoricalMessages();
+            if (!mounted) return;
+            final subscriptionManager = ref.read(subscriptionManagerProvider);
+            _subscription = subscriptionManager.chat.listen(_onChatEvent);
+          }());
+        }
+      },
+    );
+  }
+
+  /// Test hook for the private stream handler.
+  @visibleForTesting
+  Future<void> handleChatEvent(NostrEvent event) => _onChatEvent(event);
+
+  Future<void> _onChatEvent(NostrEvent event) async {
+    try {
+      if (event.kind != 14) {
+        return;
+      }
+
+      // Verify ownership BEFORE any disk write. The broadcast stream delivers
+      // events for ALL chats to every ChatRoomNotifier. Without this early
+      // check, multiple notifiers race to store the same event with their own
+      // orderId, causing messages to be stored under the wrong order and
+      // disappear after app restart. Ownership is the outer author: the
+      // K_sign key derived from this conversation's shared key.
+      final session = ref.read(sessionProvider(orderId));
+      if (session == null || session.sharedKey == null) {
+        return;
+      }
+
+      final chatKeys = _getChatKeys(session);
+      if (event.pubkey != chatKeys.sign.public) {
+        return;
+      }
+
+      final outerId = event.id!;
+
+      // This notifier already verified and decrypted this envelope (a relay
+      // re-delivery, an own echo, or a copy racing an unwrap still in
+      // flight): reuse the verified inner event and surface it if state lost
+      // it. Nothing is written and the cursor is NOT advanced from here —
+      // this copy's signature has not been checked, and both the envelope id
+      // and the author key are public, so its created_at is attacker
+      // controlled. For legitimate traffic the advance would be a no-op
+      // anyway: a re-delivery carries the same id and therefore the same
+      // created_at, which the store already rejects as not newer.
+      final pending = _unwrapCache[outerId];
+      if (pending != null) {
+        NostrEvent? cached;
+        try {
+          cached = await pending;
+        } catch (_) {
+          // The copy holding this id failed verification. Since the signature
+          // is not part of the id, that copy may be a forgery reusing a valid
+          // envelope's id, so this one falls through and is verified on its
+          // own instead of being suppressed by the forgery.
+          cached = null;
+        }
+        if (cached != null) {
+          final verified = cached;
+          if (!state.messages.any((m) => m.id == verified.id)) {
+            state = state.copy(messages: [...state.messages, verified]);
+          }
+          return;
+        }
+      }
+
+      // Unwrap and authenticate BEFORE persisting: the signature is not part
+      // of the event id, so storing an unverified copy would let a corrupted
+      // duplicate occupy the id and dedup away the valid one for good. An
+      // envelope the background service stored while the app slept is on disk
+      // but not in this cache, so it is verified here like any other.
+      final chat = await _unwrapOnce(event, chatKeys, session);
+
+      try {
+        final eventStore = ref.read(eventStorageProvider);
+        final alreadyStored = await eventStore.hasItem(outerId);
+
+        if (!alreadyStored) {
+          await eventStore.putItem(outerId, event.peerChatRecord(orderId));
+        }
+      } catch (_) {
+        // Persisting failed, so this envelope is not durably handled: drop
+        // the cached unwrap, or a later relay delivery would take the
+        // already-unwrapped shortcut above and never retry the write or the
+        // cursor advance, and the message would be gone after a restart.
+        _unwrapCache.remove(outerId);
+        rethrow;
+      }
+
+      // Advance the persisted since cursor only after the event is accepted
+      // (clamped to the local clock inside the store)
+      unawaited(
+        ref.read(chatCursorStoreProvider).advance(orderId, event.createdAt!),
+      );
+
+      // Check if message already exists to prevent duplicates
+      final messageExists = state.messages.any((m) => m.id == chat.id);
+      if (!messageExists) {
+        // Add new message and sort
+        final updatedMessages = [...state.messages, chat];
+        state = state.copy(messages: updatedMessages);
+        logger.d('New message added from relay, total messages: ${updatedMessages.length}');
+
+        _maybeShowInAppNotification(chat, session);
+      } else {
+        logger.d('Message already exists in state, skipping duplicate');
+      }
+
+      // Fire-and-forget: pre-download media after message is in state
+      unawaited(_processMessageContent(chat));
+
+      // Notify the chat rooms list to update when new messages arrive
+      try {
+        ref.read(chatRoomsNotifierProvider.notifier).refreshChatList();
+      } catch (e) {
+        logger.w('Could not refresh chat list: $e');
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error processing chat event: $e', stackTrace: stackTrace);
+    }
+  }
+
+  Future<void> sendMessage(String text) async {
+    final session = ref.read(sessionProvider(orderId));
+    if (session == null) {
+      logger.w('Cannot send message: Session is null for orderId: $orderId');
+      return;
+    }
+    if (session.sharedKey == null) {
+      logger
+          .w('Cannot send message: Shared key is null for orderId: $orderId');
+      return;
+    }
+
+    // Inner event (kind 1 with a `u` nonce tag) signed by the trade key;
+    // its real id drives optimistic UI and relay echo deduplication
+    final innerEvent = NostrEventExtensions.createChatRumor(
+      senderKeys: session.tradeKey,
+      content: text,
+    );
+
+    try {
+      // Wrap into the kind-14 envelope (signed by K_sign, encrypted with K_conv)
+      final wrappedEvent = await innerEvent.chatWrap(_getChatKeys(session));
+
+      // Publish to network - await to catch network/initialization errors
+      try {
+        await ref.read(nostrServiceProvider).publishEvent(wrappedEvent);
+        logger.d('Message sent successfully to network');
+      } catch (publishError, publishStack) {
+        logger.e('Failed to publish message: $publishError', stackTrace: publishStack);
+        return;
+      }
+
+      // Wake the peer's device via the push server (fire-and-forget).
+      // Required for P2P chat because the server's Nostr listener matches
+      // events addressed to the recipient's tradeKey.public, and the chat
+      // envelope is authored by K_sign and tagged to pub(K_conv) instead.
+      final peerPubkey = session.peer?.publicKey;
+      if (peerPubkey != null) {
+        unawaited(
+          ref.read(pushNotificationServiceProvider).notifyPeer(peerPubkey),
+        );
+      }
+
+      // Persist the wrapped event to disk immediately after successful publish.
+      // This prevents message loss if the relay echo doesn't arrive
+      // (e.g., connection drop after send). _onChatEvent will skip it via hasItem().
+      try {
+        final eventStore = ref.read(eventStorageProvider);
+        await eventStore.putItem(
+          wrappedEvent.id!,
+          wrappedEvent.peerChatRecord(orderId),
+        );
+        logger.d('Wrapped event persisted to storage for orderId: $orderId');
+      } catch (storageError) {
+        logger.e('Failed to persist message to storage: $storageError');
+        // Continue - message was published, just won't survive crash
+      }
+
+      // Add the inner event to state immediately for optimistic UI
+      // The relay will echo it back and _onChatEvent will handle deduplication
+      final messageExists = state.messages.any((m) => m.id == innerEvent.id);
+      if (!messageExists) {
+        final updatedMessages = [...state.messages, innerEvent];
+        state = state.copy(messages: updatedMessages);
+        logger.d('Message added to state optimistically, total messages: ${updatedMessages.length}');
+      } else {
+        logger.d('Message already exists in state, skipping add');
+      }
+
+      // Notify the chat rooms list to update after successful publish
+      try {
+        ref.read(chatRoomsNotifierProvider.notifier).refreshChatList();
+      } catch (e) {
+        logger.w('Could not refresh chat list after sending message: $e');
+      }
+    } catch (e, stackTrace) {
+      logger.e('Failed to send message: $e', stackTrace: stackTrace);
+    }
+  }
+
+  /// Show an in-app snackbar for new incoming P2P messages when the user is
+  /// not currently on this chat screen. Self-messages (relay echo of messages
+  /// sent by the current user) are suppressed.
+  void _maybeShowInAppNotification(NostrEvent chat, Session session) {
+    try {
+      if (chat.pubkey == session.tradeKey.public) return;
+
+      final activeScreens = ref.read(activeChatScreensProvider);
+      if (activeScreens.contains(orderId)) return;
+
+      ref
+          .read(notificationActionsProvider.notifier)
+          .showCustomMessage('chatNewMessage');
+    } catch (e) {
+      logger.w('Failed to show in-app chat notification: $e');
+    }
+  }
+
+  /// Load historical chat messages from storage
+  Future<void> _loadHistoricalMessages() async {
+    try {
+      logger.i('Starting to load historical messages for orderId: $orderId');
+
+      final session = ref.read(sessionProvider(orderId));
+      if (session == null) {
+        logger.w(
+            'Cannot load historical messages: session is null for orderId: $orderId');
+        return;
+      }
+      if (session.sharedKey == null) {
+        logger.w(
+            'Cannot load historical messages: shared key is null for orderId: $orderId');
+        return;
+      }
+
+      logger.i('Session found with shared key: ${session.sharedKey?.public}');
+
+      final eventStore = ref.read(eventStorageProvider);
+
+      // Find all chat events for this specific order
+      var chatEvents = await eventStore.find(
+        filter: Filter.and([
+          eventStore.eq('type', 'chat'),
+          eventStore.eq('order_id', orderId),
+        ]),
+        sort: [SortOrder('created_at', false)], // Most recent first
+      );
+
+      logger.i('Chat events found for orderId $orderId: ${chatEvents.length}');
+
+      if (chatEvents.isEmpty) {
+        logger.i('No chat events found for orderId $orderId');
+        return;
+      }
+
+      final List<NostrEvent> historicalMessages = [];
+
+      for (int i = 0; i < chatEvents.length; i++) {
+        final eventData = chatEvents[i];
+        logger.i('Processing event $i: ${eventData['id']}');
+
+        try {
+          // Log the event data structure
+          logger.i('Event data keys: ${eventData.keys.toList()}');
+
+          // Check if this is a complete event (has all required fields)
+          final hasCompleteData = eventData.containsKey('kind') &&
+              eventData.containsKey('content') &&
+              eventData.containsKey('pubkey') &&
+              eventData.containsKey('sig') &&
+              eventData.containsKey('tags');
+
+          if (!hasCompleteData) {
+            logger.w(
+                'Event ${eventData['id']} is incomplete (missing required fields), skipping. This is likely from an older version of the app.');
+            continue;
+          }
+
+          // Reconstruct the NostrEvent from stored data
+          final storedEvent = NostrEventExtensions.fromMap({
+            'id': eventData['id'],
+            'created_at': eventData['created_at'],
+            'kind': eventData['kind'],
+            'content': eventData['content'],
+            'pubkey': eventData['pubkey'],
+            'sig': eventData['sig'],
+            'tags': eventData['tags'],
+          });
+
+          // Decrypt and unwrap: kind 14 envelope, or legacy gift wrap
+          // stored before the kind-14 migration. Envelopes already unwrapped
+          // by this notifier are reused instead of re-verified.
+          final cachedUnwrap = _unwrapCache[storedEvent.id];
+          if (cachedUnwrap != null) {
+            historicalMessages.add(await cachedUnwrap);
+            continue;
+          }
+          final NostrEvent unwrappedMessage;
+          if (storedEvent.kind == 14) {
+            unwrappedMessage = await _unwrapOnce(
+              storedEvent,
+              _getChatKeys(session),
+              session,
+            );
+          } else {
+            if (session.sharedKey?.public != storedEvent.recipient) {
+              logger.i(
+                  'Legacy event does not belong to our chat. Expected: ${session.sharedKey?.public}, Got: ${storedEvent.recipient}');
+              continue;
+            }
+            unwrappedMessage = await storedEvent.p2pUnwrap(session.sharedKey!);
+          }
+          historicalMessages.add(unwrappedMessage);
+        } catch (e) {
+          logger
+              .e('Failed to process historical event ${eventData['id']}: $e');
+          // Continue processing other events even if one fails
+        }
+      }
+
+      logger.i(
+          'Total historical messages processed: ${historicalMessages.length}');
+
+      if (historicalMessages.isNotEmpty) {
+        // Merge historical messages with existing messages, avoiding duplicates
+        final allMessages = [...state.messages, ...historicalMessages];
+        // Deduplicate by ID
+        final seen = <String>{};
+        final deduped = allMessages.where((m) {
+          if (seen.contains(m.id)) return false;
+          seen.add(m.id!);
+          return true;
+        }).toList();
+        state = state.copy(messages: deduped);
+        logger.i(
+            'Successfully loaded and merged ${historicalMessages.length} historical messages, total: ${deduped.length} for chat $orderId');
+      } else {
+        logger.w('No historical messages loaded for chat $orderId');
+        logger.i('This could be because:');
+        logger.i('1. No messages have been sent in this chat yet');
+        logger
+            .i('2. All stored events are incomplete (from older app version)');
+        logger.i(
+            '3. The events belong to a different chat (shared key mismatch)');
+        logger
+            .i('New messages will be stored correctly and appear immediately.');
+      }
+    } catch (e) {
+      logger.e('Error loading historical messages: $e');
+      logger.e('Stack trace: ${StackTrace.current}');
+    }
+  }
+
+  /// Get the shared key for this chat session as raw bytes
+  Future<Uint8List> getSharedKey() async {
+    final session = ref.read(sessionProvider(orderId));
+    if (session == null || session.sharedKey == null) {
+      throw Exception('Session or shared key not available for orderId: $orderId');
+    }
+    return NostrUtils.sharedKeyToBytes(session.sharedKey!);
+  }
+
+  /// Process special message content (e.g., encrypted images)
+  Future<void> _processMessageContent(NostrEvent message) async {
+    try {
+      final content = message.content;
+      if (content == null || !content.startsWith('{')) {
+        // Not a JSON message, treat as regular text
+        return;
+      }
+
+      // Try to parse as JSON
+      Map<String, dynamic>? jsonContent;
+      try {
+        final decoded = jsonDecode(content);
+        if (decoded is Map<String, dynamic>) {
+          jsonContent = decoded;
+        }
+      } catch (e) {
+        // Not valid JSON, treat as regular text
+        return;
+      }
+
+      // Check for encrypted message types
+      if (jsonContent != null) {
+        if (MessageTypeUtils.isEncryptedImageMessage(message)) {
+          logger.i('📸 Processing encrypted image message');
+          await _processEncryptedImageMessage(message, jsonContent);
+        } else if (MessageTypeUtils.isEncryptedFileMessage(message)) {
+          logger.i('📎 Processing encrypted file message');
+          await _processEncryptedFileMessage(message, jsonContent);
+        }
+      }
+      
+    } catch (e) {
+      logger.w('Error processing message content: $e');
+      // Don't rethrow - message should still be displayed as text
+    }
+  }
+
+  /// Process encrypted image message by pre-downloading and caching
+  Future<void> _processEncryptedImageMessage(
+    NostrEvent message, 
+    Map<String, dynamic> imageData
+  ) async {
+    try {
+      // Extract image metadata
+      final result = EncryptedImageUploadResult.fromJson(imageData);
+      
+      logger.i('📥 Pre-downloading encrypted image: ${result.filename}');
+      logger.d('Blossom URL: ${result.blossomUrl}');
+      logger.d('Original size: ${result.originalSize} bytes');
+      
+      // Get shared key for decryption
+      final sharedKey = await getSharedKey();
+      
+      // Download and decrypt image in background
+      final decryptedImage = await _imageUploadService.downloadAndDecryptImage(
+        blossomUrl: result.blossomUrl,
+        sharedKey: sharedKey,
+      );
+      
+      logger.i('✅ Image downloaded and decrypted successfully: ${decryptedImage.length} bytes');
+      
+      // Cache the decrypted image for immediate display
+      // You could store it in a Map<String, Uint8List> for quick access
+      cacheDecryptedImage(message.id!, decryptedImage, result);
+      
+    } catch (e) {
+      logger.e('❌ Failed to process encrypted image: $e');
+      // Don't rethrow - message should still be displayed (maybe with error indicator)
+    }
+  }
+
+  /// Process encrypted file message by pre-downloading and caching
+  Future<void> _processEncryptedFileMessage(
+    NostrEvent message, 
+    Map<String, dynamic> fileData
+  ) async {
+    try {
+      // Extract file metadata
+      final result = EncryptedFileUploadResult.fromJson(fileData);
+      
+      logger.i('📥 File message received: ${result.filename} (${result.fileType})');
+      logger.d('Blossom URL: ${result.blossomUrl}');
+      logger.d('Original size: ${result.originalSize} bytes');
+      
+      // Auto-download images for preview, but not other files
+      if (result.fileType == 'image') {
+        logger.i('📸 Auto-downloading image for preview: ${result.filename}');
+        
+        try {
+          // Get shared key for decryption
+          final sharedKey = await getSharedKey();
+          
+          // Download and decrypt image in background
+          final decryptedFile = await _fileUploadService.downloadAndDecryptFile(
+            blossomUrl: result.blossomUrl,
+            sharedKey: sharedKey,
+          );
+          
+          logger.i('✅ Image downloaded and decrypted successfully: ${decryptedFile.length} bytes');
+          
+          // Cache the decrypted image for immediate display
+          cacheDecryptedFile(message.id!, decryptedFile, result);
+          
+        } catch (e) {
+          logger.e('❌ Failed to auto-download image: $e');
+          // Store metadata without file data - user can manually download
+          cacheDecryptedFile(message.id!, null, result);
+        }
+      } else {
+        // Don't pre-download non-image files - let user choose when to download
+        // Just store the metadata for display
+        cacheDecryptedFile(message.id!, null, result);
+      }
+      
+    } catch (e) {
+      logger.e('❌ Failed to process encrypted file: $e');
+      // Don't rethrow - message should still be displayed (maybe with error indicator)
+    }
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _sessionListener?.close();
+    clearMediaCaches();
+    logger.i('Disposed chat room notifier for orderId: $orderId');
+    super.dispose();
+  }
+}

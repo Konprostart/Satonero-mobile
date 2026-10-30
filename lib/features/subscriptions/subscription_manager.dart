@@ -1,0 +1,786 @@
+import 'dart:async';
+
+import 'package:dart_nostr/dart_nostr.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:mostro_mobile/services/nostr_service.dart';
+import 'package:mostro_mobile/core/models/relay_list_event.dart';
+import 'package:mostro_mobile/data/models/nostr_event.dart';
+import 'package:mostro_mobile/data/models/session.dart';
+import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
+import 'package:mostro_mobile/features/mostro/transport.dart';
+import 'package:mostro_mobile/features/settings/settings_provider.dart';
+import 'package:mostro_mobile/features/subscriptions/subscription.dart';
+import 'package:mostro_mobile/features/subscriptions/subscription_type.dart';
+import 'package:mostro_mobile/services/chat_cursor_store.dart';
+import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
+import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:mostro_mobile/shared/utils/chat_keys.dart';
+
+/// Manages Nostr subscriptions across different parts of the application.
+///
+/// This class provides a centralized way to handle subscriptions to Nostr events,
+/// supporting different subscription types (chat, orders) and automatically
+/// managing subscriptions based on session changes in the SessionNotifier.
+class SubscriptionManager {
+  final Ref ref;
+  final Map<SubscriptionType, Subscription> _subscriptions = {};
+
+  late final ProviderSubscription _sessionListener;
+
+  /// Listener for the connected node's kind-38385 info event, used to switch the
+  /// orders subscription transport once `protocol_version` becomes known.
+  StreamSubscription<NostrEvent>? _mostroInstanceListener;
+
+  /// Transport currently applied to the orders subscription, tracked so the
+  /// info-event listener only re-subscribes when the resolved transport changes.
+  Transport? _appliedOrdersTransport;
+
+  final _ordersController = StreamController<NostrEvent>.broadcast();
+  final _chatController = StreamController<NostrEvent>.broadcast();
+  final _disputeChatController = StreamController<NostrEvent>.broadcast();
+  final _relayListController = StreamController<RelayListEvent>.broadcast();
+
+  Stream<NostrEvent> get orders => _ordersController.stream;
+  Stream<NostrEvent> get chat => _chatController.stream;
+  Stream<NostrEvent> get disputeChat => _disputeChatController.stream;
+  Stream<RelayListEvent> get relayList => _relayListController.stream;
+
+  /// Session-derived subscription types. [SubscriptionType.relayList] is
+  /// driven by the configured Mostro instance rather than by sessions, so the
+  /// session-driven paths must leave it alone — tearing it down there stops
+  /// relay discovery for the rest of the app's life.
+  static Iterable<SubscriptionType> get _sessionSubscriptionTypes =>
+      SubscriptionType.values.where((t) => t != SubscriptionType.relayList);
+
+  /// Last Mostro pubkey asked for on the relay-list stream. [subscribeAll]
+  /// rebuilds every other subscription from sessions, but the relay list has
+  /// no session to rebuild it from, so it has to be remembered here.
+  String? _relayListPubkey;
+
+  /// True between [suspend] and [resume]: the app is backgrounded and the
+  /// background service owns the filters. Work scheduled before the switch
+  /// (a relay sync retry, say) must not re-open a REQ behind its back.
+  bool _isSuspended = false;
+
+  /// Identity of the filter each session subscription was built from
+  /// (sorted keys + transport + node). When a session-list emission produces
+  /// the same identity, the CLOSE + REQ (and its full history replay) is
+  /// skipped. Cleared in [unsubscribeByType] so an explicit teardown always
+  /// forces the next update through.
+  final Map<SubscriptionType, String> _appliedFilterKeys = {};
+
+  /// Per-type chain serializing subscription updates. The chat paths await a
+  /// cursor warm-up before recording their filter key, so without this two
+  /// identical bursty emissions both pass the identity check while the first
+  /// is still warming up, and each replays the CLOSE + REQ. Same pattern as
+  /// [ChatCursorStore.advance].
+  final Map<SubscriptionType, Future<void>> _updateQueue = {};
+
+  /// Debounce for relay-driven resubscribes: startup and network recovery
+  /// bring several relays alive in a burst; one re-issue covers them all.
+  static const relayResubscribeDebounce = Duration(seconds: 1);
+
+  StreamSubscription<int>? _relayGenerationListener;
+  Timer? _relayResubscribeTimer;
+
+  SubscriptionManager(this.ref) {
+    _initSessionListener();
+    // Ensure resources are released with provider/container lifecycle
+    ref.onDispose(dispose);
+    _initializeExistingSessions();
+    _initMostroInstanceListener();
+    _initRelayGenerationListener();
+  }
+
+  /// Watches the connected node's info event so the orders subscription can
+  /// switch to the v2 (kind 14) transport once the node advertises
+  /// `protocol_version=2`. The info event arrives asynchronously after the
+  /// initial subscription, so without this the orders filter would stay pinned
+  /// to the transport resolved at subscription time (v2 by default, see
+  /// [resolveTransport]) and would never fall back for a node that actually
+  /// advertises `protocol_version=1`. Re-subscribes only when the resolved
+  /// transport actually changes.
+  void _initMostroInstanceListener() {
+    try {
+      _mostroInstanceListener =
+          ref.read(orderRepositoryProvider).mostroInstanceStream.listen(
+        (_) {
+          final newTransport = _resolveOrdersTransport();
+          if (newTransport == _appliedOrdersTransport) return;
+          final sessions = ref.read(sessionNotifierProvider);
+          if (sessions.isEmpty) return;
+          logger.i('Orders transport changed to $newTransport, re-subscribing');
+          unawaited(_updateSubscription(SubscriptionType.orders, sessions));
+        },
+        onError: (error, stackTrace) {
+          logger.e('Error in mostro instance listener',
+              error: error, stackTrace: stackTrace);
+        },
+      );
+    } catch (e, stackTrace) {
+      logger.e('Failed to init mostro instance listener',
+          error: e, stackTrace: stackTrace);
+    }
+  }
+
+  /// Resolves the transport for the orders subscription from the connected
+  /// node's advertised `protocol_version` (§2, §4.1). Defaults to v2 NIP-44
+  /// when the node info is not yet available or unreadable, matching
+  /// [resolveTransport]: gift wrap is obsolete, so falling back to it would
+  /// pin the session to a kind-1059 REQ the node never answers.
+  Transport _resolveOrdersTransport() {
+    try {
+      final infoEvent = ref.read(orderRepositoryProvider).mostroInstance;
+      return resolveTransport(infoEvent?.protocolVersion);
+    } catch (e) {
+      logger.w('Failed to resolve orders transport, defaulting to v2: $e');
+      return Transport.nip44;
+    }
+  }
+
+  /// Re-issues every open REQ when a relay comes (back) alive. dart_nostr
+  /// sends a REQ once, to the sockets registered at that moment: a socket
+  /// that silently reconnects (mobile radio sleep, network change) or a relay
+  /// added afterwards by the kind 10002 sync carries no subscriptions until
+  /// something replays them. Before the filter-identity skip, the periodic
+  /// session-cleanup emission re-issued the REQs as a side effect; this
+  /// listener makes that guarantee explicit. The relay generation is part of
+  /// [_filterIdentity], so the forced update passes the skip check.
+  void _initRelayGenerationListener() {
+    try {
+      _relayGenerationListener =
+          ref.read(nostrServiceProvider).relayGenerationStream.listen(
+        (_) {
+          if (_isSuspended) return;
+          _relayResubscribeTimer?.cancel();
+          _relayResubscribeTimer =
+              Timer(relayResubscribeDebounce, _resubscribeForRelayGeneration);
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          logger.e('Error in relay generation listener',
+              error: error, stackTrace: stackTrace);
+        },
+      );
+    } catch (e, stackTrace) {
+      logger.e('Failed to init relay generation listener',
+          error: e, stackTrace: stackTrace);
+    }
+  }
+
+  void _resubscribeForRelayGeneration() {
+    if (_isSuspended) return;
+    final sessions = ref.read(sessionNotifierProvider);
+    if (sessions.isNotEmpty) {
+      logger.i('Relay generation changed, re-issuing session subscriptions');
+      _updateAllSubscriptions(sessions);
+    }
+    // The relay-list REQ is not session-derived; replace it in place so the
+    // newly alive socket receives it too.
+    final mostroPubkey = _relayListPubkey;
+    if (mostroPubkey != null) {
+      subscribeToMostroRelayList(mostroPubkey);
+    }
+  }
+
+  /// Best-effort read of the relay generation for the filter identity. Falls
+  /// back to 0 so an unavailable NostrService never blocks a subscription.
+  int _relayGeneration() {
+    try {
+      return ref.read(nostrServiceProvider).relayGeneration;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  void _initSessionListener() {
+    _sessionListener = ref.listen<List<Session>>(
+      sessionNotifierProvider,
+      (previous, current) {
+        _updateAllSubscriptions(current);
+      },
+      fireImmediately: false,
+      onError: (error, stackTrace) {
+        logger.e('Error in session listener',
+            error: error, stackTrace: stackTrace);
+      },
+    );
+  }
+
+  /// CRITICAL: Initialize subscriptions for existing sessions
+  /// DO NOT REMOVE: Fixes stuck orders bug when app restarts with existing sessions
+  /// 
+  /// This method ensures that subscriptions are created for sessions that already 
+  /// exist when SubscriptionManager is created, since fireImmediately: false 
+  /// prevents automatic initialization.
+  void _initializeExistingSessions() {
+    try {
+      final existingSessions = ref.read(sessionNotifierProvider);
+      if (existingSessions.isNotEmpty) {
+        logger.i('Initializing subscriptions for ${existingSessions.length} existing sessions');
+        _updateAllSubscriptions(existingSessions);
+      } else {
+        logger.i('No existing sessions found during SubscriptionManager initialization');
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error initializing existing sessions',
+          error: e, stackTrace: stackTrace);
+    }
+  }
+
+  void _updateAllSubscriptions(List<Session> sessions) {
+    if (sessions.isEmpty) {
+      logger.i('No sessions available, clearing all subscriptions');
+      _clearAllSubscriptions();
+      return;
+    }
+
+    for (final type in _sessionSubscriptionTypes) {
+      unawaited(_updateSubscription(type, sessions));
+    }
+  }
+
+  void _clearAllSubscriptions() {
+    for (final type in _sessionSubscriptionTypes) {
+      unsubscribeByType(type);
+    }
+  }
+
+  Future<void> _updateSubscription(
+      SubscriptionType type, List<Session> sessions) {
+    final previous = _updateQueue[type] ?? Future.value();
+    final next = previous
+        .catchError((_) {})
+        .then((_) => _applySubscriptionUpdate(type, sessions));
+    _updateQueue[type] = next;
+    return next;
+  }
+
+  Future<void> _applySubscriptionUpdate(
+      SubscriptionType type, List<Session> sessions) async {
+    // A queued update can run after [suspend]; the background service owns
+    // the filters then, and [resume] rebuilds everything from sessions.
+    if (_isSuspended) {
+      return;
+    }
+    if (sessions.isEmpty) {
+      logger.i('No sessions for $type subscription');
+      unsubscribeByType(type);
+      return;
+    }
+
+    try {
+      final filterKey = _filterIdentity(type, sessions);
+      if (filterKey != null &&
+          _appliedFilterKeys[type] == filterKey &&
+          _subscriptions.containsKey(type)) {
+        return;
+      }
+
+      // Pre-warm persisted cursors so the chat filters — built
+      // synchronously and later persisted for the background service —
+      // see durable state even on a cold start
+      if (type == SubscriptionType.disputeChat) {
+        final disputeIds = sessions
+            .where((s) => s.adminSharedKey != null)
+            .map((s) => s.disputeId)
+            .whereType<String>();
+        await ref.read(disputeChatCursorStoreProvider).warmUp(disputeIds);
+      }
+      if (type == SubscriptionType.chat) {
+        final orderIds = sessions
+            .where((s) => s.sharedKey != null)
+            .map((s) => s.orderId)
+            .whereType<String>();
+        await ref.read(chatCursorStoreProvider).warmUp(orderIds);
+      }
+      if (type == SubscriptionType.orders) {
+        // Best-effort: a prefs/storage failure must not prevent the REQ.
+        try {
+          await ref
+              .read(ordersCursorStoreProvider)
+              .warmUp([ref.read(settingsProvider).mostroPublicKey]);
+        } catch (e) {
+          logger.w('Orders cursor warm-up unavailable: $e');
+        }
+      }
+
+      final filter = _createFilterForType(type, sessions);
+      if (filter == null) {
+        return;
+      }
+      // Replace existing subscription only when we have a new filter to apply
+      unsubscribeByType(type);
+      subscribe(
+        type: type,
+        filter: filter,
+      );
+      if (filterKey != null) {
+        _appliedFilterKeys[type] = filterKey;
+      }
+
+      logger
+          .i('Subscription created for $type with ${sessions.length} sessions');
+    } catch (e, stackTrace) {
+      logger.e('Failed to create $type subscription',
+          error: e, stackTrace: stackTrace);
+    }
+  }
+
+  /// Stable identity of the inputs a session filter is derived from. Uses
+  /// the shared-key publics directly (not the derived K_sign) so no EC math
+  /// runs on the skip path. Cursor `since` values are deliberately excluded:
+  /// while a subscription stays open its cursor only moves forward. The relay
+  /// generation is included because "filter unchanged" does not imply "REQ
+  /// still delivered": a reconnected or newly added relay has no
+  /// subscriptions until the REQ is re-issued to it.
+  String? _filterIdentity(SubscriptionType type, List<Session> sessions) {
+    final generation = _relayGeneration();
+    switch (type) {
+      case SubscriptionType.orders:
+        final keys = sessions.map((s) => s.tradeKey.public).toList()..sort();
+        final transport = _resolveOrdersTransport();
+        final node = ref.read(settingsProvider).mostroPublicKey;
+        return 'orders|g$generation|$transport|$node|${keys.join(',')}';
+      case SubscriptionType.chat:
+        final keys = sessions
+            .where((s) => s.sharedKey != null)
+            .map((s) => s.sharedKey!.public)
+            .toList()
+          ..sort();
+        return keys.isEmpty ? null : 'chat|g$generation|${keys.join(',')}';
+      case SubscriptionType.disputeChat:
+        final keys = sessions
+            .where((s) => s.adminSharedKey != null)
+            .map((s) => s.adminSharedKey!.public)
+            .toList()
+          ..sort();
+        return keys.isEmpty ? null : 'dispute|g$generation|${keys.join(',')}';
+      case SubscriptionType.relayList:
+        return null;
+    }
+  }
+
+  /// Earliest start time across [sessions], or the default lookback when that
+  /// is older — whichever reaches further back. A session older than the
+  /// lookback widens the window to cover it, and a newer one cannot narrow it
+  /// below the lookback. Used as the bootstrap `since` when no cursor is
+  /// stored yet.
+  DateTime _sessionsFloor(List<Session> sessions) {
+    final defaultFloor =
+        DateTime.now().subtract(NostrEventExtensions.chatDefaultLookback);
+    if (sessions.isEmpty) return defaultFloor;
+    final oldest = sessions
+        .map((s) => s.startTime)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    return oldest.isBefore(defaultFloor) ? oldest : defaultFloor;
+  }
+
+  NostrFilter? _createFilterForType(
+      SubscriptionType type, List<Session> sessions) {
+    switch (type) {
+      case SubscriptionType.orders:
+        if (sessions.isEmpty) {
+          return null;
+        }
+        final tradeKeys = sessions.map((s) => s.tradeKey.public).toList();
+        // Transport selected per node from its advertised protocol_version
+        // (§2, §4.1). Tracked so the info-event listener can detect a change
+        // and re-subscribe when the node info arrives after this subscription.
+        final transport = _resolveOrdersTransport();
+        _appliedOrdersTransport = transport;
+        final mostroPubkey = ref.read(settingsProvider).mostroPublicKey;
+        // Persisted cursor bounds the replay; fresh installs fall back to the
+        // default lookback (older history is served by the restore flow).
+        DateTime? cursorSince;
+        try {
+          cursorSince =
+              ref.read(ordersCursorStoreProvider).cachedSinceFor(mostroPubkey);
+        } catch (e) {
+          logger.w('Orders cursor unavailable, using default lookback: $e');
+        }
+        // No cursor yet means a fresh install *or* the first launch after
+        // upgrading to the cursor build. An upgrading install can hold orders
+        // far older than the default lookback (non-terminal orders are kept
+        // well past 30 days) and normal startup does not run the restore
+        // flow, so the window must also reach back to the oldest live
+        // session: no message of an active order predates its session.
+        final ordersSince = cursorSince ??
+            _sessionsFloor(sessions)
+                .subtract(ChatCursorStore.cursorOverlap);
+        return buildOrdersFilter(
+          transport,
+          tradeKeys,
+          mostroPubkey,
+          since: ordersSince,
+        );
+      case SubscriptionType.chat:
+        // Kind 14 chat envelope: filter by the K_sign authors derived from
+        // each peer shared key (never by #p — third-party flooding)
+        final chatSessions =
+            sessions.where((s) => s.sharedKey != null).toList();
+        if (chatSessions.isEmpty) return null;
+        final chatSignKeys = chatSessions
+            .map((s) => ChatKeys.fromSharedKey(s.sharedKey!).sign.public)
+            .toList();
+        // Shared filter across conversations: earliest persisted cursor,
+        // falling back to the default lookback (wider window; dedup absorbs)
+        final chatCursorStore = ref.read(chatCursorStoreProvider);
+        final chatDefaultSince = DateTime.now()
+            .subtract(NostrEventExtensions.chatDefaultLookback);
+        final chatSince = chatSessions
+            .map((s) => s.orderId == null
+                ? chatDefaultSince
+                : (chatCursorStore.cachedSinceFor(s.orderId!) ??
+                    chatDefaultSince))
+            .reduce((a, b) => a.isBefore(b) ? a : b);
+        return NostrEventExtensions.chatSubscriptionFilter(
+          signPubkeys: chatSignKeys,
+          since: chatSince,
+        );
+      case SubscriptionType.disputeChat:
+        // Kind 14 chat envelope: filter by the K_sign authors derived from
+        // each admin shared key (never by #p — third-party flooding)
+        final disputeSessions =
+            sessions.where((s) => s.adminSharedKey != null).toList();
+        if (disputeSessions.isEmpty) return null;
+        final signKeys = disputeSessions
+            .map((s) => ChatKeys.fromSharedKey(s.adminSharedKey!).sign.public)
+            .toList();
+        // Shared filter across conversations: earliest persisted cursor,
+        // falling back to the default lookback (wider window; dedup absorbs)
+        final cursorStore = ref.read(disputeChatCursorStoreProvider);
+        final defaultSince = DateTime.now()
+            .subtract(NostrEventExtensions.chatDefaultLookback);
+        final since = disputeSessions
+            .map((s) => s.disputeId == null
+                ? defaultSince
+                : (cursorStore.cachedSinceFor(s.disputeId!) ?? defaultSince))
+            .reduce((a, b) => a.isBefore(b) ? a : b);
+        return NostrEventExtensions.chatSubscriptionFilter(
+          signPubkeys: signKeys,
+          since: since,
+        );
+      case SubscriptionType.relayList:
+        // Relay list subscriptions are handled separately via subscribeToMostroRelayList
+        return null;
+    }
+  }
+
+  void _handleEvent(SubscriptionType type, NostrEvent event) {
+    try {
+      switch (type) {
+        case SubscriptionType.orders:
+          _ordersController.add(event);
+          break;
+        case SubscriptionType.chat:
+          _chatController.add(event);
+          break;
+        case SubscriptionType.disputeChat:
+          _disputeChatController.add(event);
+          break;
+        case SubscriptionType.relayList:
+          final relayListEvent = RelayListEvent.fromEvent(event);
+          if (relayListEvent != null) {
+            _relayListController.add(relayListEvent);
+          }
+          break;
+      }
+    } catch (e, stackTrace) {
+      logger.e('Error handling $type event', error: e, stackTrace: stackTrace);
+    }
+  }
+
+  Stream<NostrEvent> subscribe({
+    required SubscriptionType type,
+    required NostrFilter filter,
+  }) {
+    final nostrService = ref.read(nostrServiceProvider);
+
+    final request = NostrRequest(
+      filters: [filter],
+    );
+
+    final stream = nostrService.subscribeToEvents(request);
+    final streamSubscription = stream.listen(
+      (event) => _handleEvent(type, event),
+      onError: (error, stackTrace) {
+        logger.e('Error in $type subscription',
+            error: error, stackTrace: stackTrace);
+      },
+      cancelOnError: false,
+    );
+
+    final subscription = Subscription(
+      request: request,
+      streamSubscription: streamSubscription,
+      onCancel: () {
+        // dart_nostr assigns the id when it serializes the REQ onto a socket,
+        // so a request that never reached a relay (none connected) has none
+        // and there is nothing to CLOSE.
+        final subscriptionId = request.subscriptionId;
+        if (subscriptionId == null) return;
+
+        // Tolerate teardown ordering: reading the provider throws once the
+        // container is being disposed, and the socket (and its REQs) dies
+        // with it anyway. Only the read is guarded — a failing unsubscribe()
+        // means the relay CLOSE was skipped and the REQ lingers, which is
+        // exactly the waste this path exists to avoid, so it must surface.
+        final NostrService nostrService;
+        try {
+          nostrService = ref.read(nostrServiceProvider);
+        } catch (e) {
+          logger.w('Skipping relay CLOSE during teardown: $e');
+          return;
+        }
+        nostrService.unsubscribe(subscriptionId);
+      },
+    );
+
+    if (_subscriptions.containsKey(type)) {
+      _subscriptions[type]!.cancel();
+    }
+
+    _subscriptions[type] = subscription;
+
+    switch (type) {
+      case SubscriptionType.orders:
+        return orders;
+      case SubscriptionType.chat:
+        return chat;
+      case SubscriptionType.disputeChat:
+        return disputeChat;
+      case SubscriptionType.relayList:
+        // RelayList subscriptions should use subscribeToMostroRelayList() instead
+        throw UnsupportedError('Use subscribeToMostroRelayList() for relay list subscriptions');
+    }
+  }
+
+  Stream<NostrEvent> subscribeSession({
+    required SubscriptionType type,
+    required Session session,
+    required NostrFilter Function(Session) createFilter,
+  }) {
+    final filter = createFilter(session);
+    return subscribe(
+      type: type,
+      filter: filter,
+    );
+  }
+
+  /// Re-issues the dispute-chat REQ so the relay replays from the persisted
+  /// cursor.
+  ///
+  /// [disputeChat] is a broadcast stream, and a broadcast stream drops events
+  /// while nothing is listening. `DisputeChatNotifier` is built lazily — only
+  /// when the Disputes tab renders — so every envelope delivered before that,
+  /// including the backlog replayed when the REQ is first issued, would be
+  /// lost to the listener that shows up afterwards. Clearing the applied
+  /// filter key forces the next update past the identity skip. Still a single
+  /// REQ: it is re-issued once, when a consumer attaches.
+  void refreshDisputeChatSubscription() {
+    if (_isSuspended) return;
+    final sessions = ref.read(sessionNotifierProvider);
+    if (sessions.isEmpty) return;
+    logger.i('Re-issuing dispute chat REQ for a newly attached listener');
+    unsubscribeByType(SubscriptionType.disputeChat);
+    unawaited(_updateSubscription(SubscriptionType.disputeChat, sessions));
+  }
+
+  void unsubscribeByType(SubscriptionType type) {
+    _appliedFilterKeys.remove(type);
+    final subscription = _subscriptions[type];
+    if (subscription != null) {
+      subscription.cancel();
+      _subscriptions.remove(type);
+    }
+  }
+
+  void unsubscribeSession(SubscriptionType type) {
+    unsubscribeByType(type);
+  }
+
+  bool hasActiveSubscription(SubscriptionType type) {
+    return _subscriptions[type] != null;
+  }
+
+  List<NostrFilter> getActiveFilters(SubscriptionType type) {
+    final subscription = _subscriptions[type];
+    return subscription?.request.filters ?? [];
+  }
+
+  void subscribeAll() {
+    unsubscribeAll();
+    final currentSessions = ref.read(sessionNotifierProvider);
+    _updateAllSubscriptions(currentSessions);
+    _restoreRelayListSubscription();
+  }
+
+  /// Brings the app's subscriptions down for backgrounding. Separate from
+  /// [unsubscribeAll] so that pending callbacks cannot re-open a REQ while the
+  /// background service owns the filters.
+  void suspend() {
+    _isSuspended = true;
+    // A pending relay-driven resubscribe must not fire while the background
+    // service owns the filters; resume() rebuilds everything anyway.
+    _relayResubscribeTimer?.cancel();
+    _relayResubscribeTimer = null;
+    unsubscribeAll();
+  }
+
+  /// Brings the app's subscriptions back up on foreground, relay list included.
+  void resume() {
+    _isSuspended = false;
+    subscribeAll();
+  }
+
+  /// Re-opens the relay-list subscription after a teardown that cannot rebuild
+  /// it from sessions. No-op when nothing ever asked for one, while suspended,
+  /// or when one is already open.
+  void _restoreRelayListSubscription() {
+    final mostroPubkey = _relayListPubkey;
+    if (mostroPubkey == null || _isSuspended) return;
+    if (_subscriptions.containsKey(SubscriptionType.relayList)) return;
+    logger.i('Restoring relay list subscription for Mostro: $mostroPubkey');
+    subscribeToMostroRelayList(mostroPubkey);
+  }
+
+  void unsubscribeAll() {
+    for (final type in SubscriptionType.values) {
+      unsubscribeByType(type);
+    }
+  }
+
+  /// Subscribes to kind 10002 relay list events from a specific Mostro instance.
+  /// This is used to automatically sync relays with the configured Mostro instance.
+  void subscribeToMostroRelayList(String mostroPubkey) {
+    // Remembered even while suspended, so [resume] can re-open it.
+    _relayListPubkey = mostroPubkey;
+    if (_isSuspended) {
+      logger.i(
+          'App is backgrounded; deferring relay list subscription for Mostro: $mostroPubkey');
+      return;
+    }
+
+    try {
+      final filter = NostrFilter(
+        kinds: [10002],
+        authors: [mostroPubkey],
+        limit: 1, // Only get the most recent relay list
+      );
+
+      _subscribeToRelayList(filter);
+
+      logger.i('Subscribed to relay list for Mostro: $mostroPubkey');
+    } catch (e, stackTrace) {
+      logger.e('Failed to subscribe to Mostro relay list',
+          error: e, stackTrace: stackTrace);
+    }
+  }
+
+  /// Internal method to handle relay list subscriptions
+  void _subscribeToRelayList(NostrFilter filter) {
+    final nostrService = ref.read(nostrServiceProvider);
+
+    final request = NostrRequest(
+      filters: [filter],
+    );
+
+    final stream = nostrService.subscribeToEvents(request);
+    final streamSubscription = stream.listen(
+      (event) {
+        // Handle relay list events directly
+        final relayListEvent = RelayListEvent.fromEvent(event);
+        if (relayListEvent != null) {
+          _relayListController.add(relayListEvent);
+        }
+      },
+      onError: (error, stackTrace) {
+        logger.e('Error in relay list subscription',
+            error: error, stackTrace: stackTrace);
+      },
+      cancelOnError: false,
+    );
+
+    final subscription = Subscription(
+      request: request,
+      streamSubscription: streamSubscription,
+      onCancel: () {
+        ref.read(nostrServiceProvider).unsubscribe(request.subscriptionId!);
+      },
+    );
+
+    // Cancel existing relay list subscription if any
+    if (_subscriptions.containsKey(SubscriptionType.relayList)) {
+      _subscriptions[SubscriptionType.relayList]!.cancel();
+    }
+
+    _subscriptions[SubscriptionType.relayList] = subscription;
+  }
+
+  /// Unsubscribes from Mostro relay list events
+  void unsubscribeFromMostroRelayList() {
+    _relayListPubkey = null;
+    unsubscribeByType(SubscriptionType.relayList);
+    logger.i('Unsubscribed from Mostro relay list');
+  }
+
+  void dispose() {
+    _sessionListener.close();
+    _mostroInstanceListener?.cancel();
+    _relayGenerationListener?.cancel();
+    _relayResubscribeTimer?.cancel();
+    unsubscribeAll();
+    _ordersController.close();
+    _chatController.close();
+    _disputeChatController.close();
+    _relayListController.close();
+  }
+}
+
+/// Builds the orders subscription filter for the resolved [transport] (§4.1).
+///
+/// - v1 ([Transport.giftWrap]): kind 1059 addressed (`p`) to the trade keys.
+/// - v2 ([Transport.nip44]): kind 14 authored by the node ([mostroPubkey]) and
+///   addressed to the trade keys — the `authors` pin disambiguates Mostro v2
+///   replies from NIP-17 peer chat, which is also kind 14 (§3.4).
+///
+/// Top-level so the transport → filter mapping can be unit-tested without the
+/// full [SubscriptionManager] / Riverpod orchestration.
+@visibleForTesting
+NostrFilter buildOrdersFilter(
+  Transport transport,
+  List<String> tradeKeys,
+  String mostroPubkey, {
+  DateTime? since,
+}) {
+  switch (transport) {
+    case Transport.giftWrap:
+      // Legacy transport: gift wrap timestamps are randomized ±48 h, so a
+      // cursor since would silently drop messages. Left unbounded until the
+      // 1059 branch is removed.
+      return NostrFilter(
+        kinds: [1059],
+        p: tradeKeys,
+      );
+    case Transport.nip44:
+      // kind 14 carries real timestamps, so the persisted cursor (minus its
+      // overlap) bounds the replay. Deliberately no limit on top of it: the
+      // relay answers a capped filter with the *newest* n and silently drops
+      // the rest of the window, and events that are never delivered never
+      // enter _retryableEvents, so nothing holds the cursor back — it
+      // advances past them and they are lost for good. That window is widest
+      // exactly when it matters (the first launch after upgrading, or a user
+      // offline for a long stretch). The filter is already scoped to one
+      // node's messages addressed to this user's trade keys, so `since`
+      // alone keeps it small.
+      return NostrFilter(
+        kinds: [14],
+        authors: [mostroPubkey],
+        p: tradeKeys,
+        since: since,
+      );
+  }
+}
