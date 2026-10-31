@@ -40,8 +40,9 @@ String nameWithRegionFlag(String name, String? region) {
   return '$name $flag';
 }
 
-/// Default third-party Mostro daemon pubkey (used when the user skips
-/// community selection). Satonero does not operate this daemon.
+/// Upstream third-party Mostro daemon pubkey, listed as a regular community
+/// option. It is never selected implicitly: skipping community selection
+/// does not choose it. Satonero does not operate this daemon.
 const String defaultMostroPubkey =
     '82fa8cb978b43c79b2156585bac2c011176a21d2aead6d9f7c575c005be88390';
 

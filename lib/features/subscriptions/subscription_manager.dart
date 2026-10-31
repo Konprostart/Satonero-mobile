@@ -656,6 +656,12 @@ class SubscriptionManager {
   /// Subscribes to kind 10002 relay list events from a specific Mostro instance.
   /// This is used to automatically sync relays with the configured Mostro instance.
   void subscribeToMostroRelayList(String mostroPubkey) {
+    // No daemon selected: never issue a relay-list REQ with an empty author.
+    if (mostroPubkey.isEmpty) {
+      _relayListPubkey = null;
+      logger.i('No Mostro daemon selected; relay list subscription skipped');
+      return;
+    }
     // Remembered even while suspended, so [resume] can re-open it.
     _relayListPubkey = mostroPubkey;
     if (_isSuspended) {

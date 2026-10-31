@@ -38,11 +38,13 @@ class Config {
               })
           .toList();
 
-  // Default Mostro daemon pubkey (third-party, not Satonero-operated;
-  // overridable via env variable). Users can select another Mostro daemon.
+  // Mostro daemon pubkey used before the user selects one. Empty by default:
+  // Satonero never connects to an upstream daemon implicitly. The user must
+  // pick a community or add a custom node. A build may still pin a daemon
+  // explicitly via --dart-define=MOSTRO_PUB_KEY=<hex>.
   static const String mostroPubKey = String.fromEnvironment(
     'MOSTRO_PUB_KEY',
-    defaultValue: defaultMostroPubkey,
+    defaultValue: '',
   );
 
   static const String dBName = 'mostro.db';

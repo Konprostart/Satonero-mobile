@@ -148,6 +148,14 @@ class OpenOrdersRepository implements OrderRepository<NostrEvent> {
       return;
     }
 
+    // No daemon selected yet: issue no REQ at all. Without this guard the
+    // repository would subscribe with an empty author (or, before the default
+    // was removed, to the upstream daemon) on every cold start.
+    if (_settings.mostroPublicKey.isEmpty) {
+      logger.i('No Mostro daemon selected; order subscription deferred');
+      return;
+    }
+
     final coldStart =
         DateTime.now().subtract(Duration(hours: orderFilterDurationHours));
     // Only the replay that actually reached EOSE proves the cache covers
