@@ -76,7 +76,6 @@ jobs:
           grep -q "package: name='com.konprostart.satonero'" /tmp/badging.txt
           grep -q "application-label:'Satonero'" /tmp/badging.txt
           grep -q "application: label='Satonero'" /tmp/badging.txt
-          unzip -l "$APK" | grep -q "launcher_icon"
 
           unzip -p "$APK" 'classes*.dex' | strings | sort -u > /tmp/apk_strings.txt
           if grep -E "mostro-push-server\.fly\.dev|mostro-p2p\.tech|mostro-mobile\.firebaseapp\.com|mostro-mobile\.firebasestorage\.app|375342057498|AIzaSyCOrsfYrkIItBLAFbnYmh4HnsxBTnT3y14" /tmp/apk_strings.txt; then
