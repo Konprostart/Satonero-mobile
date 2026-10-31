@@ -76,6 +76,13 @@ jobs:
           grep -q "package: name='com.konprostart.satonero'" /tmp/badging.txt
           grep -q "application-label:'Satonero'" /tmp/badging.txt
           grep -q "application: label='Satonero'" /tmp/badging.txt
+          ICON=$(sed -n "s/^application: label='Satonero' icon='\([^']*\)'.*/\1/p" /tmp/badging.txt)
+          test -n "$ICON"
+          "$AAPT" dump xmltree "$APK" "$ICON" | tee /tmp/icon_xmltree.txt
+          grep -q "adaptive-icon" /tmp/icon_xmltree.txt
+          grep -q "background" /tmp/icon_xmltree.txt
+          grep -q "foreground" /tmp/icon_xmltree.txt
+          grep -q "monochrome" /tmp/icon_xmltree.txt
 
           unzip -p "$APK" 'classes*.dex' | strings | sort -u > /tmp/apk_strings.txt
           if grep -E "mostro-push-server\.fly\.dev|mostro-p2p\.tech|mostro-mobile\.firebaseapp\.com|mostro-mobile\.firebasestorage\.app|375342057498|AIzaSyCOrsfYrkIItBLAFbnYmh4HnsxBTnT3y14" /tmp/apk_strings.txt; then
@@ -101,4 +108,5 @@ jobs:
             /tmp/badging.txt
             /tmp/apk_strings.txt
             /tmp/sha256.txt
+            /tmp/icon_xmltree.txt
           retention-days: 7
