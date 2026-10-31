@@ -20,6 +20,7 @@ import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
 import 'package:satonero_mobile/data/models/enums/role.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/data/repositories/session_storage.dart';
+import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/features/key_manager/key_derivator.dart';
 import 'package:satonero_mobile/features/key_manager/key_manager.dart';
@@ -574,6 +575,7 @@ Future<MostroMessage?> _processPeerChat(
 Future<String?> _loadMostroPubkey() async {
   try {
     final sharedPrefs = SharedPreferencesAsync();
+    await migrateLegacyUpstreamDaemon(sharedPrefs);
     final settingsJson =
         await sharedPrefs.getString(SharedPreferencesKeys.appSettings.value);
     if (settingsJson == null) {

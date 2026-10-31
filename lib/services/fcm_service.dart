@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/services/logger_service.dart'
     show backgroundLog, logger;
@@ -38,6 +39,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     }
 
     final sharedPrefs = SharedPreferencesAsync();
+    // Before any settings read or service start (see legacy_daemon_migration).
+    await migrateLegacyUpstreamDaemon(sharedPrefs);
 
     // Record wake timestamp for debugging and potential retry logic
     final now = (DateTime.now().millisecondsSinceEpoch / 1000).floor();

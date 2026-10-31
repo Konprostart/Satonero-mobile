@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:satonero_mobile/core/app.dart';
 import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/firebase_options.dart';
 import 'package:satonero_mobile/core/push_registration_wiring.dart';
 import 'package:satonero_mobile/features/relays/relay.dart';
@@ -45,6 +46,9 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
   final mostroDatabase = await openMostroDatabase('mostro.db');
   final eventsDatabase = await openMostroDatabase('events.db');
 
+  // Must complete before any settings read, daemon connection, order request
+  // or subscription. See lib/core/legacy_daemon_migration.dart.
+  await migrateLegacyUpstreamDaemon(sharedPreferences);
   final settings = SettingsNotifier(sharedPreferences);
   await settings.init();
   await seedTestRelays(settings, seedRelays);

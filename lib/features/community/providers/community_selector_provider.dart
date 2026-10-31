@@ -31,6 +31,15 @@ class CommunitySelectedNotifier extends StateNotifier<AsyncValue<bool>> {
         return;
       }
 
+      // Explicitly reset (legacy daemon migration): the user must choose again.
+      // Must be checked before the backward-compat branch below, which would
+      // otherwise re-mark it as selected for users with first_run_complete.
+      if (selected == false) {
+        if (!mounted) return;
+        state = const AsyncValue.data(false);
+        return;
+      }
+
       // Backward compatibility: existing users who completed onboarding
       // before community selector existed should not be interrupted.
       final firstRunComplete = await _prefs.getBool(

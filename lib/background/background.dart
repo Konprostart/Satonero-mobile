@@ -6,6 +6,7 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:logger/logger.dart';
+import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/data/models/nostr_event.dart';
 import 'package:satonero_mobile/data/models/nostr_filter.dart';
@@ -127,7 +128,9 @@ Future<void> serviceMain(ServiceInstance service) async {
         level: Level.debug,
       );
 
-      final settings = Settings.fromJson(settingsMap);
+      // Before any settings use or NostrService.init (legacy daemon migration).
+      await migrateLegacyUpstreamDaemon(SharedPreferencesAsync());
+      final settings = withoutLegacyDaemon(Settings.fromJson(settingsMap));
       currentLanguage = settings.selectedLanguage ?? PlatformDispatcher.instance.locale.languageCode;
       await nostrService.init(settings);
 
@@ -295,7 +298,8 @@ Future<void> serviceMain(ServiceInstance service) async {
     final settingsMap = data['settings'];
     if (settingsMap == null) return;
 
-    final settings = Settings.fromJson(settingsMap);
+    await migrateLegacyUpstreamDaemon(SharedPreferencesAsync());
+    final settings = withoutLegacyDaemon(Settings.fromJson(settingsMap));
     currentLanguage = settings.selectedLanguage ?? PlatformDispatcher.instance.locale.languageCode;
     await nostrService.updateSettings(settings);
 
