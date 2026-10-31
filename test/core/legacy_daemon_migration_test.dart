@@ -298,6 +298,87 @@ void main() {
     });
   });
 
+  group('background entry points', () {
+    test('the FCM / notification read returns post-migration settings only',
+        () async {
+      await _storeSettings(prefs, _settings(legacyUpstreamDaemonPubkey));
+
+      final json = await readMigratedSettingsJson(prefs);
+
+      expect(Settings.fromJson(jsonDecode(json!)).mostroPublicKey, isEmpty);
+      expect(await _storedPubkey(prefs), isEmpty,
+          reason: 'the persisted copy is clean for any later reader');
+    });
+
+    test('the FCM / notification read keeps a custom daemon', () async {
+      await _storeSettings(prefs, _settings(_customDaemon));
+
+      final json = await readMigratedSettingsJson(prefs);
+
+      expect(Settings.fromJson(jsonDecode(json!)).mostroPublicKey,
+          _customDaemon);
+    });
+
+    test('a message carrying the legacy pubkey is sanitized and migrates storage',
+        () async {
+      await _storeSettings(prefs, _settings(legacyUpstreamDaemonPubkey));
+
+      final settings = await settingsFromBackgroundMessage(
+        _settings(legacyUpstreamDaemonPubkey, relays: const ['wss://a.example'])
+            .toJson(),
+        prefs,
+      );
+
+      expect(settings.mostroPublicKey, isEmpty);
+      expect(settings.relays, ['wss://a.example'],
+          reason: 'message relays are not rewritten by the daemon guard');
+      expect(await _storedPubkey(prefs), isEmpty);
+    });
+
+    test('a message with a custom daemon passes through unchanged', () async {
+      final settings = await settingsFromBackgroundMessage(
+        _settings(_customDaemon).toJson(),
+        prefs,
+      );
+
+      expect(settings.mostroPublicKey, _customDaemon);
+    });
+  });
+
+  group('fresh install', () {
+    test('stays disconnected: no daemon, no relays, selector gate closed',
+        () async {
+      final notifier = SettingsNotifier(prefs);
+      await notifier.init();
+
+      expect(notifier.state.mostroPublicKey, isEmpty);
+      expect(notifier.state.relays, isEmpty);
+
+      final selected = CommunitySelectedNotifier(prefs);
+      for (var i = 0; i < 100 && selected.state.isLoading; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      expect(selected.state.value, isFalse,
+          reason: 'the router must send the user to the community selector');
+    });
+
+    test('issues no order REQ before an explicit daemon is selected', () async {
+      final notifier = SettingsNotifier(prefs);
+      await notifier.init();
+
+      final nostr = MockNostrService();
+      when(nostr.isInitialized).thenReturn(true);
+      when(nostr.relayGenerationStream)
+          .thenAnswer((_) => const Stream<int>.empty());
+      when(nostr.subscribeToEvents(any, onEose: anyNamed('onEose')))
+          .thenAnswer((_) => const Stream<NostrEvent>.empty());
+
+      OpenOrdersRepository(nostr, notifier.state);
+
+      verifyNever(nostr.subscribeToEvents(any, onEose: anyNamed('onEose')));
+    });
+  });
+
   group('defensive guard for other isolates', () {
     test('withoutLegacyDaemon blanks only the legacy pubkey', () {
       expect(

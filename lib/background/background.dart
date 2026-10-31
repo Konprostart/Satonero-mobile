@@ -11,7 +11,6 @@ import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/data/models/nostr_event.dart';
 import 'package:satonero_mobile/data/models/nostr_filter.dart';
 import 'package:satonero_mobile/data/repositories/event_storage.dart';
-import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/features/notifications/services/background_notification_service.dart' as notification_service;
 import 'package:satonero_mobile/services/chat_cursor_store.dart';
 import 'package:satonero_mobile/services/nostr_service.dart';
@@ -128,9 +127,11 @@ Future<void> serviceMain(ServiceInstance service) async {
         level: Level.debug,
       );
 
-      // Before any settings use or NostrService.init (legacy daemon migration).
-      await migrateLegacyUpstreamDaemon(SharedPreferencesAsync());
-      final settings = withoutLegacyDaemon(Settings.fromJson(settingsMap));
+      // Migrates before any settings use or NostrService.init.
+      final settings = await settingsFromBackgroundMessage(
+        Map<String, dynamic>.from(settingsMap as Map),
+        SharedPreferencesAsync(),
+      );
       currentLanguage = settings.selectedLanguage ?? PlatformDispatcher.instance.locale.languageCode;
       await nostrService.init(settings);
 
@@ -298,8 +299,10 @@ Future<void> serviceMain(ServiceInstance service) async {
     final settingsMap = data['settings'];
     if (settingsMap == null) return;
 
-    await migrateLegacyUpstreamDaemon(SharedPreferencesAsync());
-    final settings = withoutLegacyDaemon(Settings.fromJson(settingsMap));
+    final settings = await settingsFromBackgroundMessage(
+      Map<String, dynamic>.from(settingsMap as Map),
+      SharedPreferencesAsync(),
+    );
     currentLanguage = settings.selectedLanguage ?? PlatformDispatcher.instance.locale.languageCode;
     await nostrService.updateSettings(settings);
 

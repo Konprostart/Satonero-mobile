@@ -6,7 +6,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
-import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/services/logger_service.dart'
     show backgroundLog, logger;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,9 +85,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           }
           serviceStarted = true;
 
-          final settingsJson = await sharedPrefs.getString(
-            SharedPreferencesKeys.appSettings.value,
-          );
+          // Migrated read: the legacy pubkey cannot leak into the service start.
+          final settingsJson = await readMigratedSettingsJson(sharedPrefs);
           if (settingsJson == null) {
             backgroundLog('No settings found, stopping service');
             service.invoke('stop');

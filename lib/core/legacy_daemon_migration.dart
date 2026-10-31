@@ -97,6 +97,26 @@ List<String> _userConfiguredRelays(Map<String, dynamic> json) {
   return relays.where(userUrls.contains).toList();
 }
 
+/// Background entry points (FCM handler, background notification isolate)
+/// read the persisted settings to start their own connection. This migrates
+/// first and returns the post-migration JSON, so the legacy pubkey can never
+/// be read from storage by those paths.
+Future<String?> readMigratedSettingsJson(SharedPreferencesAsync prefs) async {
+  await migrateLegacyUpstreamDaemon(prefs);
+  return prefs.getString(SharedPreferencesKeys.appSettings.value);
+}
+
+/// Settings delivered to the background service by a message (`start`,
+/// `update-settings`). Migrates the persisted copy and sanitizes the message
+/// copy before `NostrService` can receive it.
+Future<Settings> settingsFromBackgroundMessage(
+  Map<String, dynamic> json,
+  SharedPreferencesAsync prefs,
+) async {
+  await migrateLegacyUpstreamDaemon(prefs);
+  return withoutLegacyDaemon(Settings.fromJson(json));
+}
+
 Map<String, dynamic>? _decodeObject(String raw) {
   try {
     final decoded = jsonDecode(raw);
