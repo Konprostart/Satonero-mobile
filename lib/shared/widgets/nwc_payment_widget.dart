@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/wallet/providers/nwc_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
-import 'package:mostro_mobile/shared/widgets/nwc_payment_receipt_widget.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/wallet/providers/nwc_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/shared/widgets/nwc_payment_receipt_widget.dart';
 
 /// Payment status for the NWC auto-payment flow.
 enum NwcPaymentStatus {
@@ -278,7 +278,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               foregroundColor: Colors.black,
               disabledBackgroundColor: Colors.grey.shade700,
               shape: RoundedRectangleBorder(
@@ -316,7 +316,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
       decoration: BoxDecoration(
         color: AppTheme.dark1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.mostroGreen.withAlpha(77)),
+        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(77)),
       ),
       child: Column(
         children: [
@@ -324,7 +324,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             width: 32,
             height: 32,
             child: CircularProgressIndicator(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               strokeWidth: 2.5,
             ),
           ),
@@ -348,7 +348,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
       decoration: BoxDecoration(
         color: AppTheme.dark1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.mostroGreen.withAlpha(77)),
+        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(77)),
       ),
       child: Column(
         children: [
@@ -356,7 +356,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             width: 40,
             height: 40,
             child: CircularProgressIndicator(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               strokeWidth: 3,
             ),
           ),
@@ -417,7 +417,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
             ),
             child: Text(S.of(context)!.nwcRetryPayment),
           ),
@@ -443,7 +443,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
         width: 14,
         height: 14,
         child: CircularProgressIndicator(
-          color: AppTheme.mostroGreen,
+          color: AppTheme.satoneroOrange,
           strokeWidth: 2,
         ),
       );

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/services/chat_cursor_store.dart';
+import 'package:satonero_mobile/services/chat_cursor_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Minimal in-memory double for the two methods the store uses.

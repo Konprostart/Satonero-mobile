@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
 
 void main() {
   group('Session expiration settings', () {

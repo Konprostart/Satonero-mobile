@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
 import 'package:sembast/sembast.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/repositories/base_storage.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/repositories/base_storage.dart';
 
 class MostroStorage extends BaseStorage<MostroMessage> {
   MostroStorage({required Database db})

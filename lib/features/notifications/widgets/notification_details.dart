@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as mostro_action;
-import 'package:mostro_mobile/features/notifications/widgets/detail_row.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
+import 'package:satonero_mobile/features/notifications/widgets/detail_row.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class NotificationDetails extends StatelessWidget {
   final NotificationModel notification;

@@ -2,16 +2,16 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/mostro/widgets/trusted_badge.dart';
-import 'package:mostro_mobile/features/notifications/widgets/detail_row.dart';
-import 'package:mostro_mobile/features/order/widgets/fixed_switch_widget.dart';
-import 'package:mostro_mobile/features/rate/star_rating.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/widgets/custom_button.dart';
-import 'package:mostro_mobile/shared/widgets/custom_card.dart';
-import 'package:mostro_mobile/shared/widgets/custom_elevated_button.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_switch.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/mostro/widgets/trusted_badge.dart';
+import 'package:satonero_mobile/features/notifications/widgets/detail_row.dart';
+import 'package:satonero_mobile/features/order/widgets/fixed_switch_widget.dart';
+import 'package:satonero_mobile/features/rate/star_rating.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/custom_button.dart';
+import 'package:satonero_mobile/shared/widgets/custom_card.dart';
+import 'package:satonero_mobile/shared/widgets/custom_elevated_button.dart';
+import 'package:satonero_mobile/shared/widgets/mostro_switch.dart';
 
 /// Wraps [child] in a MaterialApp with the app's localization delegates so
 /// widgets that call `S.of(context)` can be pumped in isolation.
@@ -225,7 +225,7 @@ void main() {
       expect(
           widget.thumbColor!.resolve(<WidgetState>{}), AppTheme.textSecondary);
       expect(widget.trackColor!.resolve({WidgetState.selected}),
-          AppTheme.mostroGreen);
+          AppTheme.satoneroOrange);
       expect(widget.trackColor!.resolve(<WidgetState>{}),
           AppTheme.backgroundInactive);
       expect(widget.trackOutlineColor!.resolve(<WidgetState>{}),
@@ -270,7 +270,7 @@ void main() {
       )));
 
       expect(tester.widget<Icon>(find.byIcon(Icons.star)).color,
-          AppTheme.mostroGreen);
+          AppTheme.satoneroOrange);
       expect(tester.widget<Icon>(find.byIcon(Icons.star_border).first).color,
           AppTheme.grey2);
     });

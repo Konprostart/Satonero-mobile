@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 void main() {
 

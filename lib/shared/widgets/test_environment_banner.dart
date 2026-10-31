@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/core/test_environment.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/core/test_environment.dart';
 
 /// Visible marker shown on every screen while the app runs in the Mortsom
 /// test environment. It makes a test build impossible to confuse with a

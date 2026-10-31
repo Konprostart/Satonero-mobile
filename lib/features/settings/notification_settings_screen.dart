@@ -5,18 +5,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_switch.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/shared/widgets/mostro_switch.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
-  bool get _isPushSupported {
+  bool get _isPlatformSupported {
     if (kIsWeb) return false;
     return Platform.isAndroid || Platform.isIOS;
   }
+
+  bool get _isPushSupported => _isPlatformSupported && Config.pushConfigured;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -136,7 +139,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        S.of(context)!.pushNotificationsNotSupported,
+                        _isPlatformSupported
+                            ? S.of(context)!.pushNotificationsNotConfigured
+                            : S.of(context)!.pushNotificationsNotSupported,
                         style: const TextStyle(
                           color: Colors.orange,
                           fontSize: 13,

@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/media_validation_service.dart';
-import 'package:mostro_mobile/services/blossom_upload_helper.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/media_validation_service.dart';
+import 'package:satonero_mobile/services/blossom_upload_helper.dart';
 
 class ImageUploadService {
 

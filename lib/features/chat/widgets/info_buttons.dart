@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class InfoButtons extends StatelessWidget {
   final String? selectedInfoType;
@@ -46,14 +46,14 @@ class InfoButtons extends StatelessWidget {
         onPressed: () => onInfoTypeChanged(isSelected ? null : type),
         style: ElevatedButton.styleFrom(
           backgroundColor: isSelected
-              ? AppTheme.mostroGreen
+              ? AppTheme.satoneroOrange
               : AppTheme.backgroundCard,
           foregroundColor: isSelected ? Colors.black : AppTheme.textSecondary,
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
             side: BorderSide(
-              color: isSelected ? AppTheme.mostroGreen : Colors.transparent,
+              color: isSelected ? AppTheme.satoneroOrange : Colors.transparent,
               width: 1,
             ),
           ),

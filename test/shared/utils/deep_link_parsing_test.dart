@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 void main() {
   group('NostrUtils.parseMostroUrl — mostro pubkey extraction', () {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/features/mostro/mostro_node.dart';
-import 'package:mostro_mobile/shared/providers/avatar_provider.dart';
+import 'package:satonero_mobile/features/mostro/mostro_node.dart';
+import 'package:satonero_mobile/shared/providers/avatar_provider.dart';
 
 /// Displays a Mostro node avatar with network image support and NymAvatar fallback.
 class MostroNodeAvatar extends StatelessWidget {

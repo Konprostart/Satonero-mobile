@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyStorage {

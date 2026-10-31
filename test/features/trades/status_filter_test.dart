@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/features/trades/providers/trades_provider.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/features/trades/providers/trades_provider.dart';
 
 void main() {
   group('matchesStatusFilter', () {

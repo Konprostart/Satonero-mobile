@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:mostro_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/enums.dart';
 
 class TemporaryNotification {
   final Action? action;

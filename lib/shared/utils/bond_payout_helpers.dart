@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
 
 enum BondPayoutPhase {
   /// No bond payout flow for this order.

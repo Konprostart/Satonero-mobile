@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/core/mostro_fsm.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/core/mostro_fsm.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
 
 void main() {
   group('MostroFSM.nextStatus', () {

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/services/nwc/nwc_connection.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/services/nwc/nwc_connection.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
 
 void main() {
   group('NwcConnection', () {

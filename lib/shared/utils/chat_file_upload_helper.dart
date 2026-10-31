@@ -4,13 +4,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/encrypted_file_upload_service.dart';
-import 'package:mostro_mobile/services/encrypted_image_upload_service.dart';
-import 'package:mostro_mobile/services/file_validation_service.dart';
-import 'package:mostro_mobile/services/media_validation_service.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/encrypted_file_upload_service.dart';
+import 'package:satonero_mobile/services/encrypted_image_upload_service.dart';
+import 'package:satonero_mobile/services/file_validation_service.dart';
+import 'package:satonero_mobile/services/media_validation_service.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 /// Shared file upload logic for both P2P chat and dispute chat.
 /// Each caller provides its own getSharedKey and sendMessage callbacks.
@@ -168,7 +168,7 @@ class ChatFileUploadHelper {
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.mostroGreen,
+                backgroundColor: AppTheme.satoneroOrange,
                 foregroundColor: Colors.white,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

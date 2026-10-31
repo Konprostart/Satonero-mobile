@@ -1,7 +1,7 @@
-import 'package:mostro_mobile/data/repositories/base_storage.dart';
+import 'package:satonero_mobile/data/repositories/base_storage.dart';
 import 'package:sembast/sembast.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/features/key_manager/key_manager.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/features/key_manager/key_manager.dart';
 import 'package:sembast/utils/value_utils.dart';
 
 class SessionStorage extends BaseStorage<Session> {

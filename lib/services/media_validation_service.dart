@@ -2,7 +2,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:mime/mime.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 enum SupportedImageType {
   jpeg,

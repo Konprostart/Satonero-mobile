@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as mostro_action;
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notification_type_icon.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notification_content.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notification_menu.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notification_type_icon.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notification_content.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notification_menu.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class NotificationItem extends ConsumerWidget {
   final NotificationModel notification;

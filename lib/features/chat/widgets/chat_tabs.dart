@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_tab_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_tab_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class ChatTabs extends ConsumerWidget {
   final ChatTabType currentTab;
@@ -45,7 +45,7 @@ class ChatTabs extends ConsumerWidget {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isActive ? AppTheme.mostroGreen : Colors.transparent,
+                color: isActive ? AppTheme.satoneroOrange : Colors.transparent,
                 width: 3.0,
               ),
             ),
@@ -54,7 +54,7 @@ class ChatTabs extends ConsumerWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isActive ? AppTheme.mostroGreen : AppTheme.textInactive,
+              color: isActive ? AppTheme.satoneroOrange : AppTheme.textInactive,
               fontWeight: FontWeight.w600,
               fontSize: 15,
               letterSpacing: 0.5,

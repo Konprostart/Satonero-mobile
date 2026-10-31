@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class LanguageSelector extends ConsumerWidget {
   const LanguageSelector({super.key});
@@ -52,7 +52,7 @@ class LanguageSelector extends ConsumerWidget {
                 children: [
                   Icon(
                     languageCode == null ? Icons.phone_android : Icons.language,
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                     size: 20,
                   ),
                   const SizedBox(width: 12),

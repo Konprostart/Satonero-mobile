@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class TradeHistorySelector extends ConsumerWidget {
   const TradeHistorySelector({super.key});
@@ -55,7 +55,7 @@ class TradeHistorySelector extends ConsumerWidget {
                 children: [
                   const Icon(
                     Icons.schedule,
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -111,7 +111,7 @@ class TradeHistorySelector extends ConsumerWidget {
             },
             child: Text(
               S.of(context)!.confirm,
-              style: const TextStyle(color: AppTheme.mostroGreen),
+              style: const TextStyle(color: AppTheme.satoneroOrange),
             ),
           ),
         ],

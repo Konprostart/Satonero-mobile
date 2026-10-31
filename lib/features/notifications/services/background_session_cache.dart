@@ -1,6 +1,6 @@
 import 'package:dart_nostr/dart_nostr.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/shared/utils/chat_keys.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/shared/utils/chat_keys.dart';
 
 /// Per-isolate cache for the background notification pipeline.
 ///

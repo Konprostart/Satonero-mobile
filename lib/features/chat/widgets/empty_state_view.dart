@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 class EmptyStateView extends StatelessWidget {
   final String message;

@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:dart_nostr/nostr/model/event/event.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/amount.dart';
-import 'package:mostro_mobile/data/models/cant_do.dart';
-import 'package:mostro_mobile/data/models/chat_room.dart';
-import 'package:mostro_mobile/data/models/currency.dart';
-import 'package:mostro_mobile/data/models/enums/cant_do_reason.dart';
-import 'package:mostro_mobile/data/models/range_amount.dart';
-import 'package:mostro_mobile/data/models/rating.dart';
-import 'package:mostro_mobile/data/models/rating_user.dart';
-import 'package:mostro_mobile/data/models/text_message.dart';
+import 'package:satonero_mobile/data/models/amount.dart';
+import 'package:satonero_mobile/data/models/cant_do.dart';
+import 'package:satonero_mobile/data/models/chat_room.dart';
+import 'package:satonero_mobile/data/models/currency.dart';
+import 'package:satonero_mobile/data/models/enums/cant_do_reason.dart';
+import 'package:satonero_mobile/data/models/range_amount.dart';
+import 'package:satonero_mobile/data/models/rating.dart';
+import 'package:satonero_mobile/data/models/rating_user.dart';
+import 'package:satonero_mobile/data/models/text_message.dart';
 
 /// Minimal synthetic currency payload used across the Currency tests.
 Map<String, dynamic> currencyJson({

@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/shared/providers/legible_handle_provider.dart';
-import 'package:mostro_mobile/shared/providers.dart';
-import 'package:mostro_mobile/shared/utils/bond_slash_helpers.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/shared/providers/legible_handle_provider.dart';
+import 'package:satonero_mobile/shared/providers.dart';
+import 'package:satonero_mobile/shared/utils/bond_slash_helpers.dart';
 
 class NotificationDataExtractor {
   /// Extract notification data from MostroMessage

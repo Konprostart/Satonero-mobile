@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:dart_nostr/dart_nostr.dart';
-import 'package:mostro_mobile/services/exchange_service.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/services/yadio_exchange_service.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/exchange_service.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/services/yadio_exchange_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Exchange rate event kind (NIP-33 addressable event).

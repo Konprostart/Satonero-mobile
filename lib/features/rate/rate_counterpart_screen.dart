@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 import 'star_rating.dart';
 
 /// Screen that allows users to rate their counterpart after completing an order.
@@ -75,7 +75,7 @@ class _RateCounterpartScreenState extends ConsumerState<RateCounterpartScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.mostroGreen,
+                  backgroundColor: AppTheme.satoneroOrange,
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 ),
                 onPressed: _rating > 0 ? _submitRating : null,

@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/features/notifications/services/background_notification_service.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_data_extractor.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_message_mapper.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/features/notifications/services/background_notification_service.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_data_extractor.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_message_mapper.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// Tests for the background notification pipeline covering:
 /// 1. [NostrUtils.isDmPayload] — pure detection of the `{"dm": ...}` envelope

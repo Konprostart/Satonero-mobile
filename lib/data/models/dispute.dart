@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/data/enums.dart' as enums;
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/enums.dart' as enums;
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// Enum representing semantic keys for dispute descriptions
 /// These keys will be used for localization in the UI

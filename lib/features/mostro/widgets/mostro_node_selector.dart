@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/mostro/mostro_node.dart';
-import 'package:mostro_mobile/features/mostro/mostro_nodes_provider.dart';
-import 'package:mostro_mobile/features/mostro/widgets/add_custom_node_dialog.dart';
-import 'package:mostro_mobile/features/mostro/widgets/mostro_node_avatar.dart';
-import 'package:mostro_mobile/features/mostro/widgets/trusted_badge.dart';
-import 'package:mostro_mobile/features/restore/restore_manager.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/mostro/mostro_node.dart';
+import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
+import 'package:satonero_mobile/features/mostro/widgets/add_custom_node_dialog.dart';
+import 'package:satonero_mobile/features/mostro/widgets/mostro_node_avatar.dart';
+import 'package:satonero_mobile/features/mostro/widgets/trusted_badge.dart';
+import 'package:satonero_mobile/features/restore/restore_manager.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class MostroNodeSelector extends ConsumerStatefulWidget {
   const MostroNodeSelector({super.key});

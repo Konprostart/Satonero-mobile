@@ -1,6 +1,6 @@
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/data/models.dart';
-import 'package:mostro_mobile/data/enums.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/models.dart';
+import 'package:satonero_mobile/data/enums.dart';
 
 class OrderState {
   final Status status;

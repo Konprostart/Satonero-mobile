@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/features/home/providers/home_order_providers.dart';
-import 'package:mostro_mobile/features/home/widgets/order_list_item.dart';
-import 'package:mostro_mobile/shared/widgets/add_order_button.dart';
-import 'package:mostro_mobile/shared/widgets/bottom_nav_bar.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_app_bar.dart';
-import 'package:mostro_mobile/shared/widgets/order_filter.dart';
-import 'package:mostro_mobile/shared/widgets/custom_drawer_overlay.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/features/home/providers/home_order_providers.dart';
+import 'package:satonero_mobile/features/home/widgets/order_list_item.dart';
+import 'package:satonero_mobile/shared/widgets/add_order_button.dart';
+import 'package:satonero_mobile/shared/widgets/bottom_nav_bar.dart';
+import 'package:satonero_mobile/shared/widgets/satonero_app_bar.dart';
+import 'package:satonero_mobile/shared/widgets/order_filter.dart';
+import 'package:satonero_mobile/shared/widgets/custom_drawer_overlay.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -21,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
-      appBar: const MostroAppBar(),
+      appBar: const SatoneroAppBar(),
       body: CustomDrawerOverlay(
         child: Stack(
           children: [
@@ -161,9 +161,9 @@ class HomeScreen extends ConsumerWidget {
     // When filters are active the pill is highlighted so the user can tell at a
     // glance that the offers list is being narrowed down.
     final foregroundColor =
-        hasFilters ? AppTheme.mostroGreen : Colors.white70;
+        hasFilters ? AppTheme.satoneroOrange : Colors.white70;
     final dividerColor = hasFilters
-        ? AppTheme.mostroGreen.withValues(alpha: 0.4)
+        ? AppTheme.satoneroOrange.withValues(alpha: 0.4)
         : Colors.white.withValues(alpha: 0.2);
 
     return Container(
@@ -174,12 +174,12 @@ class HomeScreen extends ConsumerWidget {
         child: Container(
           decoration: BoxDecoration(
             color: hasFilters
-                ? AppTheme.mostroGreen.withValues(alpha: 0.12)
+                ? AppTheme.satoneroOrange.withValues(alpha: 0.12)
                 : AppTheme.backgroundInput,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
               color: hasFilters
-                  ? AppTheme.mostroGreen.withValues(alpha: 0.6)
+                  ? AppTheme.satoneroOrange.withValues(alpha: 0.6)
                   : Colors.white.withValues(alpha: 0.05),
             ),
             boxShadow: [
@@ -300,8 +300,8 @@ class HomeScreen extends ConsumerWidget {
             child: InkWell(
               onTap: () => clearAllOrderFilters(ref.read),
               borderRadius: BorderRadius.circular(30),
-              splashColor: AppTheme.mostroGreen.withValues(alpha: 0.3),
-              highlightColor: AppTheme.mostroGreen.withValues(alpha: 0.15),
+              splashColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
+              highlightColor: AppTheme.satoneroOrange.withValues(alpha: 0.15),
               child: const SizedBox(
                 width: 40,
                 height: 40,
@@ -309,7 +309,7 @@ class HomeScreen extends ConsumerWidget {
                   child: HeroIcon(
                     HeroIcons.xMark,
                     style: HeroIconStyle.outline,
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                     size: 16,
                   ),
                 ),

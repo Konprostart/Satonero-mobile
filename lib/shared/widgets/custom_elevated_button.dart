@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -30,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         foregroundColor: foregroundColor ?? Colors.black,
-        backgroundColor: backgroundColor ?? AppTheme.mostroGreen,
+        backgroundColor: backgroundColor ?? AppTheme.satoneroOrange,
         padding:
             padding ?? const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       ),

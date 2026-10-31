@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/providers/avatar_provider.dart';
-import 'package:mostro_mobile/shared/providers/legible_handle_provider.dart';
-import 'package:mostro_mobile/shared/utils/chat_keys.dart';
-import 'package:mostro_mobile/shared/widgets/clickable_text_widget.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/providers/avatar_provider.dart';
+import 'package:satonero_mobile/shared/providers/legible_handle_provider.dart';
+import 'package:satonero_mobile/shared/utils/chat_keys.dart';
+import 'package:satonero_mobile/shared/widgets/clickable_text_widget.dart';
 
 class UserInformationTab extends ConsumerWidget {
   final String peerPubkey;

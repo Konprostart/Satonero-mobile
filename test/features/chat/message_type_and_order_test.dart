@@ -1,7 +1,7 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/chat_room.dart';
-import 'package:mostro_mobile/features/chat/utils/message_type_helpers.dart';
+import 'package:satonero_mobile/data/models/chat_room.dart';
+import 'package:satonero_mobile/features/chat/utils/message_type_helpers.dart';
 
 /// Chat render costs: the bubble ran up to two `jsonDecode`s of the message
 /// content per build to classify it, and the message list re-sorted the room

@@ -4,13 +4,13 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/currency.dart';
-import 'package:mostro_mobile/features/chat/utils/message_type_helpers.dart';
-import 'package:mostro_mobile/shared/utils/auth_utils.dart';
-import 'package:mostro_mobile/shared/utils/currency_utils.dart';
-import 'package:mostro_mobile/shared/utils/datetime_extensions_utils.dart';
-import 'package:mostro_mobile/shared/utils/mnemonic_validator.dart';
-import 'package:mostro_mobile/shared/utils/text_formatting.dart';
+import 'package:satonero_mobile/data/models/currency.dart';
+import 'package:satonero_mobile/features/chat/utils/message_type_helpers.dart';
+import 'package:satonero_mobile/shared/utils/auth_utils.dart';
+import 'package:satonero_mobile/shared/utils/currency_utils.dart';
+import 'package:satonero_mobile/shared/utils/datetime_extensions_utils.dart';
+import 'package:satonero_mobile/shared/utils/mnemonic_validator.dart';
+import 'package:satonero_mobile/shared/utils/text_formatting.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 /// A BIP39 test vector with a valid checksum. Not tied to any real wallet.

@@ -1,0 +1,104 @@
+name: Satonero CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.5'
+          channel: stable
+          cache: true
+
+      - name: Disable analytics
+        run: flutter config --no-analytics
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate required files
+        run: dart run build_runner build -d
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --reporter expanded
+
+      - name: Run push tests separately
+        run: |
+          flutter test --reporter expanded \
+            test/services/push_notification_service_test.dart \
+            test/services/fcm_service_test.dart \
+            test/core/push_registration_wiring_test.dart \
+            test/features/settings/settings_push_toggle_test.dart
+
+      - name: Build release APK
+        run: |
+          flutter build apk --release \
+            --build-name=1.5.0 \
+            --build-number=${{ github.run_number }}
+
+      - name: Verify identity and removed infrastructure
+        run: |
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          test -f "$APK"
+
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          BT=$(ls -d "$SDK"/build-tools/* | sort -V | tail -n1)
+          if [ -x "$BT/aapt" ]; then AAPT="$BT/aapt"; else AAPT="$BT/aapt2"; fi
+
+          "$AAPT" dump badging "$APK" | tee /tmp/badging.txt
+          grep -q "package: name='com.konprostart.satonero'" /tmp/badging.txt
+          grep -q "application-label:'Satonero'" /tmp/badging.txt
+          grep -q "application-icon-.*launcher_icon" /tmp/badging.txt
+
+          unzip -p "$APK" 'classes*.dex' | strings | sort -u > /tmp/apk_strings.txt
+          if grep -E "mostro-push-server\.fly\.dev|mostro-p2p\.tech|mostro-mobile\.firebaseapp\.com|mostro-mobile\.firebasestorage\.app|375342057498|AIzaSyCOrsfYrkIItBLAFbnYmh4HnsxBTnT3y14" /tmp/apk_strings.txt; then
+            echo "ERROR: Mostro-owned infrastructure string found in APK"
+            exit 1
+          fi
+
+          echo "Verified package, label, icon, and removed infrastructure strings."
+          sha256sum "$APK" | tee /tmp/sha256.txt
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: satonero-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+
+      - name: Upload verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: satonero-verification
+          path: |
+            /tmp/badging.txt
+            /tmp/apk_strings.txt
+            /tmp/sha256.txt
+          retention-days: 7

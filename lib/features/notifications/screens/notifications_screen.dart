@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
-import 'package:mostro_mobile/features/notifications/providers/backup_reminder_provider.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notification_item.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notifications_actions_menu.dart';
-import 'package:mostro_mobile/features/notifications/widgets/backup_reminder_notification.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_app_bar.dart';
-import 'package:mostro_mobile/shared/widgets/notification_history_bell_widget.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:satonero_mobile/features/notifications/providers/backup_reminder_provider.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notification_item.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notifications_actions_menu.dart';
+import 'package:satonero_mobile/features/notifications/widgets/backup_reminder_notification.dart';
+import 'package:satonero_mobile/shared/widgets/satonero_app_bar.dart';
+import 'package:satonero_mobile/shared/widgets/notification_history_bell_widget.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -21,7 +21,7 @@ class NotificationsScreen extends ConsumerWidget {
     
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
-      appBar: MostroAppBar(
+      appBar: SatoneroAppBar(
         title: Text(
           S.of(context)!.notifications,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -108,7 +108,7 @@ class NotificationsScreen extends ConsumerWidget {
         },
         loading: () => const Center(
           child: CircularProgressIndicator(
-            color: AppTheme.mostroGreen,
+            color: AppTheme.satoneroOrange,
           ),
         ),
         error: (error, stackTrace) => Center(
@@ -133,7 +133,7 @@ class NotificationsScreen extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () => ref.refresh(notificationsHistoryProvider),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.mostroGreen,
+                  backgroundColor: AppTheme.satoneroOrange,
                 ),
                 child: Text(S.of(context)!.retry),
               ),

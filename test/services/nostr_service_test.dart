@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
 
 void main() {
   group('NostrService relay health surface', () {

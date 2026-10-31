@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// Widget that displays a Lightning Address confirmation step before
 /// automatically sending it to Mostro.
@@ -35,20 +35,20 @@ class LnAddressConfirmationWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppTheme.dark1,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppTheme.mostroGreen.withAlpha(128)),
+            border: Border.all(color: AppTheme.satoneroOrange.withAlpha(128)),
           ),
           child: Column(
             children: [
               const Icon(
                 LucideIcons.zap,
-                color: AppTheme.mostroGreen,
+                color: AppTheme.satoneroOrange,
                 size: 40,
               ),
               const SizedBox(height: 16),
               Text(
                 S.of(context)!.lnAddressConfirmTitle,
                 style: const TextStyle(
-                  color: AppTheme.mostroGreen,
+                  color: AppTheme.satoneroOrange,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -100,7 +100,7 @@ class LnAddressConfirmationWidget extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.mostroGreen,
+                    backgroundColor: AppTheme.satoneroOrange,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

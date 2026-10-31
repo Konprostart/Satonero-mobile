@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/restore/restore_progress_notifier.dart';
-import 'package:mostro_mobile/features/restore/restore_progress_state.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/restore/restore_progress_notifier.dart';
+import 'package:satonero_mobile/features/restore/restore_progress_state.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class RestoreOverlay extends ConsumerWidget {
   const RestoreOverlay({super.key});

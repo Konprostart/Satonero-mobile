@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/restore_response.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/restore_response.dart';
 
 bool determineIfUserInitiatedDispute({
   required RestoredDispute? restoredDispute,

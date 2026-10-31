@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/data/models/enums/notification_type.dart';
-import 'package:mostro_mobile/data/repositories/event_storage.dart';
-import 'package:mostro_mobile/data/repositories/mostro_storage.dart';
-import 'package:mostro_mobile/data/repositories/notifications_history_repository.dart';
-import 'package:mostro_mobile/services/storage_pruner.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/data/models/enums/notification_type.dart';
+import 'package:satonero_mobile/data/repositories/event_storage.dart';
+import 'package:satonero_mobile/data/repositories/mostro_storage.dart';
+import 'package:satonero_mobile/data/repositories/notifications_history_repository.dart';
+import 'package:satonero_mobile/services/storage_pruner.dart';
 import 'package:sembast/sembast_memory.dart';
 
 /// Both databases are fully loaded into RAM and JSON-parsed at every launch,

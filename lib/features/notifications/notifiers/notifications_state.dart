@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/features/notifications/notifiers/notification_temporary_state.dart';
+import 'package:satonero_mobile/features/notifications/notifiers/notification_temporary_state.dart';
 
 class TemporaryNotificationsState {
   final TemporaryNotification temporaryNotification;

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mostro_mobile/shared/utils/reputation_age.dart';
+import 'package:satonero_mobile/shared/utils/reputation_age.dart';
 
 class Rating {
   final int totalReviews;

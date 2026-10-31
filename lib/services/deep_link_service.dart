@@ -4,11 +4,11 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// Contains order information extracted from a Nostr event
 class OrderInfo {

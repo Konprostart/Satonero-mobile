@@ -3,10 +3,10 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb, debugPrint, visibleForTesting;
 import 'package:http/http.dart' as http;
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/services/fcm_service.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/services/fcm_service.dart';
 
 /// Safely truncate a pubkey for logging, avoiding RangeError on short strings.
 String _shortenPubkey(String pubkey, [int maxLength = 16]) {
@@ -14,7 +14,8 @@ String _shortenPubkey(String pubkey, [int maxLength = 16]) {
   return '${pubkey.substring(0, maxLength)}...';
 }
 
-/// Service for registering push notification tokens with the Mostro push server.
+/// Service for registering push notification tokens with a Satonero-configured
+/// push server. Satonero does not ship or operate a default push server.
 ///
 /// Current implementation: Plaintext token registration (Phase 3)
 /// - Device tokens are sent over HTTPS (encrypted in transit)
@@ -61,6 +62,9 @@ class PushNotificationService {
 
   bool get isInitialized => _isInitialized;
 
+  /// False when no push server URL was supplied at build time.
+  bool get isConfigured => _pushServerUrl.isNotEmpty;
+
   /// Get the current platform identifier
   String get _platform =>
       _platformOverride ?? (Platform.isIOS ? 'ios' : 'android');
@@ -71,6 +75,11 @@ class PushNotificationService {
 
     if (!isSupported) {
       debugPrint('PushService: Not supported on this platform');
+      return false;
+    }
+
+    if (!isConfigured) {
+      debugPrint('PushService: No push server configured; push disabled');
       return false;
     }
 
@@ -128,7 +137,7 @@ class PushNotificationService {
   /// Checks that registering is possible (platform, push setting, server)
   /// and returns the current FCM token, or null when it is not.
   Future<String?> _prepareRegistration() async {
-    if (!isSupported) {
+    if (!isSupported || !isConfigured) {
       return null;
     }
 
@@ -158,6 +167,7 @@ class PushNotificationService {
   }
 
   Future<bool> _register(String tradePubkey, String fcmToken) async {
+    if (!isConfigured) return false;
     try {
       debugPrint(
           'PushService: Registering token for trade ${_shortenPubkey(tradePubkey)}');
@@ -217,7 +227,7 @@ class PushNotificationService {
   /// offline takes a while; the caller deletes the FCM token afterwards, which
   /// makes any row left behind undeliverable. Returns how many succeeded.
   Future<int> unregisterTokens(Iterable<String> tradePubkeys) async {
-    if (!isSupported) return 0;
+    if (!isSupported || !isConfigured) return 0;
     var unregistered = 0;
     for (final tradePubkey in tradePubkeys.toSet()) {
       if (await unregisterToken(tradePubkey)) unregistered++;
@@ -240,16 +250,16 @@ class PushNotificationService {
   /// on the sender's local preference would silently break delivery for a
   /// correctly opted-in recipient.
   ///
-  /// Strictly fire-and-forget. The server contract (see mostro-push-server
-  /// docs/api.md) guarantees indistinguishable responses for registered vs
-  /// unregistered pubkeys, so the caller cannot — and must not try to —
-  /// branch on the outcome:
+  /// Strictly fire-and-forget. The configured push server contract must
+  /// guarantee indistinguishable responses for registered vs unregistered
+  /// pubkeys, so the caller cannot — and must not try to — branch on the
+  /// outcome:
   ///
   /// - 202 `{"accepted":true}` on parse-valid input (always).
   /// - 400 on malformed pubkey (logged as a client bug).
   /// - 429 on rate-limit hit (dropped silently, no retry).
   Future<void> notifyPeer(String peerTradePubkey) async {
-    if (!isSupported) return;
+    if (!isSupported || !isConfigured) return;
 
     try {
       final response = await _httpClient
@@ -272,7 +282,7 @@ class PushNotificationService {
 
   /// Unregister a device token for a specific trade
   Future<bool> unregisterToken(String tradePubkey) async {
-    if (!isSupported) {
+    if (!isSupported || !isConfigured) {
       return false;
     }
 

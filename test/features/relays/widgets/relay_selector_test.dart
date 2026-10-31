@@ -4,10 +4,10 @@
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:mockito/mockito.dart';
-// import 'package:mostro_mobile/features/relays/relays_notifier.dart';
-// import 'package:mostro_mobile/features/relays/relays_provider.dart';
-// import 'package:mostro_mobile/features/relays/widgets/relay_selector.dart';
-// import 'package:mostro_mobile/generated/l10n.dart';
+// import 'package:satonero_mobile/features/relays/relays_notifier.dart';
+// import 'package:satonero_mobile/features/relays/relays_provider.dart';
+// import 'package:satonero_mobile/features/relays/widgets/relay_selector.dart';
+// import 'package:satonero_mobile/generated/l10n.dart';
 // import '../../../mocks.mocks.dart';
 
 void main() {

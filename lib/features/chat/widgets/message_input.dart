@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/chat_file_upload_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/chat_file_upload_helper.dart';
 
 class MessageInput extends ConsumerStatefulWidget {
   final String orderId;
@@ -176,7 +176,7 @@ class _MessageInputState extends ConsumerState<MessageInput> {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(

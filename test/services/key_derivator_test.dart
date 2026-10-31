@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:mostro_mobile/features/key_manager/key_derivator.dart';
+import 'package:satonero_mobile/features/key_manager/key_derivator.dart';
 
 /// Test vectors from NIP-06
 /// https://github.com/nostr-protocol/nips/blob/master/06.md

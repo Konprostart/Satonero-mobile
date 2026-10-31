@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/shared/providers/storage_providers.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/shared/providers/storage_providers.dart';
 
 class FirstRunNotifier extends StateNotifier<AsyncValue<bool>> {
   FirstRunNotifier(this._sharedPreferences)

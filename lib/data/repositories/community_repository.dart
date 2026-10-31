@@ -5,8 +5,8 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 /// Repository that fetches community metadata from Nostr relays.
 /// Uses a standalone WebSocket connection to fetch kind 0 (profile) and

@@ -3,21 +3,21 @@ import 'dart:async';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/core/models/relay_list_event.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/features/mostro/transport.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_type.dart';
-import 'package:mostro_mobile/services/chat_cursor_store.dart';
-import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/utils/chat_keys.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/core/models/relay_list_event.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/features/mostro/transport.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_type.dart';
+import 'package:satonero_mobile/services/chat_cursor_store.dart';
+import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/utils/chat_keys.dart';
 
 /// Manages Nostr subscriptions across different parts of the application.
 ///

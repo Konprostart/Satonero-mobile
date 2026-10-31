@@ -5,17 +5,17 @@ import 'dart:io';
 import 'package:dart_nostr/nostr/model/request/filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
-import 'package:mostro_mobile/features/relays/relay_health_monitor.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_type.dart';
-import 'package:mostro_mobile/shared/providers/background_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/mostro_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_manager_provider.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+import 'package:satonero_mobile/features/relays/relay_health_monitor.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_type.dart';
+import 'package:satonero_mobile/shared/providers/background_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/mostro_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_manager_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LifecycleManager extends WidgetsBindingObserver {

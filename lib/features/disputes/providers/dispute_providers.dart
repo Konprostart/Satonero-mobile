@@ -1,12 +1,12 @@
-import 'package:mostro_mobile/data/enums.dart' as enums;
+import 'package:satonero_mobile/data/enums.dart' as enums;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/data/repositories/dispute_repository.dart';
-import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/repositories/dispute_repository.dart';
+import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
 
 /// Provider for the dispute repository
 final disputeRepositoryProvider = Provider.autoDispose<DisputeRepository>((ref) {

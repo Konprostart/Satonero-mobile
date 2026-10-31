@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/user_info.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_data_extractor.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/user_info.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_data_extractor.dart';
 
 MostroMessage<Peer> reputationNotice(Action action) => MostroMessage<Peer>(
       action: action,

@@ -1,8 +1,8 @@
 import 'package:dart_nostr/nostr/model/event/event.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
 
 import 'package:equatable/equatable.dart';
 

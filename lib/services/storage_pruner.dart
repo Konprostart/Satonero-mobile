@@ -1,7 +1,7 @@
-import 'package:mostro_mobile/data/repositories/event_storage.dart';
-import 'package:mostro_mobile/data/repositories/mostro_storage.dart';
-import 'package:mostro_mobile/data/repositories/notifications_history_repository.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/repositories/event_storage.dart';
+import 'package:satonero_mobile/data/repositories/mostro_storage.dart';
+import 'package:satonero_mobile/data/repositories/notifications_history_repository.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:sembast/sembast.dart';
 
 /// Bounded growth for the local databases.

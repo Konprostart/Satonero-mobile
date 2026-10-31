@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
-import 'package:mostro_mobile/services/encryption_service.dart';
-import 'package:mostro_mobile/services/media_validation_service.dart';
+import 'package:satonero_mobile/services/encryption_service.dart';
+import 'package:satonero_mobile/services/media_validation_service.dart';
 
 /// Image sanitizing (pure-Dart decode + re-encode: 1-5 s for a phone photo)
 /// and whole-file ChaCha20-Poly1305 ran on the main isolate, freezing the UI

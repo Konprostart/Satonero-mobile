@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/chat/providers/active_chat_screens_provider.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/features/chat/widgets/chat_error_screen.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/features/chat/widgets/chat_messages_list.dart';
-import 'package:mostro_mobile/features/chat/widgets/info_buttons.dart';
-import 'package:mostro_mobile/features/chat/widgets/message_input.dart';
-import 'package:mostro_mobile/features/chat/widgets/peer_header.dart';
-import 'package:mostro_mobile/features/chat/widgets/trade_information_tab.dart';
-import 'package:mostro_mobile/features/chat/widgets/user_information_tab.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/widgets/bottom_nav_bar.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/chat/providers/active_chat_screens_provider.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/features/chat/widgets/chat_error_screen.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/features/chat/widgets/chat_messages_list.dart';
+import 'package:satonero_mobile/features/chat/widgets/info_buttons.dart';
+import 'package:satonero_mobile/features/chat/widgets/message_input.dart';
+import 'package:satonero_mobile/features/chat/widgets/peer_header.dart';
+import 'package:satonero_mobile/features/chat/widgets/trade_information_tab.dart';
+import 'package:satonero_mobile/features/chat/widgets/user_information_tab.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/widgets/bottom_nav_bar.dart';
 
 class ChatRoomScreen extends ConsumerStatefulWidget {
   final String orderId;

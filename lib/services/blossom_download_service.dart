@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 class BlossomDownloadService {
   static const Duration _timeout = Duration(minutes: 2);
@@ -16,7 +16,7 @@ class BlossomDownloadService {
       final response = await http.get(
         uri,
         headers: {
-          'User-Agent': 'MostroMobile/1.0',
+          'User-Agent': 'Satonero/1.0',
           'Accept': 'application/octet-stream, */*',
         },
       ).timeout(_timeout);
@@ -117,7 +117,7 @@ class BlossomDownloadService {
     try {
       final uri = Uri.parse(blossomUrl);
       final request = http.Request('GET', uri);
-      request.headers['User-Agent'] = 'MostroMobile/1.0';
+      request.headers['User-Agent'] = 'Satonero/1.0';
       request.headers['Accept'] = 'application/octet-stream, */*';
 
       final response = await client.send(request).timeout(_timeout);

@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models/cant_do.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/data/models/payment_failed.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/user_info.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models/cant_do.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/payment_failed.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/user_info.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
 
 const _buyerPubkey =
     '1111111111111111111111111111111111111111111111111111111111111111';

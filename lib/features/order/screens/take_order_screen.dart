@@ -3,26 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as mostro_action;
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/widgets/order_app_bar.dart';
-import 'package:mostro_mobile/shared/providers.dart';
-import 'package:mostro_mobile/shared/widgets/order_cards.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/widgets/order_app_bar.dart';
+import 'package:satonero_mobile/shared/providers.dart';
+import 'package:satonero_mobile/shared/widgets/order_cards.dart';
 
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/shared/utils/currency_utils.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/shared/utils/currency_utils.dart';
 
-import 'package:mostro_mobile/shared/widgets/custom_card.dart';
-import 'package:mostro_mobile/shared/providers/time_provider.dart';
-import 'package:mostro_mobile/shared/widgets/dynamic_countdown_widget.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/custom_card.dart';
+import 'package:satonero_mobile/shared/providers/time_provider.dart';
+import 'package:satonero_mobile/shared/widgets/dynamic_countdown_widget.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class TakeOrderScreen extends ConsumerStatefulWidget {
   final String orderId;
@@ -483,7 +483,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
             ),
             child: _isSubmitting
                 ? const SizedBox(

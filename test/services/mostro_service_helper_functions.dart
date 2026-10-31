@@ -1,6 +1,6 @@
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
 
 /// Mock server's trade index storage
 class MockServerTradeIndex {

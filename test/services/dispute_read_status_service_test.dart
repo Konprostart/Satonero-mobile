@@ -1,7 +1,7 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
-import 'package:mostro_mobile/services/dispute_read_status_service.dart';
+import 'package:satonero_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+import 'package:satonero_mobile/services/dispute_read_status_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 

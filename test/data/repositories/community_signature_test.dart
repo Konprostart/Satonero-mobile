@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/repositories/community_repository.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/repositories/community_repository.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 void main() {
   late CommunityRepository repository;

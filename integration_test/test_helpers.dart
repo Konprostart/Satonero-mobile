@@ -4,27 +4,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/data/models/currency.dart';
-import 'package:mostro_mobile/background/abstract_background_service.dart';
-import 'package:mostro_mobile/core/app.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as mostro_action;
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/data/repositories/mostro_storage.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/services/mostro_service.dart';
-import 'package:mostro_mobile/shared/notifiers/navigation_notifier.dart';
-import 'package:mostro_mobile/shared/providers/app_init_provider.dart';
-import 'package:mostro_mobile/shared/providers/background_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/mostro_database_provider.dart';
-import 'package:mostro_mobile/shared/providers/mostro_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/mostro_storage_provider.dart';
-import 'package:mostro_mobile/shared/providers/navigation_notifier_provider.dart';
-import 'package:mostro_mobile/shared/providers/storage_providers.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/data/models/currency.dart';
+import 'package:satonero_mobile/background/abstract_background_service.dart';
+import 'package:satonero_mobile/core/app.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/repositories/mostro_storage.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/services/mostro_service.dart';
+import 'package:satonero_mobile/shared/notifiers/navigation_notifier.dart';
+import 'package:satonero_mobile/shared/providers/app_init_provider.dart';
+import 'package:satonero_mobile/shared/providers/background_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/mostro_database_provider.dart';
+import 'package:satonero_mobile/shared/providers/mostro_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/mostro_storage_provider.dart';
+import 'package:satonero_mobile/shared/providers/navigation_notifier_provider.dart';
+import 'package:satonero_mobile/shared/providers/storage_providers.dart';
 import 'package:sembast/sembast_memory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -372,7 +372,7 @@ Future<void> pumpTestApp(WidgetTester tester) async {
         navigationProvider.overrideWith((ref) => NavigationNotifier()),
         appInitializerProvider.overrideWith((ref) => Future.value()),
       ],
-      child: const MostroApp(),
+      child: const SatoneroApp(),
     ),
   );
   await tester.pumpAndSettle();

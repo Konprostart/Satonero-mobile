@@ -1,14 +1,14 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/data/repositories/session_storage.dart';
-import 'package:mostro_mobile/features/key_manager/key_manager.dart';
-import 'package:mostro_mobile/features/key_manager/key_manager_provider.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/shared/notifiers/session_notifier.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/repositories/session_storage.dart';
+import 'package:satonero_mobile/features/key_manager/key_manager.dart';
+import 'package:satonero_mobile/features/key_manager/key_manager_provider.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/shared/notifiers/session_notifier.dart';
 import 'package:sembast/sembast_memory.dart';
 
 import '../mocks.mocks.dart';

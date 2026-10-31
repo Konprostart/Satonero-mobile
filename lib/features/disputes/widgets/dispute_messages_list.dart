@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_message_bubble.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_info_card.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_message_bubble.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_info_card.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 
 /// Enum representing the type of item in the dispute messages list

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/dispute_chat.dart';
-import 'package:mostro_mobile/data/models/dispute_event.dart';
+import 'package:satonero_mobile/data/models/dispute_chat.dart';
+import 'package:satonero_mobile/data/models/dispute_event.dart';
 
 void main() {
   group('DisputeChat.fromJson', () {

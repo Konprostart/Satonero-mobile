@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
 
 class RatingUser implements Payload {
   final int userRating;

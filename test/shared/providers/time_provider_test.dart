@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/shared/providers/time_provider.dart';
+import 'package:satonero_mobile/shared/providers/time_provider.dart';
 
 void main() {
   group('TimeProvider Tests', () {

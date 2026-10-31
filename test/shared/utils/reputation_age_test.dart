@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/utils/reputation_age.dart';
+import 'package:satonero_mobile/shared/utils/reputation_age.dart';
 
 void main() {
   // 2023-11-14T00:00:00Z, a UTC day boundary as mostrod publishes it.

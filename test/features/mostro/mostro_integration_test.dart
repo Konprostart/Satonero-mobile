@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/features/mostro/mostro_nodes_notifier.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/features/mostro/mostro_nodes_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
 
 import '../../mocks.dart';
 import '../../mocks.mocks.dart';

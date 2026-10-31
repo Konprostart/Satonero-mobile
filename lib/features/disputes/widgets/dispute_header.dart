@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_status_badge.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_status_badge.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
 
 /// Header widget with title and status badge for dispute list items
 class DisputeHeader extends StatelessWidget {

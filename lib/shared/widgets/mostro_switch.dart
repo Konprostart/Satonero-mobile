@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 class MostroSwitch extends StatelessWidget {
   final bool value;
@@ -27,7 +27,7 @@ class MostroSwitch extends StatelessWidget {
       trackColor: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
-            return AppTheme.mostroGreen;
+            return AppTheme.satoneroOrange;
           }
           return AppTheme.backgroundInactive;
         },

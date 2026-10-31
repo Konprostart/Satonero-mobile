@@ -263,7 +263,7 @@ When orders are canceled, Mostro sends `Action.canceled` gift wrap:
 - **ALWAYS verify the actual locale set before adding keys**: list `lib/l10n/` (one `intl_<locale>.arb` per language) — new languages get added over time and this list can be outdated. A key missing in any ARB shows up as "N untranslated message(s)" when running `flutter gen-l10n`.
 - **ARB files location**: `lib/l10n/` (`intl_en.arb` is the base language)
 - **Generated files**: `lib/generated/l10n.dart` and language-specific files
-- **Usage**: Import `import 'package:mostro_mobile/generated/l10n.dart';` and use `S.of(context)!.keyName`
+- **Usage**: Import `import 'package:satonero_mobile/generated/l10n.dart';` and use `S.of(context)!.keyName`
 
 ### Localization Best Practices
 - **Always use localized strings**: Replace hardcoded text with `S.of(context)!.keyName`

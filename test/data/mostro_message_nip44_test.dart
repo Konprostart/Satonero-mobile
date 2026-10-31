@@ -4,9 +4,9 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// Replicates the Mostro signing scheme (SHA-256 hex digest, Schnorr-verified)
 /// for asserting the tuple signatures.

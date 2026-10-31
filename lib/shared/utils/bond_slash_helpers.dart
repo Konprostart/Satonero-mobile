@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
 
 /// Pure helpers to classify why a bond was slashed, inferred from an order's
 /// message history.

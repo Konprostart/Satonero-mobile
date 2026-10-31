@@ -1,5 +1,5 @@
 import 'package:dart_nostr/dart_nostr.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
 
 abstract class BackgroundService {
   Future<void> init();

@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/utils/chat_keys.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/shared/utils/chat_keys.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 void main() {
   group('ChatKeys derivation', () {

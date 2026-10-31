@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models/enums/notification_type.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_type.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models/enums/notification_type.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_type.dart';
 
 void main() {
   group('Action', () {

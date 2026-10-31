@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/providers/avatar_provider.dart';
-import 'package:mostro_mobile/features/chat/widgets/encrypted_image_message.dart';
-import 'package:mostro_mobile/features/chat/widgets/encrypted_file_message.dart';
-import 'package:mostro_mobile/features/chat/utils/message_type_helpers.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/providers/avatar_provider.dart';
+import 'package:satonero_mobile/features/chat/widgets/encrypted_image_message.dart';
+import 'package:satonero_mobile/features/chat/widgets/encrypted_file_message.dart';
+import 'package:satonero_mobile/features/chat/utils/message_type_helpers.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class MessageBubble extends ConsumerWidget {
   final NostrEvent message;

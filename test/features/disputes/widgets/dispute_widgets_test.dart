@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_description.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_header.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_icon.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_info_card.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_list_item.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_order_id.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_status_badge.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_status_content.dart';
-import 'package:mostro_mobile/services/dispute_read_status_service.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_description.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_header.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_icon.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_info_card.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_list_item.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_order_id.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_status_badge.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_status_content.dart';
+import 'package:satonero_mobile/services/dispute_read_status_service.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// A preferences store whose every operation fails, standing in for a
 /// platform-channel error, a full disk or corrupted preferences.

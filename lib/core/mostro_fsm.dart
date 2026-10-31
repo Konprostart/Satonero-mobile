@@ -1,6 +1,6 @@
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
 
 /// Finite-State-Machine helper for Mostro order lifecycles.
 /// Only *state–transition → next-state* information is encoded here.

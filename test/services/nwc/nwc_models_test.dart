@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
-import 'package:mostro_mobile/services/nwc/nwc_models.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/services/nwc/nwc_models.dart';
 
 void main() {
   group('NwcRequest', () {

@@ -1,10 +1,10 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/repositories/open_orders_repository.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/data/repositories/open_orders_repository.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
 
 final orderRepositoryProvider = Provider((ref) {
   final nostrService = ref.read(nostrServiceProvider);

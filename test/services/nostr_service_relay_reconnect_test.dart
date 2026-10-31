@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
 
 /// An idle reconnected socket carries no REQs and therefore sends no data, so
 /// `onRelayListening` alone can never observe the reconnect: the REQ replay is

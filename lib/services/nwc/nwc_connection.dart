@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
 
 /// Represents a parsed NWC (Nostr Wallet Connect) connection URI.
 ///

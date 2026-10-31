@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   // Original colors
   static const Color grey = Color(0xFFCCCCCC);
-  static const Color mostroGreen = Color(0xFF8CC63F);
+  static const Color satoneroOrange = Color(0xFFFF9C24);
   static const Color dark1 = Color(0xFF1D212C);
   static const Color grey2 = Color(0xFF92949A);
   static const Color yellow = Color(0xFFF3CA29);
@@ -33,23 +33,23 @@ class AppTheme {
   static const Color textSubtle = Colors.white60;
 
   // Colors for actions
-  static const Color buyColor = mostroGreen;
+  static const Color buyColor = satoneroOrange;
   static const Color sellColor = Color(0xFFFF8A8A);
-  static const Color activeColor = mostroGreen;
+  static const Color activeColor = satoneroOrange;
 
   /// Purple color for accent elements, buttons, and decorative UI elements
   /// Use for: Submit buttons, message bubbles, section accents, interactive elements
   static const Color purpleButton = Color(0xFF7856AF);
 
   // Colors for states
-  static const Color statusSuccess = mostroGreen;
+  static const Color statusSuccess = satoneroOrange;
   static const Color statusWarning = Color(0xFFF3CA29);
 
   /// Red color for error states, validation failures, and error notifications
   /// Use for: Error messages, failed operations, validation errors
   static const Color statusError = Color(0xFFEF6A6A);
 
-  static const Color statusActive = mostroGreen;
+  static const Color statusActive = satoneroOrange;
   static const Color statusInfo = Color.fromARGB(255, 42, 123, 214);
   
   // Colors for role chips
@@ -96,7 +96,7 @@ class AppTheme {
   static ThemeData _buildTheme() {
     return ThemeData(
       hoverColor: dark1,
-      primaryColor: mostroGreen,
+      primaryColor: satoneroOrange,
       scaffoldBackgroundColor: backgroundDark,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -123,7 +123,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.black,
-          backgroundColor: mostroGreen,
+          backgroundColor: satoneroOrange,
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
             fontSize: 14.0,
@@ -139,7 +139,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: mostroGreen,
+          foregroundColor: satoneroOrange,
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
             fontSize: 14.0,
@@ -148,8 +148,8 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: mostroGreen,
-          side: const BorderSide(color: mostroGreen),
+          foregroundColor: satoneroOrange,
+          side: const BorderSide(color: satoneroOrange),
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
             fontSize: 14.0,
@@ -166,7 +166,7 @@ class AppTheme {
           borderSide: BorderSide(color: grey),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: mostroGreen),
+          borderSide: BorderSide(color: satoneroOrange),
         ),
       ),
       cardTheme: CardThemeData(

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/chat_room.dart';
-import 'package:mostro_mobile/features/chat/notifiers/chat_room_notifier.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/models/chat_room.dart';
+import 'package:satonero_mobile/features/chat/notifiers/chat_room_notifier.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 // The main chat room provider with proper initialization handling
 final chatRoomsProvider =

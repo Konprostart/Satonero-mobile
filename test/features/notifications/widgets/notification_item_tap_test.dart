@@ -3,18 +3,18 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models/enums/notification_type.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/data/repositories/notifications_history_repository.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notification_content.dart';
-import 'package:mostro_mobile/features/notifications/widgets/notification_item.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models/enums/notification_type.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/data/repositories/notifications_history_repository.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notification_content.dart';
+import 'package:satonero_mobile/features/notifications/widgets/notification_item.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/shared/providers/notifications_history_repository_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/shared/providers/notifications_history_repository_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// Minimal repository fake: the tap handler only calls markAsRead.
 class _FakeNotificationsRepository implements NotificationsRepository {

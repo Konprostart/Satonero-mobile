@@ -29,7 +29,7 @@ Background Isolate:
 
 ```dart
 // CORRECT — always use the singleton
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 logger.i('Info message');
 logger.e('Error occurred', error: e, stackTrace: stack);

@@ -36,7 +36,7 @@ This section documents the comprehensive color audit, identifying critical incon
 **Variants Found:**
 | Variant | Hex Value | RGB | Difference from "Official" | Usage |
 |---------|-----------|-----|---------------------------|--------|
-| `mostroGreen` | `0xFF9CD651` | (156, 214, 81) | Reference (official) | app_theme.dart |
+| `satoneroOrange` | `0xFF9CD651` | (156, 214, 81) | Reference (official) | app_theme.dart |
 | `buyColor` | `0xFF9DD64F` | (157, 214, 79) | +1 R, 0 G, -2 B | Almost identical |
 | **Hardcoded #1** | `0xFF8CC63F` | (140, 198, 63) | -16 R, -16 G, -18 B | **~10 files** |
 | Payment green | `0xFF8CC541` | (140, 197, 65) | -16 R, -17 G, -16 B | payment_confirmation |
@@ -44,7 +44,7 @@ This section documents the comprehensive color audit, identifying critical incon
 
 **Visual Comparison:**
 ```
-mostroGreen:  ████ #9CD651 (156, 214, 81)  ← "Official" brand color
+satoneroOrange:  ████ #9CD651 (156, 214, 81)  ← "Official" brand color
 buyColor:     ████ #9DD64F (157, 214, 79)  ← Almost identical
 Hardcoded:    ████ #8CC63F (140, 198, 63)  ← Most widely used 
 Payment:      ████ #8CC541 (140, 197, 65)  ← Yet another variant
@@ -281,11 +281,11 @@ The refactoring is divided into **4 phases**, prioritized by impact and risk:
 
 **1. Green Unification:**
 - ✅ Selected `#8CC63F` as official brand green
-- ✅ Updated `mostroGreen` in app_theme.dart from `#9CD651` → `#8CC63F`
-- ✅ Replaced all hardcoded `#8CC63F` instances with `AppTheme.mostroGreen`
-- ✅ Updated payment_confirmation `#8CC541` → `AppTheme.mostroGreen`
+- ✅ Updated `satoneroOrange` in app_theme.dart from `#9CD651` → `#8CC63F`
+- ✅ Replaced all hardcoded `#8CC63F` instances with `AppTheme.satoneroOrange`
+- ✅ Updated payment_confirmation `#8CC541` → `AppTheme.satoneroOrange`
 - ✅ Removed unused `green2` legacy color from app_theme.dart
-- ✅ Verified `buyColor` references `mostroGreen` (already aliased)
+- ✅ Verified `buyColor` references `satoneroOrange` (already aliased)
 
 **2. Hardcoded Color Cleanup:**
 - ✅ Replaced `Color(0xFF1D212C)` → `AppTheme.dark1` (5 files)
@@ -302,14 +302,14 @@ The refactoring is divided into **4 phases**, prioritized by impact and risk:
 #### Files Changed (15 total)
 
 **Green Unification:**
-1. ✅ `lib/core/app_theme.dart` - Updated mostroGreen value, removed green2
-2. ✅ `lib/features/order/widgets/amount_section.dart` - Hardcoded green → mostroGreen
-3. ✅ `lib/features/order/widgets/payment_methods_section.dart` - Hardcoded green → mostroGreen
-4. ✅ `lib/features/order/widgets/currency_section.dart` - Hardcoded green → mostroGreen
+1. ✅ `lib/core/app_theme.dart` - Updated satoneroOrange value, removed green2
+2. ✅ `lib/features/order/widgets/amount_section.dart` - Hardcoded green → satoneroOrange
+3. ✅ `lib/features/order/widgets/payment_methods_section.dart` - Hardcoded green → satoneroOrange
+4. ✅ `lib/features/order/widgets/currency_section.dart` - Hardcoded green → satoneroOrange
 5. ✅ `lib/features/order/screens/add_order_screen.dart` - Multiple hardcoded colors
 6. ✅ `lib/features/order/screens/payment_confirmation_screen.dart` - Payment green variant
 7. ✅ `lib/features/order/widgets/order_type_header.dart` - Added import, used backgroundCard
-8. ✅ `lib/shared/widgets/currency_selection_dialog.dart` - Hardcoded green → mostroGreen
+8. ✅ `lib/shared/widgets/currency_selection_dialog.dart` - Hardcoded green → satoneroOrange
 
 **Hardcoded Color Cleanup:**
 9. ✅ `lib/features/auth/screens/register_screen.dart` - dark1
@@ -1185,7 +1185,7 @@ Container(
 
 // ✅ GOOD - AppTheme constant
 Container(
-  color: AppTheme.mostroGreen,
+  color: AppTheme.satoneroOrange,
 )
 ```
 
@@ -1200,7 +1200,7 @@ static const Color lightGreen = Color(0xFF8CC63F);
 static const Color darkGray = Color(0xFF1D212C);
 
 // ✅ GOOD - Describes purpose
-static const Color mostroGreen = Color(0xFF8CC63F);   // Brand color
+static const Color satoneroOrange = Color(0xFF8CC63F);   // Brand color
 static const Color backgroundDark = Color(0xFF1D212C); // Darkest background
 ```
 
@@ -1211,12 +1211,12 @@ static const Color backgroundDark = Color(0xFF1D212C); // Darkest background
 
 ```dart
 // ❌ BAD - Duplicate values
-static const Color mostroGreen = Color(0xFF8CC63F);
+static const Color satoneroOrange = Color(0xFF8CC63F);
 static const Color buyColor = Color(0xFF8CC63F);      // Duplicate!
 
 // ✅ GOOD - Alias to single source
-static const Color mostroGreen = Color(0xFF8CC63F);
-static const Color buyColor = mostroGreen;            // Alias
+static const Color satoneroOrange = Color(0xFF8CC63F);
+static const Color buyColor = satoneroOrange;            // Alias
 ```
 
 ---
@@ -1227,7 +1227,7 @@ static const Color buyColor = mostroGreen;            // Alias
 ```dart
 // ✅ GOOD - Clear documentation
 /// Main brand color - use for primary actions, active states, success indicators
-static const Color mostroGreen = Color(0xFF8CC63F);
+static const Color satoneroOrange = Color(0xFF8CC63F);
 
 /// Sell action color - use ONLY for sell-related actions
 static const Color sellColor = Color(0xFFFF8A8A);

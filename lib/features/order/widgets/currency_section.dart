@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/features/order/widgets/form_section.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/shared/widgets/currency_selection_dialog.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/features/order/widgets/form_section.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/shared/widgets/currency_selection_dialog.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class CurrencySection extends ConsumerWidget {
   final OrderType orderType;
@@ -26,7 +26,7 @@ class CurrencySection extends ConsumerWidget {
           ? S.of(context)!.selectFiatCurrencyPay
           : S.of(context)!.selectFiatCurrencyReceive,
       icon: const Text('\$',
-          style: TextStyle(color: AppTheme.mostroGreen, fontSize: 18)),
+          style: TextStyle(color: AppTheme.satoneroOrange, fontSize: 18)),
       iconBackgroundColor: AppTheme.purpleButton.withValues(alpha: 0.3),
       child: currenciesAsync.when(
         loading: () => Text(S.of(context)!.loadingCurrencies,

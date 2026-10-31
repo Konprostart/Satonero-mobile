@@ -4,29 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/widgets/action_buttons.dart';
-import 'package:mostro_mobile/features/order/widgets/amount_section.dart';
-import 'package:mostro_mobile/features/order/widgets/currency_section.dart';
-import 'package:mostro_mobile/features/order/widgets/lightning_address_section.dart';
-import 'package:mostro_mobile/features/order/widgets/order_type_header.dart';
-import 'package:mostro_mobile/features/order/widgets/payment_methods_section.dart';
-import 'package:mostro_mobile/features/order/widgets/premium_section.dart';
-import 'package:mostro_mobile/features/order/widgets/price_type_section.dart';
-import 'package:mostro_mobile/features/order/widgets/form_section.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/widgets/action_buttons.dart';
+import 'package:satonero_mobile/features/order/widgets/amount_section.dart';
+import 'package:satonero_mobile/features/order/widgets/currency_section.dart';
+import 'package:satonero_mobile/features/order/widgets/lightning_address_section.dart';
+import 'package:satonero_mobile/features/order/widgets/order_type_header.dart';
+import 'package:satonero_mobile/features/order/widgets/payment_methods_section.dart';
+import 'package:satonero_mobile/features/order/widgets/premium_section.dart';
+import 'package:satonero_mobile/features/order/widgets/price_type_section.dart';
+import 'package:satonero_mobile/features/order/widgets/form_section.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/order_amount_limits.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/order_amount_limits.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class AddOrderScreen extends ConsumerStatefulWidget {
   const AddOrderScreen({super.key});
@@ -586,7 +586,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(S.of(context)!.ok,
-                      style: const TextStyle(color: AppTheme.mostroGreen)),
+                      style: const TextStyle(color: AppTheme.satoneroOrange)),
                 ),
               ],
             ),

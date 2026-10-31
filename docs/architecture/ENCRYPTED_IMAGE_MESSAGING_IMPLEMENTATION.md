@@ -454,7 +454,7 @@ Widget _buildLoadingWidget() {
   return Container(
     child: Column(
       children: [
-        CircularProgressIndicator(color: AppTheme.mostroGreen),
+        CircularProgressIndicator(color: AppTheme.satoneroOrange),
         Text('Decrypting image...'),
       ],
     ),

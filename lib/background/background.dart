@@ -6,16 +6,16 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:logger/logger.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/data/models/nostr_filter.dart';
-import 'package:mostro_mobile/data/repositories/event_storage.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/notifications/services/background_notification_service.dart' as notification_service;
-import 'package:mostro_mobile/services/chat_cursor_store.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/services/logger_service.dart' as logger_service;
-import 'package:mostro_mobile/shared/providers/mostro_database_provider.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/data/models/nostr_filter.dart';
+import 'package:satonero_mobile/data/repositories/event_storage.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/notifications/services/background_notification_service.dart' as notification_service;
+import 'package:satonero_mobile/services/chat_cursor_store.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart' as logger_service;
+import 'package:satonero_mobile/shared/providers/mostro_database_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Tracks whether the foreground app is currently active.

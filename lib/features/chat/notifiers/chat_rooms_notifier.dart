@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/chat_room.dart';
-import 'package:mostro_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/models/chat_room.dart';
+import 'package:satonero_mobile/data/models/session.dart';
 
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 
 class ChatRoomsNotifier extends StateNotifier<List<ChatRoom>> {
   final Ref ref;

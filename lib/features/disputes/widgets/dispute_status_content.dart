@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/shared/providers/legible_handle_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/shared/providers/legible_handle_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class DisputeStatusContent extends ConsumerWidget {
   final DisputeData dispute;
@@ -69,10 +69,10 @@ class DisputeStatusContent extends ConsumerWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.mostroGreen.withValues(alpha: 0.1),
+          color: AppTheme.satoneroOrange.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppTheme.mostroGreen.withValues(alpha: 0.3),
+            color: AppTheme.satoneroOrange.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -81,7 +81,7 @@ class DisputeStatusContent extends ConsumerWidget {
           children: [
             Icon(
               Icons.check_circle_outline,
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               size: 24,
             ),
             const SizedBox(width: 12),
@@ -92,7 +92,7 @@ class DisputeStatusContent extends ConsumerWidget {
                   Text(
                     S.of(context)!.disputeResolvedTitle,
                     style: TextStyle(
-                      color: AppTheme.mostroGreen,
+                      color: AppTheme.satoneroOrange,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/widgets/star_rating_row.dart';
+import 'package:satonero_mobile/shared/widgets/star_rating_row.dart';
 
 /// The 5-star rating in every order card used to be a horizontal
 /// `ListView.builder(shrinkWrap: true)` — a Scrollable + Viewport + Sliver

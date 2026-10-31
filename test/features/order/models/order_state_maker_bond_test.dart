@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/data/models.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
 
 /// Drives the OrderState through the maker order-creation sequence when the
 /// node has the anti-abuse bond enabled: submit (new-order/pending) →

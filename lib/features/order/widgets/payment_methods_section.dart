@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/order/providers/payment_methods_provider.dart';
-import 'package:mostro_mobile/features/order/widgets/form_section.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/order/providers/payment_methods_provider.dart';
+import 'package:satonero_mobile/features/order/widgets/form_section.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 class PaymentMethodsSection extends ConsumerWidget {
   final List<String> selectedMethods;
@@ -43,8 +43,8 @@ class PaymentMethodsSection extends ConsumerWidget {
     return FormSection(
       title: S.of(context)!.paymentMethodsForCurrency(selectedFiatCode ?? ''),
       icon:
-          const Icon(Icons.credit_card, color: AppTheme.mostroGreen, size: 18),
-      iconBackgroundColor: AppTheme.mostroGreen.withValues(alpha: 0.3),
+          const Icon(Icons.credit_card, color: AppTheme.satoneroOrange, size: 18),
+      iconBackgroundColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
       extraContent: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         child: TextField(
@@ -152,7 +152,7 @@ class PaymentMethodsSection extends ConsumerWidget {
                               title: Text(method,
                                   style: const TextStyle(color: Colors.white)),
                               value: dialogSelectedMethods.contains(method),
-                              activeColor: AppTheme.mostroGreen,
+                              activeColor: AppTheme.satoneroOrange,
                               checkColor: Colors.black,
                               contentPadding: EdgeInsets.zero,
                               onChanged: (selected) {

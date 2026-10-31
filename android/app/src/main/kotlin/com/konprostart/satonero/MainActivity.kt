@@ -1,4 +1,4 @@
-package network.mostro.app
+package com.konprostart.satonero
 
 import io.flutter.embedding.android.FlutterActivity
 

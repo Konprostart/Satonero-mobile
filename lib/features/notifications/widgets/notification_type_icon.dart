@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/data/models/enums/notification_type.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/data/models/enums/notification_type.dart';
 
 class NotificationTypeIcon extends StatelessWidget {
   final NotificationType type;
@@ -89,7 +89,7 @@ class NotificationTypeIcon extends StatelessWidget {
   Color _getColorForType() {
     switch (type) {
       case NotificationType.orderUpdate:
-        return AppTheme.mostroGreen;
+        return AppTheme.satoneroOrange;
       
       case NotificationType.tradeUpdate:
         switch (action) {

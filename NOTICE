@@ -1,0 +1,9 @@
+Satonero is a fork of the Mostro mobile client.
+
+Upstream project: https://github.com/MostroP2P/mobile
+Upstream copyright: Copyright (c) 2025 Mostro team
+Satonero modifications: Copyright (c) 2026 Satonero contributors
+
+Satonero is licensed under the MIT License; see LICENSE.
+Mostro protocol names and the `mostro:` deep-link scheme are retained for
+protocol compatibility and are not claims of Satonero ownership.

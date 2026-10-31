@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/wallet/providers/nwc_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart'
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/wallet/providers/nwc_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart'
     show NwcResponseException, NwcTimeoutException, NwcErrorCode;
 
 /// Invoice generation status for the NWC auto-invoice flow.
@@ -73,7 +73,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
       logger.i('NWC: Generating invoice for ${widget.sats} sats...');
       final result = await nwcNotifier.makeInvoice(
         widget.sats,
-        description: 'Mostro order ${widget.orderId}',
+        description: 'Satonero order ${widget.orderId}',
       );
 
       if (!mounted) return;
@@ -174,7 +174,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               foregroundColor: Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -200,7 +200,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
       decoration: BoxDecoration(
         color: AppTheme.dark1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.mostroGreen.withAlpha(77)),
+        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(77)),
       ),
       child: Column(
         children: [
@@ -208,7 +208,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
             width: 40,
             height: 40,
             child: CircularProgressIndicator(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               strokeWidth: 3,
             ),
           ),
@@ -240,20 +240,20 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
       decoration: BoxDecoration(
         color: AppTheme.dark1,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.mostroGreen.withAlpha(128)),
+        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(128)),
       ),
       child: Column(
         children: [
           const Icon(
             LucideIcons.checkCircle,
-            color: AppTheme.mostroGreen,
+            color: AppTheme.satoneroOrange,
             size: 40,
           ),
           const SizedBox(height: 12),
           Text(
             S.of(context)!.nwcInvoiceGenerated,
             style: const TextStyle(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -286,7 +286,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
                   ? () => widget.onInvoiceConfirmed(_generatedInvoice!)
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.mostroGreen,
+                backgroundColor: AppTheme.satoneroOrange,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -332,7 +332,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
             ),
             child: Text(S.of(context)!.nwcRetryInvoice),
           ),

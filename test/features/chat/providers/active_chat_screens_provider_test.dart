@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/chat/providers/active_chat_screens_provider.dart';
+import 'package:satonero_mobile/features/chat/providers/active_chat_screens_provider.dart';
 
 void main() {
   group('ActiveChatScreensNotifier', () {

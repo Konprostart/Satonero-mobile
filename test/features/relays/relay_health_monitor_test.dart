@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mostro_mobile/features/relays/relay_health_monitor.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_manager_provider.dart';
-import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:satonero_mobile/features/relays/relay_health_monitor.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_manager_provider.dart';
+import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
 
 import '../../mocks.mocks.dart';
 

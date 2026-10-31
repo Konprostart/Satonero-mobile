@@ -1,8 +1,8 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mostro_mobile/features/key_manager/key_derivator.dart';
-import 'package:mostro_mobile/features/key_manager/key_storage.dart';
-import 'package:mostro_mobile/features/key_manager/key_manager_errors.dart';
+import 'package:satonero_mobile/features/key_manager/key_derivator.dart';
+import 'package:satonero_mobile/features/key_manager/key_storage.dart';
+import 'package:satonero_mobile/features/key_manager/key_manager_errors.dart';
 
 class KeyManager {
   final KeyStorage _storage;

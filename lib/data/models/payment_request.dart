@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/order.dart';
 
 class PaymentRequest implements Payload {
   final Order? order;

@@ -6,10 +6,10 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:diacritic/diacritic.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/services/encrypted_image_upload_service.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/services/encrypted_image_upload_service.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class EncryptedImageMessage extends StatefulWidget {
   final NostrEvent message;
@@ -209,7 +209,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               strokeWidth: 2,
             ),
           ),

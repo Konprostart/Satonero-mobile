@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/features/order/widgets/form_section.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/features/order/widgets/form_section.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class LightningAddressSection extends StatelessWidget {
   final TextEditingController controller;

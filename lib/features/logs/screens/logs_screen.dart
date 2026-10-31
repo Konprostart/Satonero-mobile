@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/features/logs/logs_provider.dart';
-import 'package:mostro_mobile/features/logs/widgets/logs_actions_menu.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_switch.dart';
-import 'package:mostro_mobile/shared/utils/datetime_extensions_utils.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/features/logs/logs_provider.dart';
+import 'package:satonero_mobile/features/logs/widgets/logs_actions_menu.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/widgets/mostro_switch.dart';
+import 'package:satonero_mobile/shared/utils/datetime_extensions_utils.dart';
 
 class LogsScreen extends ConsumerStatefulWidget {
   const LogsScreen({super.key});

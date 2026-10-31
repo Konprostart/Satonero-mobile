@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class OrderTypeHeader extends StatelessWidget {
   final OrderType orderType;

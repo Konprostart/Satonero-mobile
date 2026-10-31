@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/features/order/widgets/form_section.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/features/order/widgets/form_section.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class AmountSection extends StatefulWidget {
   final OrderType orderType;
@@ -128,7 +128,7 @@ class _AmountSectionState extends State<AmountSection> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: AppTheme.mostroGreen,
+          color: AppTheme.satoneroOrange,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
@@ -201,8 +201,8 @@ class _AmountSectionState extends State<AmountSection> {
     return FormSection(
       title: _getTitle(),
       topRightWidget: _getTopRightWidget(),
-      icon: const Icon(Icons.money, color: AppTheme.mostroGreen, size: 18),
-      iconBackgroundColor: AppTheme.mostroGreen.withValues(alpha: 0.3),
+      icon: const Icon(Icons.money, color: AppTheme.satoneroOrange, size: 18),
+      iconBackgroundColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -264,7 +264,7 @@ class _AmountSectionState extends State<AmountSection> {
             Text(
               S.of(context)!.tapSecondFieldForRange,
               style: const TextStyle(
-                color: AppTheme.mostroGreen,
+                color: AppTheme.satoneroOrange,
                 fontSize: 12,
               ),
             ),

@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/features/order/notifiers/add_order_notifier.dart';
-import 'package:mostro_mobile/features/order/notifiers/order_notifier.dart';
-import 'package:mostro_mobile/shared/providers/mostro_storage_provider.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/features/order/notifiers/add_order_notifier.dart';
+import 'package:satonero_mobile/features/order/notifiers/order_notifier.dart';
+import 'package:satonero_mobile/shared/providers/mostro_storage_provider.dart';
 
 final orderNotifierProvider =
     StateNotifierProvider.family<OrderNotifier, OrderState, String>(

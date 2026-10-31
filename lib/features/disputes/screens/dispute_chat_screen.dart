@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/enums.dart' as enums;
-import 'package:mostro_mobile/features/chat/providers/active_chat_screens_provider.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_communication_section.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_message_input.dart';
-import 'package:mostro_mobile/features/disputes/providers/dispute_providers.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/services/dispute_read_status_service.dart';
-import 'package:mostro_mobile/features/disputes/providers/dispute_read_status_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/enums.dart' as enums;
+import 'package:satonero_mobile/features/chat/providers/active_chat_screens_provider.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_communication_section.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_message_input.dart';
+import 'package:satonero_mobile/features/disputes/providers/dispute_providers.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/services/dispute_read_status_service.dart';
+import 'package:satonero_mobile/features/disputes/providers/dispute_read_status_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class DisputeChatScreen extends ConsumerStatefulWidget {
   final String disputeId;

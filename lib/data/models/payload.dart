@@ -1,13 +1,13 @@
-import 'package:mostro_mobile/data/models/bond_payout_request.dart';
-import 'package:mostro_mobile/data/models/cant_do.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/data/models/next_trade.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/payment_failed.dart';
-import 'package:mostro_mobile/data/models/payment_request.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/rating_user.dart';
-import 'package:mostro_mobile/data/models/text_message.dart';
+import 'package:satonero_mobile/data/models/bond_payout_request.dart';
+import 'package:satonero_mobile/data/models/cant_do.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/data/models/next_trade.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/payment_failed.dart';
+import 'package:satonero_mobile/data/models/payment_request.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/rating_user.dart';
+import 'package:satonero_mobile/data/models/text_message.dart';
 
 abstract class Payload {
   String get type;

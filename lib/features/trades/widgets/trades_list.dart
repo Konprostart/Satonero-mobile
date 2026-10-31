@@ -1,6 +1,6 @@
 import 'package:dart_nostr/nostr/model/event/event.dart';
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/features/trades/widgets/trades_list_item.dart';
+import 'package:satonero_mobile/features/trades/widgets/trades_list_item.dart';
 
 class TradesList extends StatelessWidget {
   final List<NostrEvent> trades;

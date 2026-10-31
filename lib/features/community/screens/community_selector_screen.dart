@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/core/config/communities.dart';
-import 'package:mostro_mobile/features/community/community.dart';
-import 'package:mostro_mobile/features/community/providers/community_selector_provider.dart';
-import 'package:mostro_mobile/features/community/widgets/community_card.dart';
-import 'package:mostro_mobile/features/mostro/mostro_nodes_provider.dart';
-import 'package:mostro_mobile/features/mostro/widgets/add_custom_node_dialog.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/features/community/community.dart';
+import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
+import 'package:satonero_mobile/features/community/widgets/community_card.dart';
+import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
+import 'package:satonero_mobile/features/mostro/widgets/add_custom_node_dialog.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 class CommunitySelectorScreen extends ConsumerStatefulWidget {
   const CommunitySelectorScreen({super.key});

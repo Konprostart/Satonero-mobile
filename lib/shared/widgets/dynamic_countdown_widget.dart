@@ -1,7 +1,7 @@
 import 'package:circular_countdown/circular_countdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// Shared countdown widget for orders in PENDING status only
 /// 

@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/features/notifications/services/background_session_cache.dart';
+import 'package:satonero_mobile/features/notifications/services/background_session_cache.dart';
 import 'dart:convert';
 import 'dart:math';
 
@@ -6,38 +6,38 @@ import 'package:dart_nostr/nostr/model/event/event.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:mostro_mobile/core/app.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as mostro_action;
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/data/repositories/session_storage.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/key_manager/key_derivator.dart';
-import 'package:mostro_mobile/features/key_manager/key_manager.dart';
-import 'package:mostro_mobile/features/key_manager/key_storage.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_data_extractor.dart';
-import 'package:mostro_mobile/shared/utils/chat_keys.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_message_mapper.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/generated/l10n_de.dart';
-import 'package:mostro_mobile/generated/l10n_en.dart';
-import 'package:mostro_mobile/generated/l10n_es.dart';
-import 'package:mostro_mobile/generated/l10n_fr.dart';
-import 'package:mostro_mobile/generated/l10n_it.dart';
-import 'package:mostro_mobile/generated/l10n_nl.dart';
-import 'package:mostro_mobile/generated/l10n_pt.dart';
-import 'package:mostro_mobile/background/background.dart' as bg;
-import 'package:mostro_mobile/shared/providers/mostro_database_provider.dart';
+import 'package:satonero_mobile/core/app.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/data/repositories/session_storage.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/key_manager/key_derivator.dart';
+import 'package:satonero_mobile/features/key_manager/key_manager.dart';
+import 'package:satonero_mobile/features/key_manager/key_storage.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_data_extractor.dart';
+import 'package:satonero_mobile/shared/utils/chat_keys.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_message_mapper.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/generated/l10n_de.dart';
+import 'package:satonero_mobile/generated/l10n_en.dart';
+import 'package:satonero_mobile/generated/l10n_es.dart';
+import 'package:satonero_mobile/generated/l10n_fr.dart';
+import 'package:satonero_mobile/generated/l10n_it.dart';
+import 'package:satonero_mobile/generated/l10n_nl.dart';
+import 'package:satonero_mobile/generated/l10n_pt.dart';
+import 'package:satonero_mobile/background/background.dart' as bg;
+import 'package:satonero_mobile/shared/providers/mostro_database_provider.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -152,7 +152,7 @@ String resolveNotificationRoute(String? payload) {
 
 void _onNotificationTap(NotificationResponse response) {
   try {
-    final context = MostroApp.navigatorKey.currentContext;
+    final context = SatoneroApp.navigatorKey.currentContext;
     if (context == null) {
       logger.w('No context available for notification navigation');
       return;
@@ -188,9 +188,9 @@ Future<void> showLocalNotification(NostrEvent event) async {
 
     final details = NotificationDetails(
       android: AndroidNotificationDetails(
-        'mostro_notifications',
-        'Mostro Notifications',
-        channelDescription: 'Notifications for Mostro trades and messages',
+        Config.notificationChannelId,
+        'Satonero Notifications',
+        channelDescription: 'Notifications for Satonero trades and messages',
         importance: Importance.max,
         priority: Priority.high,
         visibility: NotificationVisibility.public,

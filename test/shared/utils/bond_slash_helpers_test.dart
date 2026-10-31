@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/shared/utils/bond_slash_helpers.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/shared/utils/bond_slash_helpers.dart';
 
 MostroMessage _msg(Action action) =>
     MostroMessage(action: action, id: 'order-1');

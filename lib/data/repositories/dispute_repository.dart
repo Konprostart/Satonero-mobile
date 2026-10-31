@@ -1,14 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
 
 /// Repository for managing dispute creation
 class DisputeRepository {

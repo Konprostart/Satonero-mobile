@@ -5,18 +5,18 @@ import 'package:dart_nostr/dart_nostr.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/services/chat_cursor_store.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_manager_provider.dart';
-import 'package:mostro_mobile/shared/providers.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/features/key_manager/key_manager_provider.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/services/chat_cursor_store.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_manager_provider.dart';
+import 'package:satonero_mobile/shared/providers.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/key_manager/key_manager_provider.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 class MostroService {
   final Ref ref;

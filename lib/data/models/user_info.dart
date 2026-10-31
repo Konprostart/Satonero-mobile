@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/shared/utils/reputation_age.dart';
+import 'package:satonero_mobile/shared/utils/reputation_age.dart';
 
 /// Reputation snapshot of a counterpart, as forwarded by the Mostro daemon
 /// inside a Peer payload (mostro-core `UserInfo`). Zeroed values mean either

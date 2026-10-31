@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/user_info.dart';
-import 'package:mostro_mobile/shared/widgets/custom_card.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/user_info.dart';
+import 'package:satonero_mobile/shared/widgets/custom_card.dart';
 
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/shared/utils/currency_utils.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/shared/utils/currency_utils.dart';
 
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 /// Card that displays the order amount information (selling/buying sats for amount)
 class OrderAmountCard extends ConsumerWidget {
@@ -219,7 +219,7 @@ class OrderIdCard extends StatelessWidget {
                 child: Text(
                   orderId,
                   style: const TextStyle(
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                     fontSize: 14,
                   ),
                 ).withAutomationId(AutomationIds.orderId),
@@ -365,7 +365,7 @@ class PeerReputationInline extends StatelessWidget {
           children: [
             const Icon(
               Icons.star,
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               size: 18,
             ),
             const SizedBox(width: 6),
@@ -413,7 +413,7 @@ class _ReputationMetricsRow extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.star,
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                     size: 16,
                   ),
                   const SizedBox(width: 4),

@@ -1,8 +1,5 @@
 plugins {
     id "com.android.application"
-    // START: FlutterFire Configuration
-    id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -49,7 +46,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 android {
-    namespace = "network.mostro.app"
+    namespace = "com.konprostart.satonero"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -83,7 +80,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = (project.findProperty("satoneroApplicationId") ?: "network.mostro.app") as String
+        applicationId = "com.konprostart.satonero"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         // Required by flutter_secure_storage (needs API 23+)
@@ -96,15 +93,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-    }
-
-    sourceSets {
-        debug {
-            if (project.hasProperty("satoneroApplicationId")) {
-                manifest.srcFile "src/satoneroDebug/AndroidManifest.xml"
-                res.srcDirs += "src/satoneroDebug/res"
-            }
-        }
     }
 
     buildTypes {

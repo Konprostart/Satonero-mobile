@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/order.dart';
 import 'package:test/test.dart';
 
 Future<Map<String, dynamic>> loadJson(String path) async {

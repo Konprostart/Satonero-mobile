@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mostro_mobile/data/repositories/nwc_storage.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/nwc/nwc_client.dart';
-import 'package:mostro_mobile/services/nwc/nwc_connection.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
-import 'package:mostro_mobile/services/nwc/nwc_models.dart';
-import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:satonero_mobile/data/repositories/nwc_storage.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/nwc/nwc_client.dart';
+import 'package:satonero_mobile/services/nwc/nwc_connection.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/services/nwc/nwc_models.dart';
+import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
 
 /// Represents the current state of the NWC wallet connection.
 class NwcState extends Equatable {

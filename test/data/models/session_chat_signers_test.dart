@@ -1,7 +1,7 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/session.dart';
 
 /// The chat allow-lists gate which inner-event signers a conversation
 /// accepts (chatUnwrap step 9). These pure tests lock their contents in.

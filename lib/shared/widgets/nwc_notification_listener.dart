@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/wallet/providers/nwc_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/nwc/nwc_client.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/wallet/providers/nwc_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/nwc/nwc_client.dart';
 
 /// A widget that listens to NWC payment notifications and shows
 /// in-app snackbar notifications when payments are received or sent.
@@ -67,7 +67,7 @@ class _NwcNotificationListenerState
         message =
             S.of(context)!.nwcNotificationPaymentReceived(formattedAmount);
         icon = LucideIcons.arrowDownCircle;
-        color = AppTheme.mostroGreen;
+        color = AppTheme.satoneroOrange;
       case 'payment_sent':
         message = S.of(context)!.nwcNotificationPaymentSent(formattedAmount);
         icon = LucideIcons.arrowUpCircle;

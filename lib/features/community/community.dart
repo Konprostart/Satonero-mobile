@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/core/config/communities.dart';
 
 /// A community with its static config and dynamic metadata from Nostr events.
 class Community {

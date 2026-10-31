@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/shared/providers/drawer_provider.dart';
-import 'package:mostro_mobile/shared/widgets/notification_history_bell_widget.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/shared/providers/drawer_provider.dart';
+import 'package:satonero_mobile/shared/widgets/notification_history_bell_widget.dart';
 import 'dart:async';
 
 /// Animated Mostro logo widget that shows normal logo and switches to happy logo on tap
-class AnimatedMostroLogo extends StatefulWidget {
-  const AnimatedMostroLogo({super.key});
+class AnimatedSatoneroLogo extends StatefulWidget {
+  const AnimatedSatoneroLogo({super.key});
 
   @override
-  State<AnimatedMostroLogo> createState() => _AnimatedMostroLogoState();
+  State<AnimatedSatoneroLogo> createState() => _AnimatedSatoneroLogoState();
 }
 
-class _AnimatedMostroLogoState extends State<AnimatedMostroLogo> {
+class _AnimatedSatoneroLogoState extends State<AnimatedSatoneroLogo> {
   bool _isHappy = false;
   Timer? _timer;
 
@@ -53,8 +53,8 @@ class _AnimatedMostroLogoState extends State<AnimatedMostroLogo> {
         duration: const Duration(milliseconds: 150),
         child: Image.asset(
           _isHappy
-              ? 'assets/images/mostro-happy-100.png'
-              : 'assets/images/mostro-100.png',
+              ? 'assets/images/satonero-happy-100.png'
+              : 'assets/images/satonero-100.png',
           key: ValueKey(_isHappy),
           height: 32,
           width: 32,
@@ -65,13 +65,13 @@ class _AnimatedMostroLogoState extends State<AnimatedMostroLogo> {
   }
 }
 
-class MostroAppBar extends ConsumerWidget implements PreferredSizeWidget {
+class SatoneroAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final Widget? title;
   final bool showBackButton;
   final bool showDrawerButton;
   final List<Widget>? actions;
 
-  const MostroAppBar({
+  const SatoneroAppBar({
     super.key,
     this.title,
     this.showBackButton = false,
@@ -122,7 +122,7 @@ class MostroAppBar extends ConsumerWidget implements PreferredSizeWidget {
       backgroundColor: AppTheme.backgroundDark,
       elevation: 0,
       leadingWidth: 70,
-      title: title ?? const AnimatedMostroLogo(),
+      title: title ?? const AnimatedSatoneroLogo(),
       centerTitle: true,
       // Add bottom border similar to bottom navbar
       bottom: PreferredSize(

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/services/fcm_service.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/services/fcm_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';

@@ -1,7 +1,7 @@
 import 'package:dart_nostr/dart_nostr.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// Represents a User session
 ///

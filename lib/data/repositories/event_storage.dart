@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/data/repositories/base_storage.dart';
+import 'package:satonero_mobile/data/repositories/base_storage.dart';
 import 'package:sembast/sembast.dart';
 
 class EventStorage extends BaseStorage<Map<String, dynamic>> {

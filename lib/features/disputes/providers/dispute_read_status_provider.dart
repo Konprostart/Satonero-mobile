@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
-import 'package:mostro_mobile/services/dispute_read_status_service.dart';
+import 'package:satonero_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+import 'package:satonero_mobile/services/dispute_read_status_service.dart';
 
 /// Provider to track when disputes are marked as read
 /// This triggers UI updates when a dispute's read status changes

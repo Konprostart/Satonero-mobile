@@ -1,47 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/features/chat/screens/chat_room_screen.dart';
-import 'package:mostro_mobile/features/order/screens/add_order_screen.dart';
-import 'package:mostro_mobile/features/order/screens/order_confirmation_screen.dart';
-import 'package:mostro_mobile/features/chat/screens/chat_rooms_list.dart';
-import 'package:mostro_mobile/features/home/screens/home_screen.dart';
-import 'package:mostro_mobile/features/key_manager/key_management_screen.dart';
-import 'package:mostro_mobile/features/rate/rate_counterpart_screen.dart';
-import 'package:mostro_mobile/features/settings/about_screen.dart';
-import 'package:mostro_mobile/features/settings/settings_screen.dart';
-import 'package:mostro_mobile/features/settings/notification_settings_screen.dart';
-import 'package:mostro_mobile/features/trades/screens/trade_detail_screen.dart';
-import 'package:mostro_mobile/features/trades/screens/trades_screen.dart';
-import 'package:mostro_mobile/features/relays/relays_screen.dart';
-import 'package:mostro_mobile/features/order/screens/add_lightning_invoice_screen.dart';
-import 'package:mostro_mobile/features/order/screens/bond_payout_invoice_screen.dart';
-import 'package:mostro_mobile/features/order/screens/pay_bond_invoice_screen.dart';
-import 'package:mostro_mobile/features/order/screens/pay_lightning_invoice_screen.dart';
-import 'package:mostro_mobile/features/order/screens/take_order_screen.dart';
-import 'package:mostro_mobile/features/walkthrough/screens/walkthrough_screen.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/features/chat/screens/chat_room_screen.dart';
+import 'package:satonero_mobile/features/order/screens/add_order_screen.dart';
+import 'package:satonero_mobile/features/order/screens/order_confirmation_screen.dart';
+import 'package:satonero_mobile/features/chat/screens/chat_rooms_list.dart';
+import 'package:satonero_mobile/features/home/screens/home_screen.dart';
+import 'package:satonero_mobile/features/key_manager/key_management_screen.dart';
+import 'package:satonero_mobile/features/rate/rate_counterpart_screen.dart';
+import 'package:satonero_mobile/features/settings/about_screen.dart';
+import 'package:satonero_mobile/features/settings/settings_screen.dart';
+import 'package:satonero_mobile/features/settings/notification_settings_screen.dart';
+import 'package:satonero_mobile/features/trades/screens/trade_detail_screen.dart';
+import 'package:satonero_mobile/features/trades/screens/trades_screen.dart';
+import 'package:satonero_mobile/features/relays/relays_screen.dart';
+import 'package:satonero_mobile/features/order/screens/add_lightning_invoice_screen.dart';
+import 'package:satonero_mobile/features/order/screens/bond_payout_invoice_screen.dart';
+import 'package:satonero_mobile/features/order/screens/pay_bond_invoice_screen.dart';
+import 'package:satonero_mobile/features/order/screens/pay_lightning_invoice_screen.dart';
+import 'package:satonero_mobile/features/order/screens/take_order_screen.dart';
+import 'package:satonero_mobile/features/walkthrough/screens/walkthrough_screen.dart';
 
-import 'package:mostro_mobile/features/disputes/screens/dispute_chat_screen.dart';
-import 'package:mostro_mobile/features/wallet/screens/wallet_settings_screen.dart';
-import 'package:mostro_mobile/features/wallet/screens/connect_wallet_screen.dart';
+import 'package:satonero_mobile/features/disputes/screens/dispute_chat_screen.dart';
+import 'package:satonero_mobile/features/wallet/screens/wallet_settings_screen.dart';
+import 'package:satonero_mobile/features/wallet/screens/connect_wallet_screen.dart';
 
-import 'package:mostro_mobile/features/notifications/screens/notifications_screen.dart';
-import 'package:mostro_mobile/features/logs/screens/logs_screen.dart';
-import 'package:mostro_mobile/features/logs/widgets/logs_recording_indicator.dart';
+import 'package:satonero_mobile/features/notifications/screens/notifications_screen.dart';
+import 'package:satonero_mobile/features/logs/screens/logs_screen.dart';
+import 'package:satonero_mobile/features/logs/widgets/logs_recording_indicator.dart';
 
-import 'package:mostro_mobile/core/app.dart';
-import 'package:mostro_mobile/features/community/providers/community_selector_provider.dart';
-import 'package:mostro_mobile/features/community/screens/community_selector_screen.dart';
-import 'package:mostro_mobile/features/walkthrough/providers/first_run_provider.dart';
-import 'package:mostro_mobile/shared/widgets/navigation_listener_widget.dart';
-import 'package:mostro_mobile/shared/widgets/notification_listener_widget.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/app.dart';
+import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
+import 'package:satonero_mobile/features/community/screens/community_selector_screen.dart';
+import 'package:satonero_mobile/features/walkthrough/providers/first_run_provider.dart';
+import 'package:satonero_mobile/shared/widgets/navigation_listener_widget.dart';
+import 'package:satonero_mobile/shared/widgets/notification_listener_widget.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 GoRouter createRouter(WidgetRef ref) {
   return GoRouter(
-    navigatorKey: MostroApp.navigatorKey,
+    navigatorKey: SatoneroApp.navigatorKey,
     initialLocation: '/',
     redirect: (context, state) {
       // Redirect custom schemes to home to prevent assertion failures

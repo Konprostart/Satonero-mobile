@@ -1,8 +1,8 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/features/notifications/services/background_session_cache.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/features/notifications/services/background_session_cache.dart';
 
 /// The background isolate used to open the database, construct and init a
 /// KeyManager (secure-storage reads) and re-derive every session's chat keys

@@ -1,15 +1,15 @@
 import 'package:dart_nostr/nostr/model/event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/features/trades/providers/trades_provider.dart';
-import 'package:mostro_mobile/features/trades/widgets/trades_list.dart';
-import 'package:mostro_mobile/features/trades/widgets/status_filter_widget.dart';
-import 'package:mostro_mobile/shared/widgets/bottom_nav_bar.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_app_bar.dart';
-import 'package:mostro_mobile/shared/widgets/custom_drawer_overlay.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/features/trades/providers/trades_provider.dart';
+import 'package:satonero_mobile/features/trades/widgets/trades_list.dart';
+import 'package:satonero_mobile/features/trades/widgets/status_filter_widget.dart';
+import 'package:satonero_mobile/shared/widgets/bottom_nav_bar.dart';
+import 'package:satonero_mobile/shared/widgets/satonero_app_bar.dart';
+import 'package:satonero_mobile/shared/widgets/custom_drawer_overlay.dart';
 
 class TradesScreen extends ConsumerWidget {
   const TradesScreen({super.key});
@@ -21,7 +21,7 @@ class TradesScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
-      appBar: const MostroAppBar(),
+      appBar: const SatoneroAppBar(),
       body: CustomDrawerOverlay(
         child: RefreshIndicator(
           onRefresh: () async {

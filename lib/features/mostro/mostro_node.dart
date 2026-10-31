@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/core/config/communities.dart';
 
 /// Sentinel value to explicitly clear an optional field in [MostroNode.withMetadata].
 const String _clearField = '__clear__';

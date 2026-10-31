@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 /// `AppTheme.theme` is read on every rebuild of the root `MaterialApp`, the
 /// drawer, reactive buttons and several screens. It used to be a getter that

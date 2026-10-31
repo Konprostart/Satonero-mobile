@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/wallet/providers/nwc_provider.dart';
-import 'package:mostro_mobile/services/nwc/nwc_connection.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/widgets/qr_scanner_screen.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/wallet/providers/nwc_provider.dart';
+import 'package:satonero_mobile/services/nwc/nwc_connection.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/qr_scanner_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// Screen for connecting a wallet via NWC URI.

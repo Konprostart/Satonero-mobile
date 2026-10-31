@@ -78,9 +78,9 @@ jobs:
           FIXES=$(sed -n '/### 🐛/,/^###\|^$/p' RELEASE_NOTES.md | grep "^-" || true)
 
           {
-            echo "# ⚡ Mostro Mobile ${TAG}"
+            echo "# ⚡ Satonero ${TAG}"
             echo ""
-            echo "A new version of the Mostro P2P Bitcoin trading app is here!"
+            echo "A new version of the Satonero client for the Mostro P2P Bitcoin protocol is here!"
             echo ""
             if [ -n "$FEATURES" ]; then
               FEATURE_COUNT=$(echo "$FEATURES" | wc -l)
@@ -95,8 +95,8 @@ jobs:
             echo "---"; echo ""
             echo "### 📥 Install"
             echo "Download the APK for your device architecture below:"
-            echo "- \`mostro-${TAG}-arm64-v8a.apk\` — most modern Android phones (64-bit)"
-            echo "- \`mostro-${TAG}-armeabi-v7a.apk\` — older Android phones (32-bit)"
+            echo "- \`satonero-${TAG}-arm64-v8a.apk\` — most modern Android phones (64-bit)"
+            echo "- \`satonero-${TAG}-armeabi-v7a.apk\` — older Android phones (32-bit)"
             echo ""
             echo "> The \`.aab\` (Android App Bundle) is for Google Play Store distribution."
             echo ""
@@ -190,10 +190,10 @@ jobs:
           set -euo pipefail
           VERSION=${{ steps.version.outputs.full_tag }}
           mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
-             build/app/outputs/flutter-apk/mostro-${VERSION}-armeabi-v7a.apk
+             build/app/outputs/flutter-apk/satonero-${VERSION}-armeabi-v7a.apk
           mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
-             build/app/outputs/flutter-apk/mostro-${VERSION}-arm64-v8a.apk
-          ls -lh build/app/outputs/flutter-apk/mostro-${VERSION}-*.apk
+             build/app/outputs/flutter-apk/satonero-${VERSION}-arm64-v8a.apk
+          ls -lh build/app/outputs/flutter-apk/satonero-${VERSION}-*.apk
 
       - name: Verify APK signing
         run: |
@@ -202,7 +202,7 @@ jobs:
           SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
           APKSIGNER=$(find "$SDK_ROOT"/build-tools -name apksigner -type f 2>/dev/null | sort -V | tail -1 || true)
           for ARCH in armeabi-v7a arm64-v8a; do
-            APK="build/app/outputs/flutter-apk/mostro-${VERSION}-${ARCH}.apk"
+            APK="build/app/outputs/flutter-apk/satonero-${VERSION}-${ARCH}.apk"
             echo "Verifying ${ARCH}..."
             jarsigner -verify "$APK" > /dev/null
             if [ -n "$APKSIGNER" ]; then "$APKSIGNER" verify --print-certs "$APK"; fi
@@ -214,8 +214,8 @@ jobs:
         with:
           name: Releases
           path: |
-            build/app/outputs/flutter-apk/mostro-${{ steps.version.outputs.full_tag }}-armeabi-v7a.apk
-            build/app/outputs/flutter-apk/mostro-${{ steps.version.outputs.full_tag }}-arm64-v8a.apk
+            build/app/outputs/flutter-apk/satonero-${{ steps.version.outputs.full_tag }}-armeabi-v7a.apk
+            build/app/outputs/flutter-apk/satonero-${{ steps.version.outputs.full_tag }}-arm64-v8a.apk
             build/app/outputs/bundle/release/app-release.aab
 
       - name: Create GitHub Release
@@ -223,8 +223,8 @@ jobs:
         with:
           body_path: RELEASE_BODY.md
           files: |
-            build/app/outputs/flutter-apk/mostro-${{ steps.version.outputs.full_tag }}-armeabi-v7a.apk
-            build/app/outputs/flutter-apk/mostro-${{ steps.version.outputs.full_tag }}-arm64-v8a.apk
+            build/app/outputs/flutter-apk/satonero-${{ steps.version.outputs.full_tag }}-armeabi-v7a.apk
+            build/app/outputs/flutter-apk/satonero-${{ steps.version.outputs.full_tag }}-arm64-v8a.apk
             build/app/outputs/bundle/release/app-release.aab
           generate_release_notes: false
           draft: false

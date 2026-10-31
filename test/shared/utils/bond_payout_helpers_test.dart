@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/bond_payout_request.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/payment_request.dart';
-import 'package:mostro_mobile/shared/utils/bond_payout_helpers.dart';
+import 'package:satonero_mobile/data/models/bond_payout_request.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/payment_request.dart';
+import 'package:satonero_mobile/shared/utils/bond_payout_helpers.dart';
 
 const _claimWindowDays = 15;
 

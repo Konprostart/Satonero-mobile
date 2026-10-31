@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 /// The logger sits on every hot path (several calls per incoming event). These
 /// tests pin the cost controls: the release filter must honour the configured

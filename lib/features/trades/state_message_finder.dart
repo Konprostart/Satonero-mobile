@@ -1,6 +1,6 @@
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
 
 /// Finds the message that triggered a given order [Status], for the
 /// trade-detail countdown.

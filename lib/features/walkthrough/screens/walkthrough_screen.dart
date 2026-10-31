@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/features/walkthrough/providers/first_run_provider.dart';
-import 'package:mostro_mobile/features/notifications/providers/backup_reminder_provider.dart';
-import 'package:mostro_mobile/features/walkthrough/utils/highlight_config.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/features/walkthrough/providers/first_run_provider.dart';
+import 'package:satonero_mobile/features/notifications/providers/backup_reminder_provider.dart';
+import 'package:satonero_mobile/features/walkthrough/utils/highlight_config.dart';
 
 class WalkthroughScreen extends ConsumerStatefulWidget {
   const WalkthroughScreen({super.key});
@@ -29,7 +29,7 @@ class _WalkthroughScreenState extends ConsumerState<WalkthroughScreen> {
     const defaultStyle = TextStyle(fontSize: 16, color: Colors.white70);
     const highlightStyle = TextStyle(
       fontSize: 16,
-      color: AppTheme.mostroGreen,
+      color: AppTheme.satoneroOrange,
       fontWeight: FontWeight.w600,
     );
 

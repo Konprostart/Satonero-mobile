@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/home/providers/home_order_providers.dart';
-import 'package:mostro_mobile/features/order/providers/payment_methods_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/home/providers/home_order_providers.dart';
+import 'package:satonero_mobile/features/order/providers/payment_methods_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
 
 /// A custom multi-select field based on Autocomplete.
 /// It lets the user type to filter options and add selections which are shown as Chips.
@@ -338,7 +338,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               Row(
                 children: [
                   const HeroIcon(HeroIcons.funnel,
-                      style: HeroIconStyle.outline, color: AppTheme.mostroGreen),
+                      style: HeroIconStyle.outline, color: AppTheme.satoneroOrange),
                   const SizedBox(width: 8),
                   Text(
                     S.of(context)!.filter.toUpperCase(),
@@ -883,7 +883,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.mostroGreen,
+                      backgroundColor: AppTheme.satoneroOrange,
                       foregroundColor: AppTheme.backgroundDark,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(

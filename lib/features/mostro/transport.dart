@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 /// Wire transport a Mostro node speaks.
 ///

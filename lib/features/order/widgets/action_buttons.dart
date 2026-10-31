@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as nostr_action;
-import 'package:mostro_mobile/shared/widgets/mostro_reactive_button.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as nostr_action;
+import 'package:satonero_mobile/shared/widgets/mostro_reactive_button.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class ActionButtons extends StatelessWidget {
   final VoidCallback onCancel;

@@ -1,7 +1,7 @@
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/data/models/enums/notification_type.dart';
-import 'package:mostro_mobile/data/repositories/base_storage.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/data/models/enums/notification_type.dart';
+import 'package:satonero_mobile/data/repositories/base_storage.dart';
 import 'package:sembast/sembast.dart';
 
 /// Repository interface for notifications

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_icon.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_content.dart';
-import 'package:mostro_mobile/services/dispute_read_status_service.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_icon.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_content.dart';
+import 'package:satonero_mobile/services/dispute_read_status_service.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
 
 class DisputeListItem extends StatelessWidget {
   final DisputeData dispute;

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/order/notifiers/abstract_mostro_notifier.dart';
+import 'package:satonero_mobile/features/order/notifiers/abstract_mostro_notifier.dart';
 
 /// Regression for the maker-bond abandon review concern: the create-order
 /// timeout must be fully torn down before the abandon path can run.

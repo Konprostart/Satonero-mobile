@@ -5,13 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/widgets/order_app_bar.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/widgets/order_app_bar.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class PayBondInvoiceScreen extends ConsumerWidget {
   final String orderId;
@@ -207,7 +207,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
                   icon: const Icon(Icons.copy),
                   label: Text(s.copy),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.mostroGreen,
+                    backgroundColor: AppTheme.satoneroOrange,
                   ),
                 ),
                 ElevatedButton.icon(
@@ -217,7 +217,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
                   icon: const Icon(Icons.share),
                   label: Text(s.share),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.mostroGreen,
+                    backgroundColor: AppTheme.satoneroOrange,
                   ),
                 ),
               ],

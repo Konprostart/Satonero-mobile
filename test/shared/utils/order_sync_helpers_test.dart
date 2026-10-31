@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/utils/order_sync_helpers.dart';
+import 'package:satonero_mobile/shared/utils/order_sync_helpers.dart';
 
 /// A `sync()` pass may only claim hydration when it actually read the history.
 /// Claiming it after a failed read leaves an admin resolution that was rejected

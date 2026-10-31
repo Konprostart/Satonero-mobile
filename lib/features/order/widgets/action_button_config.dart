@@ -1,6 +1,6 @@
 import 'dart:ui';
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/shared/widgets/mostro_reactive_button.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/shared/widgets/mostro_reactive_button.dart';
 
 /// Configuration for Mostro action buttons
 ///

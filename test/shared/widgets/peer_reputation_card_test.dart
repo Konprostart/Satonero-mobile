@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/user_info.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/widgets/order_cards.dart';
+import 'package:satonero_mobile/data/models/user_info.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/order_cards.dart';
 
 Future<void> pumpCard(
   WidgetTester tester, {

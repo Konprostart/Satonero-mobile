@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/currency.dart';
-import 'package:mostro_mobile/features/home/providers/home_order_providers.dart';
-import 'package:mostro_mobile/features/order/providers/payment_methods_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/shared/widgets/order_filter.dart';
+import 'package:satonero_mobile/data/models/currency.dart';
+import 'package:satonero_mobile/features/home/providers/home_order_providers.dart';
+import 'package:satonero_mobile/features/order/providers/payment_methods_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/shared/widgets/order_filter.dart';
 
 Currency _currency(String code, String emoji, String name) => Currency(
       symbol: code,

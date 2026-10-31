@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/features/trades/state_message_finder.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/features/trades/state_message_finder.dart';
 
 MostroMessage msg(actions.Action action, DateTime at) =>
     MostroMessage(action: action, timestamp: at.millisecondsSinceEpoch);

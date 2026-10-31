@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/chat_file_upload_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/chat_file_upload_helper.dart';
 
 class DisputeMessageInput extends ConsumerStatefulWidget {
   final String disputeId;
@@ -156,7 +156,7 @@ class _DisputeMessageInputState extends ConsumerState<DisputeMessageInput> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: AppTheme.mostroGreen,
+                  color: AppTheme.satoneroOrange,
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(

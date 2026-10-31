@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/payment_failed.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/payment_failed.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
 
 /// `OrderState.==` compares its `order` and `paymentFailed` payloads, but
 /// those classes had identity equality only — so every replayed message

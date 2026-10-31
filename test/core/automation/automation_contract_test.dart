@@ -7,18 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/core/test_environment.dart';
-import 'package:mostro_mobile/features/community/community.dart';
-import 'package:mostro_mobile/features/community/widgets/community_card.dart';
-import 'package:mostro_mobile/features/key_manager/import_mnemonic_dialog.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/widgets/add_lightning_invoice_widget.dart';
-import 'package:mostro_mobile/shared/widgets/add_order_button.dart';
-import 'package:mostro_mobile/shared/widgets/order_cards.dart';
-import 'package:mostro_mobile/shared/widgets/test_environment_banner.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/core/test_environment.dart';
+import 'package:satonero_mobile/features/community/community.dart';
+import 'package:satonero_mobile/features/community/widgets/community_card.dart';
+import 'package:satonero_mobile/features/key_manager/import_mnemonic_dialog.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/add_lightning_invoice_widget.dart';
+import 'package:satonero_mobile/shared/widgets/add_order_button.dart';
+import 'package:satonero_mobile/shared/widgets/order_cards.dart';
+import 'package:satonero_mobile/shared/widgets/test_environment_banner.dart';
 
 /// Every static identifier declared on [AutomationIds].
 const List<String> staticIds = [

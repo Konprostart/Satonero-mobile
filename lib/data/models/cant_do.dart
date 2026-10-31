@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/models/enums/cant_do_reason.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/enums/cant_do_reason.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
 
 class CantDo implements Payload {
   final CantDoReason cantDoReason;

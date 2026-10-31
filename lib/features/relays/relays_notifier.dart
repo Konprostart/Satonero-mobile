@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:dart_nostr/nostr/model/ease.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/core/models/relay_list_event.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_manager.dart';
-import 'package:mostro_mobile/features/subscriptions/subscription_manager_provider.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/providers/nostr_service_provider.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/core/models/relay_list_event.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_manager.dart';
+import 'package:satonero_mobile/features/subscriptions/subscription_manager_provider.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
 import 'relay.dart';
 import 'relay_url_validator.dart';
 
@@ -254,7 +254,7 @@ class RelaysNotifier extends StateNotifier<List<Relay>> {
       final uri = Uri.parse(url);
       final socket = await WebSocket.connect(
         uri.toString(),
-        headers: {'User-Agent': 'MostroMobile/1.0'},
+        headers: {'User-Agent': 'Satonero/1.0'},
       ).timeout(const Duration(seconds: 8));
 
       // Send a basic REQ message to test if it's a Nostr relay

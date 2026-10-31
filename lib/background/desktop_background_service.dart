@@ -3,10 +3,10 @@ import 'dart:isolate';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:mostro_mobile/data/models/nostr_filter.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/services/logger_service.dart' as logger_service;
+import 'package:satonero_mobile/data/models/nostr_filter.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart' as logger_service;
 import 'abstract_background_service.dart';
 
 class DesktopBackgroundService implements BackgroundService {

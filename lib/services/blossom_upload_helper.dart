@@ -1,7 +1,7 @@
 import 'dart:typed_data';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/core/config/blossom_config.dart';
-import 'package:mostro_mobile/services/blossom_client.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/config/blossom_config.dart';
+import 'package:satonero_mobile/services/blossom_client.dart';
 
 /// Shared utility for uploading data to Blossom servers with automatic retry
 class BlossomUploadHelper {

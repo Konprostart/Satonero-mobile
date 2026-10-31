@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:dart_nostr/dart_nostr.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/nostr_service.dart';
-import 'package:mostro_mobile/services/nwc/nwc_connection.dart';
-import 'package:mostro_mobile/services/nwc/nwc_crypto.dart';
-import 'package:mostro_mobile/services/nwc/nwc_exceptions.dart';
-import 'package:mostro_mobile/services/nwc/nwc_models.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/nostr_service.dart';
+import 'package:satonero_mobile/services/nwc/nwc_connection.dart';
+import 'package:satonero_mobile/services/nwc/nwc_crypto.dart';
+import 'package:satonero_mobile/services/nwc/nwc_exceptions.dart';
+import 'package:satonero_mobile/services/nwc/nwc_models.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// A decoded NWC notification from the wallet (kind 23196).
 class NwcNotification {

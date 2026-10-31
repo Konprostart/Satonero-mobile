@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_status_content.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_status_content.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// The resolution banner is rendered from the message action plus the local
 /// role alone: the app never reads the wallet or the escrow. It must therefore

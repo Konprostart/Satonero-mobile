@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends ConsumerWidget {
@@ -132,8 +132,8 @@ class AboutScreen extends ConsumerWidget {
             _buildClickableInfoRow(
               context,
               S.of(context)!.githubRepository,
-              'mostro-mobile',
-              'https://github.com/MostroP2P/mobile',
+              'satonero-mobile',
+              'https://github.com/Konprostart/Satonero-mobile',
               Icons.open_in_new,
             ),
             const SizedBox(height: 12),
@@ -190,7 +190,7 @@ class AboutScreen extends ConsumerWidget {
               context,
               S.of(context)!.usersDocumentationEnglish,
               S.of(context)!.read,
-              'https://mostro.network/docs-english/',
+              'https://github.com/Konprostart/Satonero-mobile#readme',
               Icons.open_in_new,
             ),
             const SizedBox(height: 12),
@@ -200,7 +200,7 @@ class AboutScreen extends ConsumerWidget {
               context,
               S.of(context)!.usersDocumentationSpanish,
               S.of(context)!.read,
-              'https://mostro.network/docs-spanish/',
+              'https://github.com/Konprostart/Satonero-mobile#readme',
               Icons.open_in_new,
             ),
             const SizedBox(height: 12),
@@ -210,7 +210,7 @@ class AboutScreen extends ConsumerWidget {
               context,
               S.of(context)!.technicalDocumentation,
               S.of(context)!.read,
-              'https://mostro.network/protocol/',
+              'https://github.com/MostroP2P/protocol',
               Icons.open_in_new,
             ),
           ],
@@ -1016,7 +1016,7 @@ class AboutScreen extends ConsumerWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.mostroGreen,
+                    backgroundColor: AppTheme.satoneroOrange,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

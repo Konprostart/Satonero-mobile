@@ -1,6 +1,6 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/session.dart';
+import 'package:satonero_mobile/data/models/session.dart';
 
 /// The maker anti-abuse bond keeps an uncommitted order ephemeral by marking
 /// its session `bondPending`. That marker must never reach disk, or an

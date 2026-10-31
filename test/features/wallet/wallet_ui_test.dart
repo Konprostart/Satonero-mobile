@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/data/repositories/nwc_storage.dart';
-import 'package:mostro_mobile/features/wallet/providers/nwc_provider.dart';
-import 'package:mostro_mobile/features/wallet/screens/connect_wallet_screen.dart';
-import 'package:mostro_mobile/features/wallet/screens/wallet_settings_screen.dart';
-import 'package:mostro_mobile/features/wallet/widgets/wallet_balance_widget.dart';
-import 'package:mostro_mobile/features/wallet/widgets/wallet_status_card.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/widgets/nwc_invoice_widget.dart';
-import 'package:mostro_mobile/shared/widgets/nwc_payment_receipt_widget.dart';
-import 'package:mostro_mobile/shared/widgets/nwc_payment_widget.dart';
+import 'package:satonero_mobile/data/repositories/nwc_storage.dart';
+import 'package:satonero_mobile/features/wallet/providers/nwc_provider.dart';
+import 'package:satonero_mobile/features/wallet/screens/connect_wallet_screen.dart';
+import 'package:satonero_mobile/features/wallet/screens/wallet_settings_screen.dart';
+import 'package:satonero_mobile/features/wallet/widgets/wallet_balance_widget.dart';
+import 'package:satonero_mobile/features/wallet/widgets/wallet_status_card.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/nwc_invoice_widget.dart';
+import 'package:satonero_mobile/shared/widgets/nwc_payment_receipt_widget.dart';
+import 'package:satonero_mobile/shared/widgets/nwc_payment_widget.dart';
 
 /// A BOLT11 string shaped like a real invoice but not payable anywhere.
 const _invoice = 'lnbc100n1pjtestinvoicesyntheticvaluefortestsonly';

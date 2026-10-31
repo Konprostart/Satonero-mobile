@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/features/notifications/widgets/timestamp_text.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/features/notifications/widgets/timestamp_text.dart';
 
 class NotificationFooter extends StatelessWidget {
   final NotificationModel notification;

@@ -1,6 +1,6 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// Characterization guard for moving the per-message crypto (Schnorr verify +
 /// NIP-44 decrypt, ~15-90 ms of pure-Dart BigInt) off the main isolate.

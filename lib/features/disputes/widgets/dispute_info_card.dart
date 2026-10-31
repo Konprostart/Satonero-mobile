@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_status_badge.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_status_content.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
-import 'package:mostro_mobile/shared/providers/legible_handle_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_status_badge.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_status_content.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/shared/providers/legible_handle_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class DisputeInfoCard extends ConsumerWidget {
   final DisputeData dispute;

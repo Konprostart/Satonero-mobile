@@ -13,8 +13,8 @@
 
 import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mostro_mobile/core/app_bootstrap.dart';
-import 'package:mostro_mobile/core/test_environment.dart';
+import 'package:satonero_mobile/core/app_bootstrap.dart';
+import 'package:satonero_mobile/core/test_environment.dart';
 
 Future<void> main() async {
   TestEnvironment.arm();

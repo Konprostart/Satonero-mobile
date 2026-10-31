@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// Displays a payment receipt after a successful NWC payment.
 ///
@@ -42,7 +42,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.dark1,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.mostroGreen.withAlpha(128)),
+        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(128)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -50,14 +50,14 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
           // Success icon
           const Icon(
             LucideIcons.checkCircle2,
-            color: AppTheme.mostroGreen,
+            color: AppTheme.satoneroOrange,
             size: 56,
           ),
           const SizedBox(height: 12),
           Text(
             S.of(context)!.nwcPaymentSuccess,
             style: const TextStyle(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
@@ -151,7 +151,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onDismiss,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.mostroGreen,
+                  backgroundColor: AppTheme.satoneroOrange,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(

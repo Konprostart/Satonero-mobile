@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
 
 class EventBus {
   final _controller = StreamController<MostroMessage>.broadcast();

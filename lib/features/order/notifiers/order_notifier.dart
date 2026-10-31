@@ -1,15 +1,15 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
-import 'package:mostro_mobile/shared/providers.dart';
-import 'package:mostro_mobile/features/order/notifiers/abstract_mostro_notifier.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/mostro_service.dart';
-import 'package:mostro_mobile/shared/utils/order_sync_helpers.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:satonero_mobile/shared/providers.dart';
+import 'package:satonero_mobile/features/order/notifiers/abstract_mostro_notifier.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/mostro_service.dart';
+import 'package:satonero_mobile/shared/utils/order_sync_helpers.dart';
 
 class OrderNotifier extends AbstractMostroNotifier {
   late final MostroService mostroService;

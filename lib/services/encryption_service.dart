@@ -2,7 +2,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:math';
 import 'package:pointycastle/export.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 class EncryptionResult {
   final Uint8List encryptedData;

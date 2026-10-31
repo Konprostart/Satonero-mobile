@@ -5,11 +5,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/services/logger_service.dart'
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/services/logger_service.dart'
     show backgroundLog, logger;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mostro_mobile/firebase_options.dart';
+import 'package:satonero_mobile/firebase_options.dart';
 
 
 /// FCM background message handler - wakes up the app to process new events.
@@ -26,8 +26,9 @@ import 'package:mostro_mobile/firebase_options.dart';
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
-    // Skip on unsupported platforms
+    // Skip on unsupported platforms or when Satonero Firebase is not configured.
     if (kIsWeb || Platform.isLinux) return;
+    if (!DefaultFirebaseOptions.isConfigured) return;
 
     // Initialize Firebase for background context (if not already initialized)
     if (Firebase.apps.isEmpty) {
@@ -169,6 +170,12 @@ class FCMService {
       // Skip Firebase initialization on web and Linux (not supported)
       if (kIsWeb || Platform.isLinux) {
         debugPrint('FCM: Skipping initialization on web/Linux (not supported)');
+        return;
+      }
+
+      if (!DefaultFirebaseOptions.isConfigured) {
+        debugPrint(
+            'FCM: Satonero Firebase is not configured; push disabled');
         return;
       }
 

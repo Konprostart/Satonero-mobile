@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dart_nostr/dart_nostr.dart';
-import 'package:mostro_mobile/core/config.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/features/key_manager/key_derivator.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/key_manager/key_derivator.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 void main() {
   // Use valid keys from NIP-06 test vectors

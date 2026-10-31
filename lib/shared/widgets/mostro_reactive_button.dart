@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/shared/providers/mostro_storage_provider.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/shared/providers/mostro_storage_provider.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 
 enum ButtonStyleType { raised, outlined, text }
 

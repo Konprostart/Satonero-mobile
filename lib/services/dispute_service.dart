@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:mostro_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
 
 /// Stub service for disputes - UI only implementation
 class DisputeService {

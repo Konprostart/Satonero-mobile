@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/restore/restore_manager.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/features/restore/restore_manager.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 /// Regression tests for the restore receive path covering both transports:
 /// v1 gift wrap (kind 1059) and v2 NIP-44 direct (kind 14). The node is the

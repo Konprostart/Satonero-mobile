@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 class CurrencySelectionDialog {
   /// Shows a currency selection dialog and returns the selected currency code
@@ -72,7 +72,7 @@ class _CurrencySelectionDialogWidgetState
                 color: AppTheme.backgroundInput,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: AppTheme.mostroGreen.withValues(alpha: 0.3),
+                  color: AppTheme.satoneroOrange.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -153,7 +153,7 @@ class _CurrencySelectionDialogWidgetState
                                 ),
                                 trailing: isSelected
                                     ? const Icon(Icons.check,
-                                        color: AppTheme.mostroGreen)
+                                        color: AppTheme.satoneroOrange)
                                     : null,
                                 onTap: () {
                                   Navigator.of(context).pop(code);

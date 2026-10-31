@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/services/chat_read_status_service.dart';
-import 'package:mostro_mobile/shared/providers/avatar_provider.dart';
-import 'package:mostro_mobile/shared/providers/legible_handle_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/services/chat_read_status_service.dart';
+import 'package:satonero_mobile/shared/providers/avatar_provider.dart';
+import 'package:satonero_mobile/shared/providers/legible_handle_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 
 class ChatListItem extends ConsumerStatefulWidget {
   final String orderId;

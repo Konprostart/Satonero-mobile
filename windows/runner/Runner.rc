@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "network.mostro" "\0"
-            VALUE "FileDescription", "mostro_mobile" "\0"
+            VALUE "CompanyName", "Satonero" "\0"
+            VALUE "FileDescription", "satonero_mobile" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mostro_mobile" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 network.mostro. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mostro_mobile.exe" "\0"
-            VALUE "ProductName", "mostro_mobile" "\0"
+            VALUE "InternalName", "satonero_mobile" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Satonero contributors. Upstream Mostro copyright preserved." "\0"
+            VALUE "OriginalFilename", "satonero_mobile.exe" "\0"
+            VALUE "ProductName", "satonero_mobile" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

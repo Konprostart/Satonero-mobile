@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 class UnreadIndicator extends StatelessWidget {
   const UnreadIndicator({super.key});
@@ -10,7 +10,7 @@ class UnreadIndicator extends StatelessWidget {
       width: 8,
       height: 8,
       decoration: const BoxDecoration(
-        color: AppTheme.mostroGreen,
+        color: AppTheme.satoneroOrange,
         shape: BoxShape.circle,
       ),
     );

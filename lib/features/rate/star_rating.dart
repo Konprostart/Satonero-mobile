@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 class StarRating extends StatefulWidget {
   /// The initial rating (between 0 and 5).
@@ -31,7 +31,7 @@ class _StarRatingState extends State<StarRating> {
     // Use a filled star if the index is less than current rating; otherwise an outlined star.
     final icon = index < _currentRating ? Icons.star : Icons.star_border;
     final color =
-        index < _currentRating ? AppTheme.mostroGreen : AppTheme.grey2;
+        index < _currentRating ? AppTheme.satoneroOrange : AppTheme.grey2;
 
     return GestureDetector(
       onTap: () {

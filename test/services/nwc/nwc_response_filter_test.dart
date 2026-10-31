@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/services/chat_cursor_store.dart';
-import 'package:mostro_mobile/services/nwc/nwc_client.dart';
+import 'package:satonero_mobile/services/chat_cursor_store.dart';
+import 'package:satonero_mobile/services/nwc/nwc_client.dart';
 
 /// Pins the `since` bound on the NWC kind-23195 response subscription.
 ///

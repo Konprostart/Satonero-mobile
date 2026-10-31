@@ -1,18 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/data/models/last_trade_index_response.dart';
-import 'package:mostro_mobile/data/models/next_trade.dart';
-import 'package:mostro_mobile/data/models/nostr_filter.dart';
-import 'package:mostro_mobile/data/models/orders_request.dart';
-import 'package:mostro_mobile/data/models/orders_response.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/data/models/payment_failed.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/data/models/user_info.dart';
-import 'package:mostro_mobile/data/models/rating_user.dart';
-import 'package:mostro_mobile/data/models/text_message.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/data/models/last_trade_index_response.dart';
+import 'package:satonero_mobile/data/models/next_trade.dart';
+import 'package:satonero_mobile/data/models/nostr_filter.dart';
+import 'package:satonero_mobile/data/models/orders_request.dart';
+import 'package:satonero_mobile/data/models/orders_response.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/payment_failed.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/data/models/user_info.dart';
+import 'package:satonero_mobile/data/models/rating_user.dart';
+import 'package:satonero_mobile/data/models/text_message.dart';
 
 /// 64-char hex string standing in for a secp256k1 pubkey.
 const _pubkey =

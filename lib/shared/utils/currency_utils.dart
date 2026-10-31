@@ -1,5 +1,5 @@
 
-import 'package:mostro_mobile/data/models/currency.dart';
+import 'package:satonero_mobile/data/models/currency.dart';
 import 'package:intl/intl.dart';
 
 class CurrencyUtils {

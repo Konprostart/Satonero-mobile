@@ -3,12 +3,12 @@ import 'dart:isolate';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:math';
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/range_amount.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/rating.dart';
-import 'package:mostro_mobile/shared/utils/chat_keys.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/range_amount.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/rating.dart';
+import 'package:satonero_mobile/shared/utils/chat_keys.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:dart_nostr/dart_nostr.dart';
 

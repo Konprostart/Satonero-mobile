@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/mostro/transport.dart';
+import 'package:satonero_mobile/features/mostro/transport.dart';
 
 void main() {
   group('resolveTransport', () {

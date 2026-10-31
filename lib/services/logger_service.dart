@@ -3,7 +3,7 @@ import 'dart:isolate';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
-import 'package:mostro_mobile/core/config.dart';
+import 'package:satonero_mobile/core/config.dart';
 
 // Isolate log communication
 ReceivePort? _isolateLogReceiver;

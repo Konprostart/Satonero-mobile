@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/order/widgets/form_section.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_switch.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/order/widgets/form_section.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/mostro_switch.dart';
 
 class PriceTypeSection extends StatelessWidget {
   final bool isMarketRate;
@@ -30,7 +30,7 @@ class PriceTypeSection extends StatelessWidget {
     return FormSection(
       title: S.of(context)!.priceType,
       icon: priceTypeIcon,
-      iconBackgroundColor: AppTheme.mostroGreen.withValues(alpha: 0.3),
+      iconBackgroundColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
       infoTooltip: S.of(context)!.priceTypeTooltip,
       infoTitle: S.of(context)!.priceType,
       child: Column(

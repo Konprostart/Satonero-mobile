@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_message_mapper.dart';
-import 'package:mostro_mobile/features/notifications/widgets/unread_indicator.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_message_mapper.dart';
+import 'package:satonero_mobile/features/notifications/widgets/unread_indicator.dart';
 
 class NotificationHeader extends StatelessWidget {
   final NotificationModel notification;

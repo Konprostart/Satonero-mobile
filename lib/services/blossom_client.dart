@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:http/http.dart' as http;
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 class BlossomClient {
   final String serverUrl;
@@ -59,7 +59,7 @@ class BlossomClient {
         headers: {
           'Content-Type': mimeType,
           'Authorization': 'Nostr $authBase64',
-          'User-Agent': 'MostroMobile/1.0',
+          'User-Agent': 'Satonero/1.0',
         },
         body: imageData,
       ).timeout(timeout);

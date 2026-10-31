@@ -1,7 +1,7 @@
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/services/fcm_service.dart';
-import 'package:mostro_mobile/services/push_notification_service.dart';
-import 'package:mostro_mobile/shared/notifiers/session_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/services/fcm_service.dart';
+import 'package:satonero_mobile/services/push_notification_service.dart';
+import 'package:satonero_mobile/shared/notifiers/session_notifier.dart';
 
 /// Connects push registration to the trades ([sessions]) and to the push
 /// setting ([settings]).

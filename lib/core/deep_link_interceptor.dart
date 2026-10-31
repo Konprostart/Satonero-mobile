@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 /// A deep link interceptor that prevents custom schemes from reaching GoRouter
 /// This prevents assertion failures when the system tries to parse mostro: URLs

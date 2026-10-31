@@ -1,7 +1,7 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/core/models/relay_list_event.dart';
-import 'package:mostro_mobile/features/relays/relay.dart';
+import 'package:satonero_mobile/core/models/relay_list_event.dart';
+import 'package:satonero_mobile/features/relays/relay.dart';
 
 final _publishedAt = DateTime.utc(2026, 1, 1);
 final _authorPubkey = 'a' * 64;

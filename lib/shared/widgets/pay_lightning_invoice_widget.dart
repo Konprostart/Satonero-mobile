@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class PayLightningInvoiceWidget extends StatefulWidget {
   final VoidCallback onSubmit;
@@ -92,7 +92,7 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
               icon: const Icon(Icons.copy),
               label: Text(S.of(context)!.copy),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.mostroGreen,
+                backgroundColor: AppTheme.satoneroOrange,
               ),
             ),
             ElevatedButton.icon(
@@ -132,7 +132,7 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
               icon: const Icon(Icons.share),
               label: Text(S.of(context)!.share),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.mostroGreen,
+                backgroundColor: AppTheme.satoneroOrange,
               ),
             ),
           ],

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
-import 'package:mostro_mobile/features/notifications/providers/backup_reminder_provider.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:satonero_mobile/features/notifications/providers/backup_reminder_provider.dart';
 
 class NotificationBellWidget extends ConsumerStatefulWidget {
   const NotificationBellWidget({super.key});

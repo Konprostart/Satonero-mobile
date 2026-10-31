@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_header.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_order_id.dart';
-import 'package:mostro_mobile/features/disputes/widgets/dispute_description.dart';
-import 'package:mostro_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
-import 'package:mostro_mobile/features/disputes/providers/dispute_read_status_provider.dart';
-import 'package:mostro_mobile/data/models/dispute.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_header.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_order_id.dart';
+import 'package:satonero_mobile/features/disputes/widgets/dispute_description.dart';
+import 'package:satonero_mobile/features/disputes/notifiers/dispute_chat_notifier.dart';
+import 'package:satonero_mobile/features/disputes/providers/dispute_read_status_provider.dart';
+import 'package:satonero_mobile/data/models/dispute.dart';
 
 /// Main content widget for dispute information
 class DisputeContent extends ConsumerStatefulWidget {

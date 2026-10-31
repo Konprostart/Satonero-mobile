@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:mostro_mobile/core/push_registration_wiring.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/services/fcm_service.dart';
-import 'package:mostro_mobile/services/push_notification_service.dart';
-import 'package:mostro_mobile/shared/notifiers/session_notifier.dart';
+import 'package:satonero_mobile/core/push_registration_wiring.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/services/fcm_service.dart';
+import 'package:satonero_mobile/services/push_notification_service.dart';
+import 'package:satonero_mobile/shared/notifiers/session_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';

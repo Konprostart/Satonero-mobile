@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/features/notifications/notifiers/notification_temporary_state.dart';
-import 'package:mostro_mobile/features/notifications/notifiers/notifications_notifier.dart';
-import 'package:mostro_mobile/features/notifications/notifiers/notifications_state.dart';
-import 'package:mostro_mobile/shared/providers/notifications_history_repository_provider.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/features/notifications/notifiers/notification_temporary_state.dart';
+import 'package:satonero_mobile/features/notifications/notifiers/notifications_notifier.dart';
+import 'package:satonero_mobile/features/notifications/notifiers/notifications_state.dart';
+import 'package:satonero_mobile/shared/providers/notifications_history_repository_provider.dart';
 
 // Notification actions (shows toasts + saves to DB)
 final notificationActionsProvider = 

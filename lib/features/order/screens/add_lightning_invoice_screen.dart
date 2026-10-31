@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/screens/payout_invoice_screen.dart';
-import 'package:mostro_mobile/features/order/widgets/order_app_bar.dart';
-import 'package:mostro_mobile/features/wallet/providers/nwc_provider.dart';
-import 'package:mostro_mobile/shared/providers/mostro_storage_provider.dart';
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/widgets/add_lightning_invoice_widget.dart';
-import 'package:mostro_mobile/shared/widgets/nwc_invoice_widget.dart';
-import 'package:mostro_mobile/shared/widgets/invoice_header.dart';
-import 'package:mostro_mobile/shared/widgets/ln_address_confirmation_widget.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/screens/payout_invoice_screen.dart';
+import 'package:satonero_mobile/features/order/widgets/order_app_bar.dart';
+import 'package:satonero_mobile/features/wallet/providers/nwc_provider.dart';
+import 'package:satonero_mobile/shared/providers/mostro_storage_provider.dart';
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/widgets/add_lightning_invoice_widget.dart';
+import 'package:satonero_mobile/shared/widgets/nwc_invoice_widget.dart';
+import 'package:satonero_mobile/shared/widgets/invoice_header.dart';
+import 'package:satonero_mobile/shared/widgets/ln_address_confirmation_widget.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 class AddLightningInvoiceScreen extends ConsumerStatefulWidget {
   final String orderId;

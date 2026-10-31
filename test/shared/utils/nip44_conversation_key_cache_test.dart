@@ -1,6 +1,6 @@
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 import 'package:nip44/nip44.dart';
 
 /// Every NIP-44 encrypt/decrypt recomputed the conversation key — one EC

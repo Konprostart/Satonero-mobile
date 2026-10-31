@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:mostro_mobile/core/test_environment.dart';
-import 'package:mostro_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/core/test_environment.dart';
+import 'package:satonero_mobile/core/config/communities.dart';
 
 class Config {
   // Nostr configuration
@@ -10,11 +10,11 @@ class Config {
     //'ws://10.0.2.2:7000', // mobile emulator
   ];
 
-  // Defensive bootstrap relays: connected only to discover a Mostro's kind
+  // Public bootstrap relays used only to discover a Mostro daemon's kind
   // 10002 relay list at cold start or when no discovered relay is reachable.
-  // Not persisted nor shown in the relay list; they idle once relays are found.
+  // These are public relays, not operated by Satonero. Satonero does not run
+  // its own relay or Mostro daemon.
   static const List<String> bootstrapRelays = [
-    'wss://mostro-p2p.tech',
     'wss://nos.lol',
     'wss://relay.damus.io',
   ];
@@ -28,7 +28,8 @@ class Config {
           ? TestEnvironment.seedRelays
           : bootstrapRelays;
 
-  // Derived from trustedCommunities to maintain single source of truth
+  // Derived from trustedCommunities. These are third-party Mostro
+  // communities/daemons, not Satonero-operated services.
   static final List<Map<String, String>> trustedMostroNodes =
       trustedCommunities
           .map((c) => {
@@ -37,7 +38,8 @@ class Config {
               })
           .toList();
 
-  // Mostro hexkey (backward compatible, overridable via env variable)
+  // Default Mostro daemon pubkey (third-party, not Satonero-operated;
+  // overridable via env variable). Users can select another Mostro daemon.
   static const String mostroPubKey = String.fromEnvironment(
     'MOSTRO_PUB_KEY',
     defaultValue: defaultMostroPubkey,
@@ -87,14 +89,18 @@ class Config {
   static const int pendingChildSessionExpirationHours = 48;
 
   // Notification configuration
-  static String notificationChannelId = 'mostro_mobile';
+  static String notificationChannelId = 'satonero_mobile';
   static int notificationId = 38383;
 
   // Push notification server configuration
+  // Empty by default: Satonero does not operate a push server. Provide a
+  // Satonero-owned or self-hosted server with --dart-define=PUSH_SERVER_URL=...
   static const String pushServerUrl = String.fromEnvironment(
     'PUSH_SERVER_URL',
-    defaultValue: 'https://mostro-push-server.fly.dev',
+    defaultValue: '',
   );
+
+  static bool get pushConfigured => pushServerUrl.isNotEmpty;
   // Logger configuration
   static const int logMaxEntries = 1000;
   static const int logBatchDeleteSize = 100;

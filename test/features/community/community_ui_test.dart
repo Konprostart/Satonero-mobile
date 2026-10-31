@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/core/config/communities.dart';
-import 'package:mostro_mobile/features/community/community.dart';
-import 'package:mostro_mobile/features/community/widgets/community_card.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/features/community/community.dart';
+import 'package:satonero_mobile/features/community/widgets/community_card.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
 
 const _pubkey =
     '4444444444444444444444444444444444444444444444444444444444444444';

@@ -6,11 +6,11 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:diacritic/diacritic.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/services/encrypted_file_upload_service.dart';
-import 'package:mostro_mobile/services/file_validation_service.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/services/encrypted_file_upload_service.dart';
+import 'package:satonero_mobile/services/file_validation_service.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class EncryptedFileMessage extends StatefulWidget {
   final NostrEvent message;
@@ -284,7 +284,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                   style: const TextStyle(fontSize: 13),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.mostroGreen,
+                  backgroundColor: AppTheme.satoneroOrange,
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   shape: RoundedRectangleBorder(
@@ -324,7 +324,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-              color: AppTheme.mostroGreen,
+              color: AppTheme.satoneroOrange,
               strokeWidth: 2,
             ),
           ),

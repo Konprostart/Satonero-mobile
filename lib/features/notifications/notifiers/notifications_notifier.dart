@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/repositories/notifications_history_repository.dart';
-import 'package:mostro_mobile/data/models/notification.dart';
-import 'package:mostro_mobile/features/notifications/notifiers/notification_temporary_state.dart';
-import 'package:mostro_mobile/features/notifications/notifiers/notifications_state.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_message_mapper.dart';
-import 'package:mostro_mobile/shared/providers/notifications_history_repository_provider.dart';
-import 'package:mostro_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/repositories/notifications_history_repository.dart';
+import 'package:satonero_mobile/data/models/notification.dart';
+import 'package:satonero_mobile/features/notifications/notifiers/notification_temporary_state.dart';
+import 'package:satonero_mobile/features/notifications/notifiers/notifications_state.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_message_mapper.dart';
+import 'package:satonero_mobile/shared/providers/notifications_history_repository_provider.dart';
+import 'package:satonero_mobile/data/enums.dart';
 
 class NotificationsNotifier extends StateNotifier<TemporaryNotificationsState> {
   final Ref ref;

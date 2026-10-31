@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/services/encrypted_file_upload_service.dart';
-import 'package:mostro_mobile/services/encrypted_image_upload_service.dart';
-import 'package:mostro_mobile/shared/mixins/media_cache_mixin.dart';
+import 'package:satonero_mobile/services/encrypted_file_upload_service.dart';
+import 'package:satonero_mobile/services/encrypted_image_upload_service.dart';
+import 'package:satonero_mobile/shared/mixins/media_cache_mixin.dart';
 
 /// Every chat notifier held its decrypted media bytes until process exit. The
 /// cache is now byte-bounded, and the budget is global: a per-notifier

@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/data/models/user_info.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/user_info.dart';
 
 class Peer implements Payload {
   final String publicKey;

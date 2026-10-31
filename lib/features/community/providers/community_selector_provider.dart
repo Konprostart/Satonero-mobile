@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/config/communities.dart';
-import 'package:mostro_mobile/data/models/enums/storage_keys.dart';
-import 'package:mostro_mobile/data/repositories/community_repository.dart';
-import 'package:mostro_mobile/features/community/community.dart';
-import 'package:mostro_mobile/shared/providers/storage_providers.dart';
+import 'package:satonero_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/data/repositories/community_repository.dart';
+import 'package:satonero_mobile/features/community/community.dart';
+import 'package:satonero_mobile/shared/providers/storage_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Whether the user has already selected a community.

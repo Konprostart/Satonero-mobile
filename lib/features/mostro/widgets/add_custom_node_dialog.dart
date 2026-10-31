@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/features/mostro/mostro_node.dart';
-import 'package:mostro_mobile/features/mostro/mostro_nodes_provider.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/features/mostro/mostro_node.dart';
+import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class AddCustomNodeDialog {
   static Future<void> show(BuildContext context, WidgetRef ref) async {

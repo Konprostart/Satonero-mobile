@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/shared/widgets/bottom_nav_bar.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as action;
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/shared/widgets/bottom_nav_bar.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as action;
 
 class PaymentConfirmationScreen extends ConsumerWidget {
   final String orderId;
@@ -57,7 +57,7 @@ class PaymentConfirmationScreen extends ConsumerWidget {
                   height: 80,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.mostroGreen,
+                    color: AppTheme.satoneroOrange,
                   ),
                   child: const Icon(
                     Icons.check,
@@ -84,7 +84,7 @@ class PaymentConfirmationScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.mostroGreen,
+                    backgroundColor: AppTheme.satoneroOrange,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

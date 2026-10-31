@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/features/home/providers/home_order_providers.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/home/providers/home_order_providers.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
 
 void main() {
   late ProviderContainer container;

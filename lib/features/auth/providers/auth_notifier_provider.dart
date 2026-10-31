@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/repositories/auth_repository.dart';
-import 'package:mostro_mobile/features/auth/notifiers/auth_notifier.dart';
-import 'package:mostro_mobile/features/auth/notifiers/auth_state.dart';
-import 'package:mostro_mobile/shared/utils/biometrics_helper.dart';
+import 'package:satonero_mobile/data/repositories/auth_repository.dart';
+import 'package:satonero_mobile/features/auth/notifiers/auth_notifier.dart';
+import 'package:satonero_mobile/features/auth/notifiers/auth_state.dart';
+import 'package:satonero_mobile/shared/utils/biometrics_helper.dart';
 
 final biometricsHelperProvider = Provider<BiometricsHelper>((ref) {
   throw UnimplementedError();

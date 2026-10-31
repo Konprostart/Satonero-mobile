@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/services/media_validation_service.dart';
-import 'package:mostro_mobile/services/blossom_upload_helper.dart';
-import 'package:mostro_mobile/services/encryption_service.dart';
-import 'package:mostro_mobile/services/blossom_download_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/media_validation_service.dart';
+import 'package:satonero_mobile/services/blossom_upload_helper.dart';
+import 'package:satonero_mobile/services/encryption_service.dart';
+import 'package:satonero_mobile/services/blossom_download_service.dart';
 
 class EncryptedImageUploadResult {
   final String blossomUrl;

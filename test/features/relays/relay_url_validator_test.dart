@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mostro_mobile/features/relays/relay_url_validator.dart';
+import 'package:satonero_mobile/features/relays/relay_url_validator.dart';
 
 void main() {
   group('RelayUrlValidator.normalize (secure mode)', () {

@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
 
 /// Pure decision helpers for the bond-cancel session lifecycle. The daemon
 /// only sends a `bond-slashed` notice after a *waiting-timeout slash*, never

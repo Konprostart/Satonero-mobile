@@ -1,5 +1,5 @@
-name: mostro_mobile
-description: "Mobile/Desktop Client for Mostro."
+name: satonero_mobile
+description: "Satonero: a Satonero-branded client for the Mostro peer-to-peer Bitcoin protocol."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -172,10 +172,10 @@ flutter_intl:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/launcher-icon.png"
+  image_path: "assets/brand/satonero/satonero-launcher-1024.png"
   remove_alpha_ios: true
-  # Proper adaptive icon configuration to prevent white circle masking
-  adaptive_icon_foreground: "assets/images/launcher-icon.png"
-  adaptive_icon_background: "#2D2D2D"
+  adaptive_icon_foreground: "assets/brand/satonero/satonero-foreground-1024.png"
+  adaptive_icon_background: "#171A23"
+  adaptive_icon_monochrome: "assets/brand/satonero/satonero-monochrome-1024.png"
   min_sdk_android: 21
 

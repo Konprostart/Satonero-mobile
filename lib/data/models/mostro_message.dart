@@ -3,11 +3,11 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dart_nostr/nostr/core/key_pairs.dart';
 import 'package:dart_nostr/nostr/model/event/event.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/payload.dart';
-import 'package:mostro_mobile/data/models/peer.dart';
-import 'package:mostro_mobile/features/mostro/transport.dart';
-import 'package:mostro_mobile/shared/utils/nostr_utils.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/payload.dart';
+import 'package:satonero_mobile/data/models/peer.dart';
+import 'package:satonero_mobile/features/mostro/transport.dart';
+import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
 
 class MostroMessage<T extends Payload> {
   String? id;

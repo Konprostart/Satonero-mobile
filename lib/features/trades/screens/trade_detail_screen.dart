@@ -4,34 +4,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:mostro_mobile/core/app_theme.dart';
-import 'package:mostro_mobile/core/automation/automation_id.dart';
-import 'package:mostro_mobile/core/automation/automation_ids.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as actions;
-import 'package:mostro_mobile/data/models/order.dart';
-import 'package:mostro_mobile/data/models/enums/order_type.dart';
-import 'package:mostro_mobile/data/models/enums/role.dart';
-import 'package:mostro_mobile/data/models/enums/status.dart';
-import 'package:mostro_mobile/data/models/nostr_event.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/features/order/providers/order_notifier_provider.dart';
-import 'package:mostro_mobile/features/order/widgets/order_app_bar.dart';
-import 'package:mostro_mobile/shared/widgets/order_cards.dart';
-import 'package:mostro_mobile/features/trades/state_message_finder.dart';
-import 'package:mostro_mobile/features/trades/widgets/mostro_message_detail_widget.dart';
-import 'package:mostro_mobile/shared/providers/order_repository_provider.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/widgets/mostro_reactive_button.dart';
-import 'package:mostro_mobile/data/models/session.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/shared/providers/mostro_storage_provider.dart';
-import 'package:mostro_mobile/data/models/mostro_message.dart';
-import 'package:mostro_mobile/shared/providers/time_provider.dart';
-import 'package:mostro_mobile/shared/widgets/dynamic_countdown_widget.dart';
-import 'package:mostro_mobile/features/disputes/providers/dispute_providers.dart';
-import 'package:mostro_mobile/generated/l10n.dart';
-import 'package:mostro_mobile/shared/utils/bond_payout_helpers.dart';
-import 'package:mostro_mobile/shared/utils/snack_bar_helper.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
+import 'package:satonero_mobile/core/automation/automation_id.dart';
+import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as actions;
+import 'package:satonero_mobile/data/models/order.dart';
+import 'package:satonero_mobile/data/models/enums/order_type.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/order/widgets/order_app_bar.dart';
+import 'package:satonero_mobile/shared/widgets/order_cards.dart';
+import 'package:satonero_mobile/features/trades/state_message_finder.dart';
+import 'package:satonero_mobile/features/trades/widgets/mostro_message_detail_widget.dart';
+import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/widgets/mostro_reactive_button.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/shared/providers/mostro_storage_provider.dart';
+import 'package:satonero_mobile/data/models/mostro_message.dart';
+import 'package:satonero_mobile/shared/providers/time_provider.dart';
+import 'package:satonero_mobile/shared/widgets/dynamic_countdown_widget.dart';
+import 'package:satonero_mobile/features/disputes/providers/dispute_providers.dart';
+import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/utils/bond_payout_helpers.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
 class TradeDetailScreen extends ConsumerWidget {
   final String orderId;
@@ -307,7 +307,7 @@ class TradeDetailScreen extends ConsumerWidget {
       key: const Key('bondPayoutClaimButton'),
       onPressed: () => context.push('/bond_payout/$orderId'),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.mostroGreen,
+        backgroundColor: AppTheme.satoneroOrange,
       ),
       child: Text(S.of(context)!.addBondInvoiceButton),
     );
@@ -372,7 +372,7 @@ class TradeDetailScreen extends ConsumerWidget {
               widgets.add(_buildNostrButton(
                 S.of(context)!.payInvoiceButton,
                 action: actions.Action.payInvoice,
-                backgroundColor: AppTheme.mostroGreen,
+                backgroundColor: AppTheme.satoneroOrange,
                 onPressed: () => context.push('/pay_invoice/$orderId'),
               ));
             }
@@ -385,7 +385,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.payBondButton,
               action: actions.Action.payBondInvoice,
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               onPressed: () => context.push('/pay_bond/$orderId'),
             ));
           }
@@ -400,7 +400,7 @@ class TradeDetailScreen extends ConsumerWidget {
                   ? S.of(context)!.collectSatsButton
                   : S.of(context)!.addInvoiceButton,
               action: actions.Action.addInvoice,
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               onPressed: () => context.push('/add_invoice/$orderId'),
             ));
           }
@@ -411,7 +411,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.fiatSentButton,
               action: actions.Action.fiatSent,
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               onPressed: () => ref
                   .read(orderNotifierProvider(orderId).notifier)
                   .sendFiatSent(),
@@ -444,7 +444,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.release.toUpperCase(),
               action: actions.Action.release,
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               controller: buttonController,
               onPressed: () async {
                 final result = await showDialog<bool>(
@@ -526,7 +526,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.takeSell,
               action: actions.Action.takeSell,
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               onPressed: () => context.push('/take_sell/$orderId'),
             ));
           }
@@ -537,7 +537,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.takeBuy,
               action: actions.Action.takeBuy,
-              backgroundColor: AppTheme.mostroGreen,
+              backgroundColor: AppTheme.satoneroOrange,
               onPressed: () => context.push('/take_buy/$orderId'),
             ));
           }
@@ -562,7 +562,7 @@ class TradeDetailScreen extends ConsumerWidget {
           widgets.add(_buildNostrButton(
             S.of(context)!.completePurchaseButton,
             action: actions.Action.purchaseCompleted,
-            backgroundColor: AppTheme.mostroGreen,
+            backgroundColor: AppTheme.satoneroOrange,
             onPressed: () => ref
                 .read(orderNotifierProvider(orderId).notifier)
                 .releaseOrder(),
@@ -579,7 +579,7 @@ class TradeDetailScreen extends ConsumerWidget {
           widgets.add(_buildNostrButton(
             S.of(context)!.rate.toUpperCase(),
             action: actions.Action.rate,
-            backgroundColor: AppTheme.mostroGreen,
+            backgroundColor: AppTheme.satoneroOrange,
             onPressed: () => context.push('/rate_user/$orderId'),
           ));
           break;
@@ -801,7 +801,7 @@ class TradeDetailScreen extends ConsumerWidget {
               SnackBarHelper.showTopSnackBar(
                 context,
                 S.of(context)!.disputeCreatedSuccessfully,
-                backgroundColor: AppTheme.mostroGreen,
+                backgroundColor: AppTheme.satoneroOrange,
               );
             } else if (context.mounted) {
               SnackBarHelper.showTopSnackBar(
@@ -835,7 +835,7 @@ class TradeDetailScreen extends ConsumerWidget {
         context.push('/chat_room/$orderId');
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.mostroGreen,
+        backgroundColor: AppTheme.satoneroOrange,
       ),
       child: Text(S.of(context)!.contactButton),
     );
@@ -847,7 +847,7 @@ class TradeDetailScreen extends ConsumerWidget {
         context.push('/dispute_details/$disputeId');
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.mostroGreen,
+        backgroundColor: AppTheme.satoneroOrange,
       ),
       child: Text(S.of(context)!.viewDisputeButton),
     );
@@ -926,8 +926,8 @@ class TradeDetailScreen extends ConsumerWidget {
     return OutlinedButton(
       onPressed: () => context.go('/order_book'),
       style: OutlinedButton.styleFrom(
-        foregroundColor: AppTheme.mostroGreen,
-        side: const BorderSide(color: AppTheme.mostroGreen),
+        foregroundColor: AppTheme.satoneroOrange,
+        side: const BorderSide(color: AppTheme.satoneroOrange),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         minimumSize: const Size(120, 48),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -937,7 +937,7 @@ class TradeDetailScreen extends ConsumerWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: AppTheme.mostroGreen,
+          color: AppTheme.satoneroOrange,
         ),
       ),
     );

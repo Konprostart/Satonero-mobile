@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:mostro_mobile/services/encrypted_image_upload_service.dart';
-import 'package:mostro_mobile/services/encrypted_file_upload_service.dart';
+import 'package:satonero_mobile/services/encrypted_image_upload_service.dart';
+import 'package:satonero_mobile/services/encrypted_file_upload_service.dart';
 
 /// One cached blob, tracked globally so the budget is a real ceiling rather
 /// than a per-conversation one. The owner is held weakly: the list is

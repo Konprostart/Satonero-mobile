@@ -2,7 +2,7 @@ import 'dart:isolate';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:mime/mime.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 
 class FileValidationResult {
   final Uint8List validatedData;

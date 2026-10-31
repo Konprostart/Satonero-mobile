@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dart_nostr/nostr/model/request/filter.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:mostro_mobile/background/background.dart';
-import 'package:mostro_mobile/features/settings/settings.dart';
-import 'package:mostro_mobile/services/logger_service.dart' as logger_service;
+import 'package:satonero_mobile/background/background.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/services/logger_service.dart' as logger_service;
 import 'abstract_background_service.dart';
 
 class MobileBackgroundService implements BackgroundService {
@@ -32,8 +32,8 @@ class MobileBackgroundService implements BackgroundService {
           onStart: serviceMain,
           isForegroundMode: false,
           autoStartOnBoot: false,
-          initialNotificationTitle: "Mostro",
-          initialNotificationContent: "Connected to Mostro service",
+          initialNotificationTitle: "Satonero",
+          initialNotificationContent: "Connected to Mostro network",
           foregroundServiceTypes: [
             AndroidForegroundType.dataSync,
           ]),

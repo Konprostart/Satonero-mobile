@@ -1,5 +1,5 @@
-import 'package:mostro_mobile/data/models/enums/action.dart';
-import 'package:mostro_mobile/data/models/enums/notification_type.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/notification_type.dart';
 
 class NotificationModel {
   final String id;

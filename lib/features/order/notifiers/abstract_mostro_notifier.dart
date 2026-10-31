@@ -2,20 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mostro_mobile/data/enums.dart';
-import 'package:mostro_mobile/data/models.dart';
-import 'package:mostro_mobile/features/mostro/mostro_instance.dart';
-import 'package:mostro_mobile/features/order/models/order_state.dart';
-import 'package:mostro_mobile/features/restore/restore_mode_provider.dart';
-import 'package:mostro_mobile/shared/providers.dart';
-import 'package:mostro_mobile/features/chat/providers/chat_room_providers.dart';
-import 'package:mostro_mobile/features/notifications/providers/notifications_provider.dart';
-import 'package:mostro_mobile/features/notifications/utils/notification_data_extractor.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
-import 'package:mostro_mobile/shared/utils/bond_cancel_helpers.dart';
-import 'package:mostro_mobile/shared/utils/bond_payout_helpers.dart';
-import 'package:mostro_mobile/shared/utils/bond_slash_helpers.dart';
+import 'package:satonero_mobile/data/enums.dart';
+import 'package:satonero_mobile/data/models.dart';
+import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/features/restore/restore_mode_provider.dart';
+import 'package:satonero_mobile/shared/providers.dart';
+import 'package:satonero_mobile/features/chat/providers/chat_room_providers.dart';
+import 'package:satonero_mobile/features/notifications/providers/notifications_provider.dart';
+import 'package:satonero_mobile/features/notifications/utils/notification_data_extractor.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/utils/bond_cancel_helpers.dart';
+import 'package:satonero_mobile/shared/utils/bond_payout_helpers.dart';
+import 'package:satonero_mobile/shared/utils/bond_slash_helpers.dart';
 
 class AbstractMostroNotifier extends StateNotifier<OrderState> {
   final String orderId;

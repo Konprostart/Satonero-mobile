@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mostro_mobile/data/models/enums/action.dart' as mostro;
-import 'package:mostro_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro;
+import 'package:satonero_mobile/generated/l10n.dart';
 
 /// Utility class to map Mostro actions to notification title and message keys
 /// 

@@ -1,4 +1,4 @@
-import 'package:mostro_mobile/data/models/restore_response.dart';
+import 'package:satonero_mobile/data/models/restore_response.dart';
 import 'package:test/test.dart';
 
 void main() {

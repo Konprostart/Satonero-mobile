@@ -3,23 +3,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mostro_mobile/core/app.dart';
-import 'package:mostro_mobile/core/push_registration_wiring.dart';
-import 'package:mostro_mobile/features/relays/relay.dart';
-import 'package:mostro_mobile/features/auth/providers/auth_notifier_provider.dart';
-import 'package:mostro_mobile/features/relays/relays_provider.dart';
-import 'package:mostro_mobile/features/settings/settings_notifier.dart';
-import 'package:mostro_mobile/features/settings/settings_provider.dart';
-import 'package:mostro_mobile/background/background_service.dart';
-import 'package:mostro_mobile/features/notifications/services/background_notification_service.dart';
-import 'package:mostro_mobile/services/fcm_service.dart';
-import 'package:mostro_mobile/services/push_notification_service.dart';
-import 'package:mostro_mobile/shared/providers/background_service_provider.dart';
-import 'package:mostro_mobile/shared/providers/providers.dart';
-import 'package:mostro_mobile/shared/providers/session_notifier_provider.dart';
-import 'package:mostro_mobile/shared/utils/biometrics_helper.dart';
-import 'package:mostro_mobile/shared/utils/notification_permission_helper.dart';
-import 'package:mostro_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/core/app.dart';
+import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/firebase_options.dart';
+import 'package:satonero_mobile/core/push_registration_wiring.dart';
+import 'package:satonero_mobile/features/relays/relay.dart';
+import 'package:satonero_mobile/features/auth/providers/auth_notifier_provider.dart';
+import 'package:satonero_mobile/features/relays/relays_provider.dart';
+import 'package:satonero_mobile/features/settings/settings_notifier.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/background/background_service.dart';
+import 'package:satonero_mobile/features/notifications/services/background_notification_service.dart';
+import 'package:satonero_mobile/services/fcm_service.dart';
+import 'package:satonero_mobile/services/push_notification_service.dart';
+import 'package:satonero_mobile/shared/providers/background_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/providers.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+import 'package:satonero_mobile/shared/utils/biometrics_helper.dart';
+import 'package:satonero_mobile/shared/utils/notification_permission_helper.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -85,7 +87,7 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
   runApp(
     UncontrolledProviderScope(
       container: container,
-      child: const MostroApp(),
+      child: const SatoneroApp(),
     ),
   );
 }
@@ -175,6 +177,15 @@ Future<_PushServices?> _initializeFirebaseMessaging(
     // Skip Firebase initialization on Linux (not supported)
     if (!kIsWeb && Platform.isLinux) {
       logger.i('Firebase not supported on Linux - skipping FCM initialization');
+      return null;
+    }
+
+    // Satonero ships no Firebase project or push server. Push is opt-in via
+    // --dart-define values; never fall back to Mostro-owned infrastructure.
+    if (!DefaultFirebaseOptions.isConfigured || !Config.pushConfigured) {
+      logger.i(
+          'Satonero push not configured (FIREBASE_* / PUSH_SERVER_URL); '
+          'push disabled');
       return null;
     }
 
