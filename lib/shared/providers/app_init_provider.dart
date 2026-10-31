@@ -35,7 +35,9 @@ final appInitializerProvider = FutureProvider<void>((ref) async {
 
   final mostroNodes = ref.read(mostroNodesProvider.notifier);
   await mostroNodes.init();
-  unawaited(mostroNodes.fetchAllNodeMetadata());
+  // Custom nodes only: trusted-node metadata is fetched by the community
+  // selector when the user opens it (see community_selector_screen.dart).
+  unawaited(mostroNodes.fetchAllNodeMetadata(includeTrusted: false));
 
   final sessionManager = ref.read(sessionNotifierProvider.notifier);
   await sessionManager.init();

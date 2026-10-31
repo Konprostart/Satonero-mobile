@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:satonero_mobile/core/test_environment.dart';
 import 'package:satonero_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 
 class Config {
   // Nostr configuration
@@ -42,10 +43,18 @@ class Config {
   // Satonero never connects to an upstream daemon implicitly. The user must
   // pick a community or add a custom node. A build may still pin a daemon
   // explicitly via --dart-define=MOSTRO_PUB_KEY=<hex>.
-  static const String mostroPubKey = String.fromEnvironment(
+  static const String _buildMostroPubKey = String.fromEnvironment(
     'MOSTRO_PUB_KEY',
     defaultValue: '',
   );
+
+  /// The legacy upstream pubkey is never accepted as a build pin. See
+  /// [resolveBuildMostroPubKey].
+  static final String mostroPubKey =
+      resolveBuildMostroPubKey(_buildMostroPubKey);
+
+  /// True when the build pinned the rejected legacy upstream pubkey.
+  static bool get legacyBuildPinRejected => isLegacyBuildPin(_buildMostroPubKey);
 
   static const String dBName = 'mostro.db';
   static const String dBPassword = 'mostro';

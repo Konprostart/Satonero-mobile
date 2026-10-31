@@ -117,6 +117,20 @@ Future<Settings> settingsFromBackgroundMessage(
   return withoutLegacyDaemon(Settings.fromJson(json));
 }
 
+/// Resolves the build-time `MOSTRO_PUB_KEY` value. The legacy upstream
+/// pubkey is rejected and resolves to '' (no daemon configured), so a build
+/// can never default to it. Any other value, including a custom daemon, is
+/// returned unchanged.
+String resolveBuildMostroPubKey(String raw) {
+  final value = raw.trim();
+  if (value.toLowerCase() == legacyUpstreamDaemonPubkey) return '';
+  return value;
+}
+
+/// True when the build pinned the legacy upstream pubkey and it was rejected.
+bool isLegacyBuildPin(String raw) =>
+    raw.trim().toLowerCase() == legacyUpstreamDaemonPubkey;
+
 Map<String, dynamic>? _decodeObject(String raw) {
   try {
     final decoded = jsonDecode(raw);

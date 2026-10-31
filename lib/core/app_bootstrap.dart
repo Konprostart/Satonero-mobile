@@ -48,6 +48,10 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
   // SettingsNotifier.init() runs the legacy daemon migration first.
   final settings = SettingsNotifier(sharedPreferences);
   await settings.init();
+  if (Config.legacyBuildPinRejected) {
+    logger.w('MOSTRO_PUB_KEY is the legacy upstream daemon and was rejected; '
+        'no daemon is configured until the user selects one.');
+  }
   await seedTestRelays(settings, seedRelays);
 
   await initializeNotifications();

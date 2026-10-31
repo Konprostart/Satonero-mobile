@@ -214,9 +214,16 @@ class MostroNodesNotifier extends StateNotifier<List<MostroNode>> {
     _updateTrustedMetadataCache(pubkey, name, picture, website, about);
   }
 
-  /// Fetch kind 0 metadata for all nodes in a single batch request
-  Future<void> fetchAllNodeMetadata() async {
-    final pubkeys = state.map((n) => n.pubkey).toList();
+  /// Fetch kind 0 metadata in a single batch request.
+  ///
+  /// [includeTrusted] = false limits the request to custom nodes. Cold start
+  /// uses that, so the static upstream list is not queried on ordinary app
+  /// launches. The community selector calls it with the default (true).
+  Future<void> fetchAllNodeMetadata({bool includeTrusted = true}) async {
+    final pubkeys = state
+        .where((n) => includeTrusted || !n.isTrusted)
+        .map((n) => n.pubkey)
+        .toList();
     if (pubkeys.isEmpty) return;
 
     try {

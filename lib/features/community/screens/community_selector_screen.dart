@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +35,9 @@ class _CommunitySelectorScreenState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showDisclaimerDialog();
+      // Trusted-node metadata is requested only when the user opens the
+      // selector, never on ordinary app startup.
+      unawaited(ref.read(mostroNodesProvider.notifier).fetchAllNodeMetadata());
     });
   }
 
