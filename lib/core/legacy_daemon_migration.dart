@@ -20,9 +20,11 @@ const String legacyUpstreamDaemonPubkey =
 ///  - the background notification isolate's Mostro pubkey lookup.
 ///
 /// Effect when the stored daemon equals [legacyUpstreamDaemonPubkey]:
-///  - `mostro_settings`: `mostroPublicKey` becomes `''`; the instance-bound
-///    relay state (`relays`, `userRelays`, `blacklistedRelays`) is cleared,
-///    matching what an instance switch does in `updateMostroInstance`.
+///  - `mostro_settings`: `mostroPublicKey` becomes `''`. `relays` keeps only
+///    the URLs that the user configured (also present in `userRelays`); the
+///    other entries are relays advertised by the legacy daemon's kind 10002
+///    and are dropped, because `NostrService.init` connects to every entry of
+///    `relays` at startup. `userRelays` and `blacklistedRelays` are preserved.
 ///  - `community_selected` is set to `false`, so the user must choose a
 ///    community or custom node explicitly. No other daemon is selected.
 ///  - `background_filters` is removed if it references the legacy pubkey.
@@ -50,9 +52,7 @@ Future<bool> migrateLegacyUpstreamDaemon(SharedPreferencesAsync prefs) async {
       await prefs.setBool(SharedPreferencesKeys.communitySelected.value, false);
 
       json['mostroPublicKey'] = '';
-      json['relays'] = <String>[];
-      json['blacklistedRelays'] = <String>[];
-      json['userRelays'] = <Map<String, dynamic>>[];
+      json['relays'] = _userConfiguredRelays(json);
       await prefs.setString(
         SharedPreferencesKeys.appSettings.value,
         jsonEncode(json),
@@ -79,6 +79,22 @@ Future<bool> migrateLegacyUpstreamDaemon(SharedPreferencesAsync prefs) async {
 Settings withoutLegacyDaemon(Settings settings) {
   if (settings.mostroPublicKey != legacyUpstreamDaemonPubkey) return settings;
   return settings.copyWith(mostroPublicKey: '');
+}
+
+/// Keeps only the entries of `relays` that the user configured, i.e. whose
+/// URL is also recorded in `userRelays`. Everything else in `relays` was
+/// discovered from the legacy daemon's relay list. `blacklistedRelays` and
+/// `userRelays` are left as they are: they only filter or describe relays.
+List<String> _userConfiguredRelays(Map<String, dynamic> json) {
+  final relays = (json['relays'] as List<dynamic>? ?? const [])
+      .whereType<String>()
+      .toList();
+  final userUrls = (json['userRelays'] as List<dynamic>? ?? const [])
+      .whereType<Map<String, dynamic>>()
+      .map((r) => r['url'])
+      .whereType<String>()
+      .toSet();
+  return relays.where(userUrls.contains).toList();
 }
 
 Map<String, dynamic>? _decodeObject(String raw) {

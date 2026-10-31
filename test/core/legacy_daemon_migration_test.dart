@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:satonero_mobile/data/repositories/open_orders_repository.dart';
 import 'package:satonero_mobile/core/config/communities.dart';
 import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
@@ -11,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
+import '../mocks.mocks.dart';
+
 const _customDaemon =
     'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 
@@ -19,8 +24,25 @@ final _communityDaemon = trustedCommunities
     .map((c) => c.pubkey)
     .firstWhere((pk) => pk != legacyUpstreamDaemonPubkey);
 
-Settings _settings(String pubkey, {List<String> relays = const []}) =>
-    Settings(relays: relays, fullPrivacyMode: false, mostroPublicKey: pubkey);
+Settings _settings(
+  String pubkey, {
+  List<String> relays = const [],
+  List<Map<String, dynamic>> userRelays = const [],
+  List<String> blacklistedRelays = const [],
+}) =>
+    Settings(
+      relays: relays,
+      fullPrivacyMode: false,
+      mostroPublicKey: pubkey,
+      userRelays: userRelays,
+      blacklistedRelays: blacklistedRelays,
+    );
+
+Map<String, dynamic> _userRelay(String url) => {
+      'url': url,
+      'isHealthy': true,
+      'source': 'user',
+    };
 
 Future<void> _storeSettings(SharedPreferencesAsync prefs, Settings s) =>
     prefs.setString(
@@ -48,12 +70,19 @@ void main() {
   });
 
   group('legacy default reset', () {
-    test('resets the stored legacy daemon and everything bound to it', () async {
+    test('resets the stored legacy daemon and its discovered relays only', () async {
       await _storeSettings(
         prefs,
         _settings(
           legacyUpstreamDaemonPubkey,
-          relays: const ['wss://upstream-discovered.example'],
+          // Discovered from the legacy daemon's kind 10002: must be dropped.
+          // The user-configured relay must survive.
+          relays: const [
+            'wss://upstream-discovered.example',
+            'wss://mine.example',
+          ],
+          userRelays: [_userRelay('wss://mine.example')],
+          blacklistedRelays: const ['wss://blocked.example'],
         ),
       );
       await prefs.setBool(SharedPreferencesKeys.communitySelected.value, true);
@@ -68,9 +97,13 @@ void main() {
       final raw = await prefs.getString(SharedPreferencesKeys.appSettings.value);
       final migrated = Settings.fromJson(jsonDecode(raw!));
       expect(migrated.mostroPublicKey, isEmpty);
-      expect(migrated.relays, isEmpty);
-      expect(migrated.userRelays, isEmpty);
-      expect(migrated.blacklistedRelays, isEmpty);
+      expect(migrated.relays, ['wss://mine.example'],
+          reason: 'discovered relays of the legacy daemon are removed');
+      expect(migrated.userRelays.map((r) => r['url']).toList(),
+          ['wss://mine.example'],
+          reason: 'user-added relays are preserved');
+      expect(migrated.blacklistedRelays, ['wss://blocked.example'],
+          reason: 'the blacklist only filters and is preserved');
       expect(
         await prefs.getBool(SharedPreferencesKeys.communitySelected.value),
         isFalse,
@@ -215,6 +248,53 @@ void main() {
         await prefs.getBool(SharedPreferencesKeys.communitySelected.value),
         isTrue,
       );
+    });
+  });
+
+  group('startup ordering', () {
+    test('SettingsNotifier.init migrates before exposing any settings',
+        () async {
+      await _storeSettings(prefs, _settings(legacyUpstreamDaemonPubkey));
+      await prefs.setBool(SharedPreferencesKeys.communitySelected.value, true);
+
+      final notifier = SettingsNotifier(prefs);
+      await notifier.init();
+
+      expect(notifier.state.mostroPublicKey, isEmpty);
+      expect(await _storedPubkey(prefs), isEmpty,
+          reason: 'the persisted copy is rewritten before init returns');
+      expect(
+        await prefs.getBool(SharedPreferencesKeys.legacyDaemonMigrated.value),
+        isTrue,
+      );
+    });
+
+    test('no order REQ can be built from the legacy pubkey after init',
+        () async {
+      await _storeSettings(prefs, _settings(legacyUpstreamDaemonPubkey));
+
+      final notifier = SettingsNotifier(prefs);
+      await notifier.init();
+
+      final nostr = MockNostrService();
+      when(nostr.isInitialized).thenReturn(true);
+      when(nostr.relayGenerationStream)
+          .thenAnswer((_) => const Stream<int>.empty());
+      when(nostr.subscribeToEvents(any, onEose: anyNamed('onEose')))
+          .thenAnswer((_) => const Stream<NostrEvent>.empty());
+
+      OpenOrdersRepository(nostr, notifier.state);
+
+      verifyNever(nostr.subscribeToEvents(any, onEose: anyNamed('onEose')));
+    });
+
+    test('init keeps a custom daemon and its REQ untouched', () async {
+      await _storeSettings(prefs, _settings(_customDaemon));
+
+      final notifier = SettingsNotifier(prefs);
+      await notifier.init();
+
+      expect(notifier.state.mostroPublicKey, _customDaemon);
     });
   });
 

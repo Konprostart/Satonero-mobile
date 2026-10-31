@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/services/fcm_service.dart';
@@ -47,6 +48,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
   }
 
   Future<void> init() async {
+    // Gate: the legacy daemon migration must complete before any settings are
+    // read. Every foreground load goes through here, and `bootstrapAndRun`
+    // awaits it before the ProviderContainer exists, so no daemon connection,
+    // REQ or subscription can start from the legacy pubkey.
+    await migrateLegacyUpstreamDaemon(_prefs);
     final settingsJson = await _prefs.getString(_storageKey);
     if (settingsJson != null) {
       try {
