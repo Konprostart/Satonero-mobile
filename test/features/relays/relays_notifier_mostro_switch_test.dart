@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/core/models/relay_list_event.dart';
 import 'package:satonero_mobile/features/relays/relays_provider.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
@@ -31,6 +30,10 @@ void main() {
 
   const otherMostro =
       'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+  // The instance that is configured before each test. Satonero has no
+  // implicit default daemon, so it must be set explicitly.
+  const currentMostro =
+      'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
 
   setUp(() {
     SharedPreferencesAsyncPlatform.instance =
@@ -62,10 +65,16 @@ void main() {
   Future<void> seedCurrentInstanceRelay(WidgetTester tester) async {
     container.read(relaysProvider);
     await tester.pump();
+    await container
+        .read(settingsProvider.notifier)
+        .updateMostroInstance(currentMostro);
+    await tester.pump();
+    // Only the calls made by the test itself are of interest from here on.
+    clearInteractions(nostrService);
     relayListController.add(RelayListEvent(
       relays: const ['wss://relay.old-mostro.test'],
       publishedAt: DateTime.now(),
-      authorPubkey: Config.mostroPubKey,
+      authorPubkey: currentMostro,
     ));
     await tester.pump();
     expect(
