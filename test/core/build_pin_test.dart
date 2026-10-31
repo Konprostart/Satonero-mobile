@@ -30,9 +30,19 @@ void main() {
       expect(isLegacyBuildPin(''), isFalse);
     });
 
-    test('a test build without a pin has no daemon and no rejected pin', () {
-      expect(Config.mostroPubKey, isEmpty);
-      expect(Config.legacyBuildPinRejected, isFalse);
+    test('the pin of this test run resolves to the expected daemon state', () {
+      const pinned = String.fromEnvironment('MOSTRO_PUB_KEY');
+      if (pinned.isEmpty) {
+        expect(Config.mostroPubKey, isEmpty);
+        expect(Config.legacyBuildPinRejected, isFalse);
+      } else if (isLegacyBuildPin(pinned)) {
+        expect(Config.mostroPubKey, isEmpty,
+            reason: 'legacy pin must leave the daemon unconfigured');
+        expect(Config.legacyBuildPinRejected, isTrue);
+      } else {
+        expect(Config.mostroPubKey, pinned.trim());
+        expect(Config.legacyBuildPinRejected, isFalse);
+      }
     });
   });
 }
