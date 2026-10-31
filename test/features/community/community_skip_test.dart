@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
 import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/data/repositories/open_orders_repository.dart';
 import 'package:satonero_mobile/features/community/community.dart';
-import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/community/screens/community_selector_screen.dart';
 import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
@@ -88,6 +88,12 @@ void main() {
   group('community selector', () {
     late ProviderContainer container;
 
+    /// Reads the persisted "community selected" flag through real async I/O,
+    /// so the assertion does not depend on the provider's init timing.
+    Future<bool?> persistedCommunitySelected(WidgetTester tester) =>
+        tester.runAsync(() => SharedPreferencesAsync()
+            .getBool(SharedPreferencesKeys.communitySelected.value));
+
     Future<void> pumpSelector(WidgetTester tester) async {
       container = ProviderContainer(overrides: [
         sharedPreferencesProvider
@@ -145,7 +151,7 @@ void main() {
 
       expect(container.read(settingsProvider).mostroPublicKey, isEmpty);
       expect(container.read(mostroNodesProvider), isEmpty);
-      expect(container.read(communitySelectedProvider).value, isFalse);
+      expect(await persistedCommunitySelected(tester), isNot(true));
       expect(find.text('HOME'), findsNothing);
     });
 
@@ -161,7 +167,7 @@ void main() {
 
       expect(find.byType(CommunitySelectorScreen), findsOneWidget);
       expect(container.read(settingsProvider).mostroPublicKey, isEmpty);
-      expect(container.read(communitySelectedProvider).value, isFalse);
+      expect(await persistedCommunitySelected(tester), isNot(true));
     });
 
     testWidgets('explicit community selection still connects to that daemon',
@@ -176,7 +182,7 @@ void main() {
 
       expect(container.read(settingsProvider).mostroPublicKey,
           _communityPubkey);
-      expect(container.read(communitySelectedProvider).value, isTrue);
+      expect(await persistedCommunitySelected(tester), isTrue);
       expect(find.text('HOME'), findsOneWidget);
     });
   });
