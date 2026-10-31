@@ -56,12 +56,11 @@ void main() {
 
     await notifier.fetchAllNodeMetadata(includeTrusted: false);
 
-    expect(authorsOfLastRequest(), [_custom]);
-    expect(authorsOfLastRequest(), isNot(contains(legacyUpstreamDaemonPubkey)));
-    expect(
-      authorsOfLastRequest(),
-      isNot(contains(trustedCommunities.first.pubkey)),
-    );
+    // Read the captured call once: a mock verifies each call only once.
+    final authors = authorsOfLastRequest();
+    expect(authors, [_custom]);
+    expect(authors, isNot(contains(legacyUpstreamDaemonPubkey)));
+    expect(authors, isNot(contains(trustedCommunities.first.pubkey)));
   });
 
   test('the community selector flow (default) still requests trusted nodes',
