@@ -8,6 +8,7 @@ import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/data/repositories/open_orders_repository.dart';
 import 'package:satonero_mobile/features/community/community.dart';
+import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/community/screens/community_selector_screen.dart';
 import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
@@ -91,7 +92,7 @@ void main() {
     /// Reads the persisted "community selected" flag through real async I/O,
     /// so the assertion does not depend on the provider's init timing.
     Future<bool?> persistedCommunitySelected(WidgetTester tester) =>
-        tester.runAsync(() => SharedPreferencesAsync()
+        tester.runAsync<bool?>(() => SharedPreferencesAsync()
             .getBool(SharedPreferencesKeys.communitySelected.value));
 
     Future<void> pumpSelector(WidgetTester tester) async {
