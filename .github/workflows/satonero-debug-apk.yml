@@ -1,0 +1,53 @@
+name: Satonero Debug APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-satonero-debug-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.5'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate required files
+        run: dart run build_runner build -d
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Build Satonero debug APK
+        env:
+          ORG_GRADLE_PROJECT_satoneroApplicationId: com.konprostart.satonero
+        run: flutter build apk --debug
+
+      - name: Verify APK package, label, and icon
+        run: |
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-debug.apk
+          test -f "$APK"
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          BT=$(ls -d "$SDK"/build-tools/* | sort -V | tail -n1)
+          if [ -x "$BT/aapt" ]; then AAPT="$BT/aapt"; else AAPT="$BT/aapt2"; fi
+          "$AAPT" dump badging "$APK" | grep -E "^(package:|application-label:|application-icon-)"
+          "$AAPT" dump badging "$APK" | grep -q "package: name='com.konprostart.satonero'"
+          "$AAPT" dump badging "$APK" | grep -q "application-label:'Satonero'"
+          "$AAPT" dump badging "$APK" | grep -q "application-icon-.*ic_launcher_satonero"
+          echo "Verified package, label, and launcher icon."
+
+      - name: Upload Satonero debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: satonero-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
