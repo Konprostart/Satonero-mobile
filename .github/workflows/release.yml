@@ -235,10 +235,12 @@ jobs:
             if ! "$APKSIGNER" verify --print-certs "$APK" > /tmp/apk_signing.txt 2>&1; then
               echo "::error::apksigner verification failed ($ARCH)"; cat /tmp/apk_signing.txt; exit 1
             fi
+            # Public certificate data only (no key material): safe to log.
+            echo "--- apksigner output ($ARCH) ---"; cat /tmp/apk_signing.txt
             if grep -qi 'Android Debug' /tmp/apk_signing.txt; then
               echo "::error::debug-signed APK rejected ($ARCH)"; exit 1
             fi
-            SIGNERS=$(grep -oE 'Signer #[0-9]+ certificate SHA-256 digest: [0-9a-f]+' /tmp/apk_signing.txt | awk '{print $NF}')
+            SIGNERS=$(grep 'certificate SHA-256 digest' /tmp/apk_signing.txt | sed -E 's/.*digest: *//' | tr -d ' \r' | tr 'A-F' 'a-f' || true)
             if [ "$(printf '%s\n' "$SIGNERS" | sed '/^$/d' | wc -l)" -ne 1 ]; then
               echo "::error::expected exactly one signer ($ARCH)"; exit 1
             fi
