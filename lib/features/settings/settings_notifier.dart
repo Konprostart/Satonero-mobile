@@ -6,8 +6,6 @@ import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
-import 'package:satonero_mobile/data/models/session.dart';
-import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 import 'package:satonero_mobile/services/fcm_service.dart';
 import 'package:satonero_mobile/services/private_mode_proxy.dart';
 import 'package:shared_preferences/shared_preferences.dart';

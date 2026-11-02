@@ -15,7 +15,6 @@ import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/shared/widgets/currency_selection_dialog.dart';
 import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
-import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 import 'package:satonero_mobile/shared/widgets/language_selector.dart';
 import 'package:satonero_mobile/shared/widgets/trade_history_selector.dart';
 import 'package:satonero_mobile/features/wallet/widgets/wallet_status_card.dart';
