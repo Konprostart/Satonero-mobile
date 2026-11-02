@@ -102,8 +102,11 @@ android {
         release {
             if (hasKeystore) {
                 signingConfig signingConfigs.release
+            } else if (System.getenv("ALLOW_DEBUG_SIGNING") == "true") {
+                signingConfig signingConfigs.debug
+                logger.warn("ALLOW_DEBUG_SIGNING=true: release build is using DEBUG signing. Never publish this artifact.")
             } else {
-                throw new GradleException("Release signing requires a valid keystore. Debug signing is not allowed for release builds.")
+                throw new GradleException("Release signing requires a valid keystore. Debug signing is not allowed for release builds (set ALLOW_DEBUG_SIGNING=true only for CI verification builds).")
             }
         }
     }
