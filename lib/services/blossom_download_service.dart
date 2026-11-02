@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:satonero_mobile/services/private_mode_proxy.dart';
 import 'package:satonero_mobile/services/logger_service.dart';
 
 class BlossomDownloadService {
@@ -13,7 +14,7 @@ class BlossomDownloadService {
       final uri = Uri.parse(blossomUrl);
       logger.d('GET $uri');
 
-      final response = await http.get(
+      final response = await createPrivateModeHttp().get(
         uri,
         headers: {
           'User-Agent': 'Satonero/1.0',

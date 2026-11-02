@@ -4,6 +4,7 @@ import 'package:dart_nostr/dart_nostr.dart';
 import 'package:dart_nostr/nostr/model/ease.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:satonero_mobile/core/config.dart';
+import 'package:satonero_mobile/services/private_mode_proxy.dart';
 import 'package:satonero_mobile/core/models/relay_list_event.dart';
 import 'package:satonero_mobile/features/settings/settings_notifier.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
@@ -255,6 +256,7 @@ class RelaysNotifier extends StateNotifier<List<Relay>> {
       final socket = await WebSocket.connect(
         uri.toString(),
         headers: {'User-Agent': 'Satonero/1.0'},
+        customClient: createPrivateModeHttpClient(),
       ).timeout(const Duration(seconds: 8));
 
       // Send a basic REQ message to test if it's a Nostr relay

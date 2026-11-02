@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:satonero_mobile/services/private_mode_proxy.dart';
 
 class ExchangeRateNotifier extends StateNotifier<AsyncValue<double>> {
   final ExchangeService exchangeService;
@@ -48,7 +49,7 @@ abstract class ExchangeService {
     final url = Uri.parse('$baseUrl$endpoint');
     try {
       final response =
-          await http.get(url, headers: defaultHeaders).timeout(timeout);
+          await createPrivateModeHttp().get(url, headers: defaultHeaders).timeout(timeout);
 
       if (response.statusCode == 200) {
         return json.decode(response.body) as Map<String, dynamic>;

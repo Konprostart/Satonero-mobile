@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:satonero_mobile/services/private_mode_proxy.dart';
 import 'dart:io';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
@@ -46,7 +47,10 @@ class CommunityRepository {
 
     WebSocket? ws;
     try {
-      ws = await WebSocket.connect(relayUrl).timeout(_timeout);
+      ws = await WebSocket.connect(
+        relayUrl,
+        customClient: createPrivateModeHttpClient(),
+      ).timeout(_timeout);
 
       final subIdKind0 = _randomSubId();
       final subIdKind38385 = _randomSubId();
