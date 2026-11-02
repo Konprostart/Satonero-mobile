@@ -6,12 +6,15 @@ import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/core/legacy_daemon_migration.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/data/models/session.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 import 'package:satonero_mobile/services/fcm_service.dart';
+import 'package:satonero_mobile/services/private_mode_proxy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsNotifier extends StateNotifier<Settings> {
   final SharedPreferencesAsync _prefs;
-  final Ref? ref;
+  Ref? ref;
   static final String _storageKey = SharedPreferencesKeys.appSettings.value;
 
   FCMService? _fcmService;
@@ -73,6 +76,29 @@ class SettingsNotifier extends StateNotifier<Settings> {
   Future<void> updatePrivacyMode(bool newValue) async {
     state = state.copyWith(privacyModeSetting: newValue);
     await _saveToPrefs();
+  }
+
+  Future<bool> updatePrivateMode(bool newValue) async {
+    // Disabling Private Mode is always allowed. Existing sessions and trade
+    // keys are preserved; only new traffic may use a direct connection.
+
+    state = state.copyWith(
+      privateMode: newValue,
+      privacyModeSetting: newValue ? true : state.fullPrivacyMode,
+    );
+    applyPrivateModeProxy(newValue);
+
+    if (newValue) {
+      try {
+        await _unregisterPushTokens?.call();
+      } catch (_) {}
+      if (_fcmService != null) {
+        state = state.copyWith(pushNotificationsEnabled: false);
+      }
+    }
+
+    await _saveToPrefs();
+    return true;
   }
 
   Future<void> updateMostroInstance(String newValue) async {

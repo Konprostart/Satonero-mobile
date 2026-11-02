@@ -15,6 +15,7 @@ import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/shared/widgets/currency_selection_dialog.dart';
 import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 import 'package:satonero_mobile/shared/widgets/language_selector.dart';
 import 'package:satonero_mobile/shared/widgets/trade_history_selector.dart';
 import 'package:satonero_mobile/features/wallet/widgets/wallet_status_card.dart';
@@ -108,6 +109,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _buildRelaysCard(context),
                   const SizedBox(height: 16),
 
+                  // Private Mode Card
+                  _buildPrivateModeCard(context),
+                  const SizedBox(height: 16),
+
                   // Notification Settings Card
                   _buildNotificationSettingsCard(context),
                   const SizedBox(height: 16),
@@ -127,6 +132,96 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrivateModeCard(BuildContext context) {
+    final settings = ref.watch(settingsProvider);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.backgroundCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(LucideIcons.shield, color: AppTheme.activeColor, size: 24),
+                const SizedBox(width: 12),
+                Text(S.of(context)!.privateModeTitle,
+                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () => _showPrivateModeInfo(context),
+                  child: const Icon(Icons.help_outline, color: AppTheme.textSecondary, size: 20),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(S.of(context)!.privateModeDescription,
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(settings.privateMode ? S.of(context)!.privateModeOn : S.of(context)!.privateModeOff,
+                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w500)),
+                Switch(
+                  value: settings.privateMode,
+                  onChanged: (value) async {
+                    if (!value) {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (dialogContext) => AlertDialog(
+                          title: Text(S.of(context)!.privateModeTitle),
+                          content: Text(S.of(context)!.privateModeDisableWarning),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(dialogContext).pop(false),
+                              child: Text(S.of(context)!.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(dialogContext).pop(true),
+                              child: Text(S.of(context)!.privateModeClose),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirmed != true) return;
+                    }
+                    await ref.read(settingsProvider.notifier).updatePrivateMode(value);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              settings.privateMode
+                  ? S.of(context)!.privateModeStatusOn
+                  : S.of(context)!.privateModeStatusOff,
+              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showPrivateModeInfo(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(S.of(context)!.privateModeTitle),
+        content: Text(S.of(context)!.privateModeInfoText),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context)!.privateModeClose)),
         ],
       ),
     );

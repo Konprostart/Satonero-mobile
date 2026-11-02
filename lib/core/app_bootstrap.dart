@@ -22,6 +22,7 @@ import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart'
 import 'package:satonero_mobile/shared/utils/biometrics_helper.dart';
 import 'package:satonero_mobile/shared/utils/notification_permission_helper.dart';
 import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/services/private_mode_proxy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -53,6 +54,7 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
         'no daemon is configured until the user selects one.');
   }
   await seedTestRelays(settings, seedRelays);
+  applyPrivateModeProxy(settings.settings.privateMode);
 
   await initializeNotifications();
 
@@ -62,7 +64,10 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
   await backgroundService.init();
 
   // Initialize FCM (skip on Linux)
-  final pushServices = await _initializeFirebaseMessaging(sharedPreferences);
+  final pushServices = await _initializeFirebaseMessaging(
+    sharedPreferences,
+    privateMode: settings.settings.privateMode,
+  );
 
   final container = ProviderContainer(
     overrides: [
@@ -80,6 +85,8 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
       ],
     ],
   );
+
+  settings.ref = container;
 
   // Initialize relay sync on app start
   _initializeRelaySynchronization(container);
@@ -177,8 +184,13 @@ class _PushServices {
 /// Initialize Firebase Cloud Messaging and Push Notification Service
 /// Returns the initialized services, or null if not supported/failed
 Future<_PushServices?> _initializeFirebaseMessaging(
-    SharedPreferencesAsync prefs) async {
+    SharedPreferencesAsync prefs, {bool privateMode = false}) async {
   try {
+    if (privateMode) {
+      logger.i('Private Mode enabled - skipping Firebase/FCM initialization');
+      return null;
+    }
+
     // Skip Firebase initialization on Linux (not supported)
     if (!kIsWeb && Platform.isLinux) {
       logger.i('Firebase not supported on Linux - skipping FCM initialization');

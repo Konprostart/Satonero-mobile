@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Settings extends Equatable {
   final bool fullPrivacyMode;
+  final bool privateMode;
   final List<String> relays;
   final String mostroPublicKey;
   final String? defaultFiatCode;
@@ -19,6 +20,7 @@ class Settings extends Equatable {
   const Settings({
     required this.relays,
     required this.fullPrivacyMode,
+    this.privateMode = false,
     required this.mostroPublicKey,
     this.defaultFiatCode,
     this.selectedLanguage,
@@ -37,6 +39,7 @@ class Settings extends Equatable {
   @override
   List<Object?> get props => [
         fullPrivacyMode,
+        privateMode,
         relays,
         mostroPublicKey,
         defaultFiatCode,
@@ -54,6 +57,7 @@ class Settings extends Equatable {
   Settings copyWith({
     List<String>? relays,
     bool? privacyModeSetting,
+    bool? privateMode,
     String? mostroPublicKey,
     String? defaultFiatCode,
     String? selectedLanguage,
@@ -71,6 +75,7 @@ class Settings extends Equatable {
     return Settings(
       relays: relays ?? this.relays,
       fullPrivacyMode: privacyModeSetting ?? fullPrivacyMode,
+      privateMode: privateMode ?? this.privateMode,
       mostroPublicKey: mostroPublicKey ?? this.mostroPublicKey,
       defaultFiatCode: defaultFiatCode ?? this.defaultFiatCode,
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
@@ -92,6 +97,7 @@ class Settings extends Equatable {
   Map<String, dynamic> toJson() => {
         'relays': relays,
         'fullPrivacyMode': fullPrivacyMode,
+        'privateMode': privateMode,
         'mostroPublicKey': mostroPublicKey,
         'defaultFiatCode': defaultFiatCode,
         'selectedLanguage': selectedLanguage,
@@ -108,6 +114,7 @@ class Settings extends Equatable {
     return Settings(
       relays: (json['relays'] as List<dynamic>?)?.cast<String>() ?? [],
       fullPrivacyMode: json['fullPrivacyMode'] as bool,
+      privateMode: json['privateMode'] as bool? ?? false,
       mostroPublicKey: json['mostroPublicKey'],
       defaultFiatCode: json['defaultFiatCode'],
       selectedLanguage: json['selectedLanguage'],
