@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:satonero_mobile/services/private_mode_proxy.dart';
 
 class ExchangeRateNotifier extends StateNotifier<AsyncValue<double>> {
