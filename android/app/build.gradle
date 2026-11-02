@@ -69,6 +69,9 @@ android {
                     keyPassword  keystoreProperties['keyPassword']
                     storeFile    file(keystoreProperties['storeFile'])
                     storePassword keystoreProperties['storePassword']
+                    if (keystoreProperties['storeType']) {
+                        storeType keystoreProperties['storeType']
+                    }
                 } else if (hasKeystoreFromEnv) {
                     keyAlias     envKeystore.keyAlias
                     keyPassword  envKeystore.keyPassword
@@ -100,9 +103,7 @@ android {
             if (hasKeystore) {
                 signingConfig signingConfigs.release
             } else {
-                // Fallback to debug signing for development
-                signingConfig signingConfigs.debug
-                logger.warn("Release build using debug signing - keystore not available")
+                throw new GradleException("Release signing requires a valid keystore. Debug signing is not allowed for release builds.")
             }
         }
     }
