@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.5.1] - 2026-11-02
+
+### Added
+- feat: add minimal Private Mode with Orbot proxy (bad53b4)
+
+### Fixed
+- fix: remove unused http import (707544a)
+- fix: route direct network paths through Private Mode proxy (10ab603)
+- fix: remove unused imports from Private Mode (6ad3ba5)
+- fix: wire Private Mode active-session guard (959a3b6)
+
+### Changed
+- ci: allow debug APK build without keystore (be6baee)
+- test: fix Private Mode guard test setup (4523a4c)
+- test: add Private Mode guard and proxy tests (3ca1836)
+- ci: add Private Mode validation workflow (1f924b0)
+
+
 ## [v1.5.0] - 2026-10-02
 
 ### Added
