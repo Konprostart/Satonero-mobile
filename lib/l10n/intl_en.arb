@@ -595,7 +595,7 @@
         }
     },
     "exchangeRateNotAvailable": "Exchange rate not available, please wait or refresh",
-    "mostroInstanceNotAvailable": "Mostro instance data not available, please wait",
+    "mostroInstanceNotAvailable": "Satonero node information is not available yet. Please wait or check your connection.",
     "enterAmountYouWantToReceiveCurrency": "Enter the amount of {currency} you want to receive",
     "@enterAmountYouWantToReceiveCurrency": {
         "placeholders": {

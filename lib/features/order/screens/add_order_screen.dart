@@ -468,7 +468,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
     return _submitOrder; // Form is valid - allow submission
   }
 
-  void _submitOrder() {
+  Future<void> _submitOrder() async {
     // Force-commit any pending text field changes (e.g. premium debounce timer)
     primaryFocus?.unfocus();
     if (_formKey.currentState?.validate() ?? false) {
@@ -505,14 +505,17 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
 
       // Additional safety check: ensure we have valid data for submission
       final exchangeRateAsync = ref.read(exchangeRateProvider(fiatCode));
-      final mostroInstance = ref.read(orderRepositoryProvider).mostroInstance;
+      final mostroInstance =
+          await ref.read(orderRepositoryProvider).awaitMostroInstance();
 
       if (!exchangeRateAsync.hasValue || mostroInstance == null) {
         debugPrint(
             'Submission blocked: Required data not available - Exchange rate: ${exchangeRateAsync.hasValue}, Mostro instance: ${mostroInstance != null}');
         SnackBarHelper.showTopSnackBar(
           context,
-          S.of(context)!.exchangeRateNotAvailable,
+          mostroInstance == null
+              ? S.of(context)!.mostroInstanceNotAvailable
+              : S.of(context)!.exchangeRateNotAvailable,
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.orange.withValues(alpha: 0.8),
         );
