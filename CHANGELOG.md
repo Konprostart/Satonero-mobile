@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.5.0] - 2026-11-02
+
+### Added
+- Add one-time migration resetting legacy upstream daemon selection (09ecd26)
+- Add Satonero debug APK workflow with branded package and icon (3ce0337)
+- Add Android settings.gradle (dd14a1d)
+- Add Android Gradle build files (e3b3bd9)
+- Add Flutter v2 embedding metadata (d0f81aa)
+- Add manual debug APK workflow (ac639e2)
+
+### Fixed
+- fix: correct cert fingerprint extraction from apksigner output (4cb7dda)
+- fix: enforce release signing, support PKCS12 keystore, verify cert fingerprint (f521bec)
+- Fix mock verify reuse in metadata scope test (61dc9f1)
+- Fix analyzer errors in Skip test (70e8352)
+- Fix CI icon verification for generated launcher icon (8b3b11e)
+- Fix FakeSecureStorage getListeners type (6e09b12)
+- Fix FakeSecureStorage getListeners implementation (391bd3d)
+
+### Changed
+- l10n: walkthrough welcome screens speak Satonero in English template (c4789e4)
+- Upstream isolation: custom-only cold-start metadata, reject legacy MOSTRO_PUB_KEY pin (69c914e)
+- Route background startup reads through migrated helpers; add entry-point and fresh-install tests (6d26a96)
+- Legacy migration: keep user relays, drop only daemon-discovered relays; gate in SettingsNotifier.init (ade1df0)
+- Make relay switch test use an explicit current daemon (004586d)
+- Use persisted flag in Skip test to avoid init-timing flake (abe0166)
+- Stop implicit selection of upstream Mostro daemon on Skip (830fdb1)
+- Restore icon verification via aapt xmltree of adaptive icon (b2165d0)
+- Relax CI icon resource check (3f967d7)
+- Rebrand as Satonero and remove Mostro-owned infrastructure defaults (cbf2a8d)
+- Set compileSdk to 36 for plugin compatibility (aed480c)
+- Bump Gradle wrapper to 8.11.1 (377af49)
+- Bump Android Gradle plugin to 8.9.1 (8d2df23)
+- Use Java 17 for debug APK build (b147d7b)
+- Remove default Mostro relay dependency (e0f999c)
+- Publish Satonero mobile source and license (4faa8f8)
+
+
 ## [v1.5.0] - 2026-10-02
 
 ### Added
