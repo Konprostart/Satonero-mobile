@@ -218,7 +218,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(S.of(context)!.privateModeTitle),
-        content: Text(S.of(context)!.privateModeInfoText),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(S.of(context)!.privateModeInfoText),
+            const SizedBox(height: 12),
+            Text(S.of(context)!.privateModeSetupText),
+          ],
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context)!.privateModeClose)),
         ],

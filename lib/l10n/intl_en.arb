@@ -1134,6 +1134,7 @@
   "privateModeActiveTradesWarning": "Finish or cancel active trades before turning off Private Mode.",
   "privateModeDisableBlocked": "Private Mode could not be disabled.",
   "privateModeInfoText": "Private Mode routes Satonero traffic through Tor and avoids linking new trades to your identity. Tor does not guarantee complete anonymity and cannot eliminate all metadata or payment-related risks.",
+  "privateModeSetupText": "Option 1 - Orbot HTTP proxy + Satonero Private Mode: start Orbot normally, enable HTTP proxy at 127.0.0.1:8118, keep Orbot VPN mode OFF, then enable Private Mode in Satonero. Option 2 - Orbot VPN mode + Full Privacy: enable Orbot VPN mode, select Satonero in Orbot apps, keep Satonero Private Mode OFF, then enable Full Privacy under Account / Key Management. Do not enable both routing methods at the same time.",
   "privateModeDisableWarning": "Disabling Private Mode may expose your real IP address and allow Satonero traffic to reconnect directly. Continue?",
   "privateModeClose": "Close",
     "maximumAnonymity": "Maximum anonymity",
