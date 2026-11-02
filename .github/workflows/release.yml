@@ -218,7 +218,7 @@ jobs:
           APKSIGNER=$(find "$SDK_ROOT"/build-tools -name apksigner -type f 2>/dev/null | sort -V | tail -1 || true)
           for ARCH in armeabi-v7a arm64-v8a; do
             APK="build/app/outputs/flutter-apk/satonero-${{ steps.version.outputs.full_tag }}-${ARCH}.apk"
-            FP=$("$APKSIGNER" verify --print-certs "$APK" 2>/dev/null | grep -i "SHA-256 digest" | head -1 | tr -d ' ' | cut -d: -f2- | tr '[:upper:]' '[:lower:]' || true)
+            FP=$("$APKSIGNER" verify --print-certs "$APK" 2>/dev/null | grep -i "SHA-256 digest" | head -1 | sed -n 's/.*SHA-256 digest: *//p' | tr -d ' ' | tr '[:upper:]' '[:lower:]' || true)
             echo "${ARCH} cert fingerprint: $FP"
             if [ "$FP" != "$EXPECTED_FP" ]; then
               echo "::error::Certificate fingerprint mismatch for ${ARCH}: expected $EXPECTED_FP, got $FP"
