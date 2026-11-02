@@ -46,6 +46,8 @@ jobs:
         run: flutter test test/services/private_mode_proxy_test.dart test/features/settings/private_mode_guard_test.dart
 
       - name: Build debug APK
+        env:
+          ALLOW_DEBUG_SIGNING: "true"
         run: flutter build apk --debug
 
       - name: Upload APK artifact
