@@ -1,10 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/features/settings/settings_notifier.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
-import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 import 'package:satonero_mobile/shared/providers/storage_providers.dart';
 
 void main() {
@@ -26,7 +24,7 @@ void main() {
   test('Private Mode disable is blocked when ref is unavailable', () async {
     SharedPreferences.setMockInitialValues({});
     final prefs = SharedPreferencesAsync();
-    final notifier = SettingsNotifier(prefs);
+    final notifier = SettingsNotifier(prefs, hasActiveSessions: () => false);
     await notifier.init();
     await notifier.updatePrivateMode(true);
     final result = await notifier.updatePrivateMode(false);

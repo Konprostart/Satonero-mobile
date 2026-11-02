@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsNotifier extends StateNotifier<Settings> {
   final SharedPreferencesAsync _prefs;
-  Ref? ref;
+  bool Function()? hasActiveSessions;
   static final String _storageKey = SharedPreferencesKeys.appSettings.value;
 
   FCMService? _fcmService;
@@ -33,7 +33,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
     _unregisterPushTokens = unregisterTokens;
   }
 
-  SettingsNotifier(this._prefs, {this.ref}) : super(_defaultSettings());
+  SettingsNotifier(this._prefs, {this.hasActiveSessions}) : super(_defaultSettings());
 
   @override
   bool updateShouldNotify(Settings old, Settings current) => old != current;

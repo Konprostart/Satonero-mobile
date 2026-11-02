@@ -86,7 +86,7 @@ Future<void> bootstrapAndRun({List<String> seedRelays = const []}) async {
     ],
   );
 
-  settings.ref = container;
+  settings.hasActiveSessions = () => container.read(sessionNotifierProvider).isNotEmpty;
 
   // Initialize relay sync on app start
   _initializeRelaySynchronization(container);
