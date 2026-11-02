@@ -484,6 +484,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
 
       // Now we know selectedFiatCode is non-null and non-empty
       final fiatCode = selectedFiatCode;
+      final l10n = S.of(context)!;
 
       if (_selectedPaymentMethods.isEmpty &&
           _customPaymentMethodController.text.trim().isEmpty) {
@@ -508,14 +509,16 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
       final mostroInstance =
           await ref.read(orderRepositoryProvider).awaitMostroInstance();
 
+      if (!mounted) return;
+
       if (!exchangeRateAsync.hasValue || mostroInstance == null) {
         debugPrint(
             'Submission blocked: Required data not available - Exchange rate: ${exchangeRateAsync.hasValue}, Mostro instance: ${mostroInstance != null}');
         SnackBarHelper.showTopSnackBar(
           context,
           mostroInstance == null
-              ? S.of(context)!.mostroInstanceNotAvailable
-              : S.of(context)!.exchangeRateNotAvailable,
+              ? l10n.mostroInstanceNotAvailable
+              : l10n.exchangeRateNotAvailable,
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.orange.withValues(alpha: 0.8),
         );
@@ -581,7 +584,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
             context: context,
             builder: (context) => AlertDialog(
               backgroundColor: AppTheme.backgroundCard,
-              title: Text(S.of(context)!.error,
+              title: Text(l10n.error,
                   style: const TextStyle(color: Colors.white)),
               content: Text(e.toString(),
                   style: const TextStyle(color: Colors.white)),
