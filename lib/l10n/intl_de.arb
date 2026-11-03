@@ -1,5 +1,7 @@
 {
     "@@locale": "de",
+  "usingDefaultCommunityTitle": "Standard-Community-Node verwenden",
+  "usingDefaultCommunityBody": "Satonero verwendet den Standard-Community-Node fuer Anzeigen. Du kannst ihn jederzeit aendern oder trennen.",
   "chooseLanguageTitle": "Wähle deine Sprache",
   "chooseLanguageSubtitle": "Du kannst sie später in den Einstellungen ändern.",
     "backToHome": "Zurück zur Startseite",

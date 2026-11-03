@@ -1,5 +1,7 @@
 {
     "@@locale": "pt",
+  "usingDefaultCommunityTitle": "Usar no comunitario padrao",
+  "usingDefaultCommunityBody": "Satonero usara o no comunitario padrao para anuncios. Voce pode altera-lo ou desconectar a qualquer momento.",
   "chooseLanguageTitle": "Escolha o seu idioma",
   "chooseLanguageSubtitle": "Você pode alterá-la depois nas Configurações.",
     "backToHome": "Voltar ao Início",

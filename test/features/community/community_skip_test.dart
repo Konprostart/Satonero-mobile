@@ -139,31 +139,30 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('Skip explains the situation and connects to nothing',
+    testWidgets('Skip selects the default community node',
         (tester) async {
       await pumpSelector(tester);
       final ctx = tester.element(find.byType(CommunitySelectorScreen));
 
       await tester.tap(find.text(S.of(ctx)!.skipForNow));
       await tester.pumpAndSettle();
+      await tester.tap(find.text(S.of(ctx)!.communityDisclaimerAccept));
+      await tester.pumpAndSettle();
 
-      expect(find.text(S.of(ctx)!.skipNoDaemonTitle), findsOneWidget);
-      expect(find.text(S.of(ctx)!.skipNoDaemonBody), findsOneWidget);
-
-      expect(container.read(settingsProvider).mostroPublicKey, isEmpty);
-      expect(container.read(mostroNodesProvider), isEmpty);
-      expect(await persistedCommunitySelected(tester), isNot(true));
-      expect(find.text('HOME'), findsNothing);
+      expect(container.read(settingsProvider).mostroPublicKey,
+          _upstreamPubkey);
+      expect(await persistedCommunitySelected(tester), isTrue);
+      expect(find.text('HOME'), findsOneWidget);
     });
 
-    testWidgets('dismissing the Skip explanation keeps the user on selector',
+    testWidgets('cancelling the Skip confirmation keeps the user on selector',
         (tester) async {
       await pumpSelector(tester);
       final ctx = tester.element(find.byType(CommunitySelectorScreen));
 
       await tester.tap(find.text(S.of(ctx)!.skipForNow));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(S.of(ctx)!.skipNoDaemonDismiss));
+      await tester.tap(find.text(S.of(ctx)!.cancel));
       await tester.pumpAndSettle();
 
       expect(find.byType(CommunitySelectorScreen), findsOneWidget);

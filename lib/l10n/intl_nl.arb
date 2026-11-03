@@ -1,5 +1,7 @@
 {
     "@@locale": "nl",
+  "usingDefaultCommunityTitle": "Standaard community-node gebruiken",
+  "usingDefaultCommunityBody": "Satonero gebruikt de standaard community-node voor advertenties. Je kunt dit altijd wijzigen of verbreken.",
   "chooseLanguageTitle": "Kies je taal",
   "chooseLanguageSubtitle": "Je kunt dit later wijzigen in de instellingen.",
     "backToHome": "Terug naar start",
