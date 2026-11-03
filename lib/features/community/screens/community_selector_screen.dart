@@ -336,22 +336,28 @@ class _CommunitySelectorScreenState
     await _runSelection(() => _selectAndProceed(_selectedPubkey!));
   }
 
-  /// Skip never selects a daemon. The user stays disconnected and is told
-  /// how to connect: pick a community or add their own Mostro node.
+  /// Skip selects the default community node so advertisements can load,
+  /// while keeping the choice visible and changeable afterwards.
   Future<void> _onSkip(BuildContext context) async {
-    await showDialog<void>(
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(S.of(ctx)!.skipNoDaemonTitle),
-        content: Text(S.of(ctx)!.skipNoDaemonBody),
+        title: Text(S.of(ctx)!.usingDefaultCommunityTitle),
+        content: Text(S.of(ctx)!.usingDefaultCommunityBody),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(S.of(ctx)!.skipNoDaemonDismiss),
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(S.of(ctx)!.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(S.of(ctx)!.communityDisclaimerAccept),
           ),
         ],
       ),
     );
+    if (confirmed != true) return;
+    await _runSelection(() => _selectAndProceed(defaultMostroPubkey));
   }
 
   Future<void> _onUseCustomNode(BuildContext context) async {

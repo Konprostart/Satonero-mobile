@@ -1,5 +1,7 @@
 {
     "@@locale": "es",
+  "usingDefaultCommunityTitle": "Usar nodo comunitario por defecto",
+  "usingDefaultCommunityBody": "Satonero usara el nodo comunitario por defecto para los anuncios. Puedes cambiarlo o desconectarlo cuando quieras.",
   "chooseLanguageTitle": "Elige tu idioma",
   "chooseLanguageSubtitle": "Puedes cambiarlo más tarde en Configuración.",
     "backToHome": "Volver al inicio",

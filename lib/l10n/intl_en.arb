@@ -1,5 +1,7 @@
 {
     "@@locale": "en",
+  "usingDefaultCommunityTitle": "Use default community node",
+  "usingDefaultCommunityBody": "Satonero will use the default community node for advertisements. You can change or disconnect at any time.",
   "chooseLanguageTitle": "Choose your language",
   "chooseLanguageSubtitle": "You can change it later in Settings.",
     "backToHome": "Back to Home",

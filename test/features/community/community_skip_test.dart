@@ -10,7 +10,6 @@ import 'package:satonero_mobile/data/repositories/open_orders_repository.dart';
 import 'package:satonero_mobile/features/community/community.dart';
 import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/community/screens/community_selector_screen.dart';
-import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/features/settings/settings_notifier.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
@@ -139,31 +138,30 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('Skip explains the situation and connects to nothing',
+    testWidgets('Skip selects the default community node',
         (tester) async {
       await pumpSelector(tester);
       final ctx = tester.element(find.byType(CommunitySelectorScreen));
 
       await tester.tap(find.text(S.of(ctx)!.skipForNow));
       await tester.pumpAndSettle();
+      await tester.tap(find.text(S.of(ctx)!.communityDisclaimerAccept));
+      await tester.pumpAndSettle();
 
-      expect(find.text(S.of(ctx)!.skipNoDaemonTitle), findsOneWidget);
-      expect(find.text(S.of(ctx)!.skipNoDaemonBody), findsOneWidget);
-
-      expect(container.read(settingsProvider).mostroPublicKey, isEmpty);
-      expect(container.read(mostroNodesProvider), isEmpty);
-      expect(await persistedCommunitySelected(tester), isNot(true));
-      expect(find.text('HOME'), findsNothing);
+      expect(container.read(settingsProvider).mostroPublicKey,
+          _upstreamPubkey);
+      expect(await persistedCommunitySelected(tester), isTrue);
+      expect(find.text('HOME'), findsOneWidget);
     });
 
-    testWidgets('dismissing the Skip explanation keeps the user on selector',
+    testWidgets('cancelling the Skip confirmation keeps the user on selector',
         (tester) async {
       await pumpSelector(tester);
       final ctx = tester.element(find.byType(CommunitySelectorScreen));
 
       await tester.tap(find.text(S.of(ctx)!.skipForNow));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(S.of(ctx)!.skipNoDaemonDismiss));
+      await tester.tap(find.text(S.of(ctx)!.cancel));
       await tester.pumpAndSettle();
 
       expect(find.byType(CommunitySelectorScreen), findsOneWidget);

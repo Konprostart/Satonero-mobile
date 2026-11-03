@@ -1,5 +1,7 @@
 {
     "@@locale": "fr",
+  "usingDefaultCommunityTitle": "Utiliser le noeud communautaire par defaut",
+  "usingDefaultCommunityBody": "Satonero utilisera le noeud communautaire par defaut pour les annonces. Vous pouvez le changer ou vous deconnecter a tout moment.",
   "chooseLanguageTitle": "Choisissez votre langue",
   "chooseLanguageSubtitle": "Vous pourrez la modifier plus tard dans les Paramètres.",
     "backToHome": "Retour à l'accueil",
