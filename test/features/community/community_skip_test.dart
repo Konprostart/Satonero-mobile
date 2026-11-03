@@ -10,7 +10,6 @@ import 'package:satonero_mobile/data/repositories/open_orders_repository.dart';
 import 'package:satonero_mobile/features/community/community.dart';
 import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/community/screens/community_selector_screen.dart';
-import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/features/settings/settings_notifier.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
