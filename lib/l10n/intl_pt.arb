@@ -1,5 +1,7 @@
 {
     "@@locale": "pt",
+  "chooseLanguageTitle": "Escolha o seu idioma",
+  "chooseLanguageSubtitle": "Você pode alterá-la depois nas Configurações.",
     "backToHome": "Voltar ao Início",
     "newOrder": "Sua oferta foi publicada! Aguarde até que outro usuário escolha sua ordem. Ela estará disponível por {expiration_hours} horas. Você pode cancelar esta ordem antes que outro usuário a aceite executando: cancel.",
     "@newOrder": {

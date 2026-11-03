@@ -34,6 +34,9 @@ import 'package:satonero_mobile/core/app.dart';
 import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/community/screens/community_selector_screen.dart';
 import 'package:satonero_mobile/features/walkthrough/providers/first_run_provider.dart';
+import 'package:satonero_mobile/features/walkthrough/screens/language_selection_screen.dart';
+import 'package:satonero_mobile/features/walkthrough/utils/first_launch_language.dart';
+import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:satonero_mobile/shared/widgets/navigation_listener_widget.dart';
 import 'package:satonero_mobile/shared/widgets/notification_listener_widget.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
@@ -51,9 +54,20 @@ GoRouter createRouter(WidgetRef ref) {
         return '/';
       }
       final firstRunState = ref.read(firstRunProvider);
+      final selectedLanguage = ref.read(settingsProvider).selectedLanguage;
 
       return firstRunState.when(
         data: (isFirstRun) {
+          // First launch: pick the language before the walkthrough. Once a
+          // language is saved, the walkthrough runs in that language.
+          if (needsFirstLaunchLanguage(
+            isFirstRun: isFirstRun,
+            selectedLanguage: selectedLanguage,
+          )) {
+            return state.matchedLocation == '/language_selection'
+                ? null
+                : '/language_selection';
+          }
           if (isFirstRun && state.matchedLocation != '/walkthrough') {
             return '/walkthrough';
           }
@@ -211,6 +225,15 @@ GoRouter createRouter(WidgetRef ref) {
                   context: context,
                   state: state,
                   child: const AboutScreen(),
+                ),
+          ),
+          GoRoute(
+            path: '/language_selection',
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const LanguageSelectionScreen(),
                 ),
           ),
           GoRoute(

@@ -1,5 +1,7 @@
 {
     "@@locale": "nl",
+  "chooseLanguageTitle": "Kies je taal",
+  "chooseLanguageSubtitle": "Je kunt dit later wijzigen in de instellingen.",
     "backToHome": "Terug naar start",
     "newOrder": "Je aanbod is gepubliceerd! Wacht tot een andere gebruiker je order accepteert. Hij blijft {expiration_hours} uur beschikbaar. Je kunt deze order annuleren voordat iemand hem accepteert, met: cancel.",
     "@newOrder": {

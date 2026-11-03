@@ -130,6 +130,12 @@ class _SatoneroAppState extends ConsumerState<SatoneroApp> {
         ref.listen(communitySelectedProvider, (_, __) {
           _router?.refresh();
         });
+        // Re-run the routing redirect when first-run state resolves. The router
+        // can be built while it is still loading; without this a fresh install
+        // could stay on the walkthrough and skip the language selection.
+        ref.listen(firstRunProvider, (_, __) {
+          _router?.refresh();
+        });
 
         ref.listen<AuthState>(authNotifierProvider, (previous, state) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
