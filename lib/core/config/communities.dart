@@ -41,8 +41,9 @@ String nameWithRegionFlag(String name, String? region) {
 }
 
 /// Upstream third-party Mostro daemon pubkey, listed as a regular community
-/// option. It is never selected implicitly: skipping community selection
-/// does not choose it. Satonero does not operate this daemon.
+/// option. Skip selects it after the user confirms the default-community
+/// dialog (community_selector_screen.dart _onSkip). Satonero does not
+/// operate this daemon.
 const String defaultMostroPubkey =
     '82fa8cb978b43c79b2156585bac2c011176a21d2aead6d9f7c575c005be88390';
 
