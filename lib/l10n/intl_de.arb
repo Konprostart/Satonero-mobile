@@ -1702,7 +1702,7 @@
     },
     "communityAllCurrencies": "Alle Währungen",
     "communityDisclaimerTitle": "Wichtiger Hinweis",
-    "communityDisclaimerBody": "Das Mostro-Entwicklungsteam ist nicht verantwortlich fuer die Nutzung der Plattform durch Node-Betreiber. Jeder Betreiber kontrolliert seinen eigenen Mostro-Node und ist allein verantwortlich fuer seine Handlungen. Mit der Nutzung von Mostro akzeptieren Sie die volle Verantwortung fuer Ihre Transaktionen und erkennen an, dass das Entwicklungsteam keine Kontrolle ueber einzelne Node-Betreiber hat.",
+    "communityDisclaimerBody": "Satonero ist eine unabhängige App. Satonero ist nicht verantwortlich für die Dienste, das Verhalten oder die Transaktionen unabhängiger Node-Betreiber. Jeder Betreiber kontrolliert seinen eigenen Node und ist allein verantwortlich für seine Handlungen und Transaktionen. Durch die Nutzung eines Nodes übernimmst du die volle Verantwortung für deine eigenen Transaktionen. Satonero hat keine Kontrolle über einzelne Node-Betreiber.",
     "communityDisclaimerAccept": "Akzeptieren",
     "tooManyRequests": "Zu viele Anfragen, bitte versuche es später erneut.",
     "tradeHistory": "Trade-Verlauf",

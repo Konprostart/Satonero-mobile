@@ -1702,7 +1702,7 @@
     },
     "communityAllCurrencies": "Toutes les devises",
     "communityDisclaimerTitle": "Avis Important",
-    "communityDisclaimerBody": "L'equipe de developpement de Mostro n'est pas responsable de l'utilisation que font les operateurs de noeuds de la plateforme. Chaque operateur controle son propre noeud Mostro et est seul responsable de ses actions. En utilisant Mostro, vous acceptez l'entiere responsabilite de vos transactions et reconnaissez que l'equipe de developpement n'a aucun controle sur les operateurs de noeuds individuels.",
+    "communityDisclaimerBody": "Satonero est une application indépendante. Elle n'est pas responsable des services, du comportement ou des transactions des opérateurs de nœuds indépendants. Chaque opérateur contrôle son propre nœud et est seul responsable de ses actions et transactions. En utilisant un nœud, vous acceptez l'entière responsabilité de vos propres transactions. Satonero n'a aucun contrôle sur les opérateurs de nœuds individuels.",
     "communityDisclaimerAccept": "Accepter",
     "tooManyRequests": "Trop de requêtes, veuillez réessayer plus tard.",
     "tradeHistory": "Historique des trades",
