@@ -76,6 +76,7 @@ chrome/.packages
 # Misc
 *.log
 *.lock
+!pubspec.lock
 .pdm
 bfg-1.14.0.jar
 lib/generated/
