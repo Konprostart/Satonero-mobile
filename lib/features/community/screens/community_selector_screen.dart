@@ -8,6 +8,7 @@ import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:satonero_mobile/core/automation/automation_id.dart';
 import 'package:satonero_mobile/core/automation/automation_ids.dart';
 import 'package:satonero_mobile/core/config/communities.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
 import 'package:satonero_mobile/features/community/community.dart';
 import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/community/widgets/community_card.dart';
@@ -15,6 +16,7 @@ import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
 import 'package:satonero_mobile/features/mostro/widgets/add_custom_node_dialog.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
 import 'package:satonero_mobile/services/logger_service.dart';
+import 'package:satonero_mobile/shared/providers/storage_providers.dart';
 
 class CommunitySelectorScreen extends ConsumerStatefulWidget {
   const CommunitySelectorScreen({super.key});
@@ -34,11 +36,22 @@ class _CommunitySelectorScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showDisclaimerDialog();
+      unawaited(_showDisclaimerIfNotAccepted());
       // Trusted-node metadata is requested only when the user opens the
       // selector, never on ordinary app startup.
       unawaited(ref.read(mostroNodesProvider.notifier).fetchAllNodeMetadata());
     });
+  }
+
+  /// Shows the notice only until the user has accepted it once. The
+  /// acceptance is persisted, so reopening the app does not repeat it.
+  Future<void> _showDisclaimerIfNotAccepted() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final accepted = await prefs.getBool(
+      SharedPreferencesKeys.communityNoticeAccepted.value,
+    );
+    if (accepted == true || !mounted) return;
+    _showDisclaimerDialog();
   }
 
   void _showDisclaimerDialog() {
@@ -52,7 +65,14 @@ class _CommunitySelectorScreenState
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () async {
+              final navigator = Navigator.of(ctx);
+              await ref.read(sharedPreferencesProvider).setBool(
+                    SharedPreferencesKeys.communityNoticeAccepted.value,
+                    true,
+                  );
+              navigator.pop();
+            },
             child: Text(S.of(ctx)!.communityDisclaimerAccept),
           ).withAutomationId(AutomationIds.communityNoticeAccept),
         ],

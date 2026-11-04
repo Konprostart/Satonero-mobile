@@ -1759,7 +1759,7 @@
     },
     "communityAllCurrencies": "All currencies",
     "communityDisclaimerTitle": "Important Notice",
-    "communityDisclaimerBody": "The Mostro development team is not responsible for how node operators use the platform. Each operator controls their own Mostro node and is solely responsible for their actions. By using Mostro, you accept full responsibility for your trades and acknowledge that the development team has no control over individual node operators.",
+    "communityDisclaimerBody": "Satonero is an independent app. It is not responsible for the services, conduct or trades of independent node operators. Each node operator controls their own node and is solely responsible for their actions and trades. By using a node, you accept full responsibility for your own trades. Satonero has no control over individual node operators.",
     "communityDisclaimerAccept": "Accept",
     "tooManyRequests": "Too many requests, please try again later.",
     "tradeHistory": "Trade history",

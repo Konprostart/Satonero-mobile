@@ -1743,7 +1743,7 @@
     },
     "communityAllCurrencies": "Tutte le valute",
     "communityDisclaimerTitle": "Avviso Importante",
-    "communityDisclaimerBody": "Il team di sviluppo di Mostro non e' responsabile di come gli operatori dei nodi utilizzano la piattaforma. Ogni operatore controlla il proprio nodo Mostro ed e' l'unico responsabile delle proprie azioni. Utilizzando Mostro, accetti la piena responsabilita' per le tue operazioni e riconosci che il team di sviluppo non ha alcun controllo sui singoli operatori dei nodi.",
+    "communityDisclaimerBody": "Satonero è un'app indipendente. Non è responsabile dei servizi, del comportamento o delle operazioni degli operatori indipendenti di nodi. Ogni operatore controlla il proprio nodo ed è l'unico responsabile delle proprie azioni e operazioni. Usando un nodo, accetti la piena responsabilità delle tue operazioni. Satonero non ha alcun controllo sui singoli operatori di nodi.",
     "communityDisclaimerAccept": "Accetta",
     "tooManyRequests": "Troppe richieste, riprova più tardi.",
     "tradeHistory": "Cronologia trade",

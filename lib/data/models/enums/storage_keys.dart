@@ -7,7 +7,8 @@ enum SharedPreferencesKeys {
   trustedNodeMetadata('trusted_node_metadata'),
   backgroundFilters('background_filters'),
   communitySelected('community_selected'),
-  legacyDaemonMigrated('legacy_upstream_daemon_migrated');
+  legacyDaemonMigrated('legacy_upstream_daemon_migrated'),
+  communityNoticeAccepted('community_notice_accepted');
 
   final String value;
 

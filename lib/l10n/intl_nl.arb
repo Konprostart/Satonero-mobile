@@ -1747,7 +1747,7 @@
     },
     "communityAllCurrencies": "Alle valuta",
     "communityDisclaimerTitle": "Belangrijk",
-    "communityDisclaimerBody": "Het ontwikkelteam van Mostro is niet verantwoordelijk voor wat node-beheerders met het platform doen. Elke beheerder bestuurt een eigen Mostro-node en is als enige verantwoordelijk voor wat daar gebeurt. Door Mostro te gebruiken neem je de volledige verantwoordelijkheid voor je eigen trades, en erken je dat het ontwikkelteam geen zeggenschap heeft over afzonderlijke node-beheerders.",
+    "communityDisclaimerBody": "Satonero is een onafhankelijke app. Satonero is niet verantwoordelijk voor de diensten, het gedrag of de transacties van onafhankelijke node-operators. Elke operator beheert zijn eigen node en is als enige verantwoordelijk voor zijn acties en transacties. Door een node te gebruiken, accepteer je de volledige verantwoordelijkheid voor je eigen transacties. Satonero heeft geen controle over individuele node-operators.",
     "communityDisclaimerAccept": "Akkoord",
     "tooManyRequests": "Te veel verzoeken, probeer het later opnieuw.",
     "tradeHistory": "Tradehistorie",

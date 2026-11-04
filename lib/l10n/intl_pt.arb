@@ -1747,7 +1747,7 @@
     },
     "communityAllCurrencies": "Todas as moedas",
     "communityDisclaimerTitle": "Aviso Importante",
-    "communityDisclaimerBody": "A equipe de desenvolvimento do Mostro não é responsável pela forma como os operadores de nós usam a plataforma. Cada operador controla seu próprio nó Mostro e é o único responsável por suas ações. Ao usar o Mostro, você aceita total responsabilidade por suas operações e reconhece que a equipe de desenvolvimento não tem controle sobre os operadores de nós individuais.",
+    "communityDisclaimerBody": "Satonero é um aplicativo independente. Não é responsável pelos serviços, pela conduta ou pelas operações de operadores de nós independentes. Cada operador controla o seu próprio nó e é o único responsável pelas suas ações e operações. Ao usar um nó, você aceita a total responsabilidade pelas suas próprias operações. A Satonero não tem controle sobre operadores individuais de nós.",
     "communityDisclaimerAccept": "Aceitar",
     "tooManyRequests": "Muitas solicitações, tente novamente mais tarde.",
     "tradeHistory": "Histórico de operações",
