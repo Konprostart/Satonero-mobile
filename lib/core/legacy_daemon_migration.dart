@@ -99,8 +99,10 @@ List<String> _userConfiguredRelays(Map<String, dynamic> json) {
 
 /// Background entry points (FCM handler, background notification isolate)
 /// read the persisted settings to start their own connection. This migrates
-/// first and returns the post-migration JSON, so the legacy pubkey can never
-/// be read from storage by those paths.
+/// first and returns the post-migration JSON. It does NOT strip the pubkey:
+/// a node the user selected (including via Skip) stays visible to the author
+/// check and restored filters. NostrService inputs are sanitized separately
+/// in settingsFromBackgroundMessage.
 Future<String?> readMigratedSettingsJson(SharedPreferencesAsync prefs) async {
   await migrateLegacyUpstreamDaemon(prefs);
   return prefs.getString(SharedPreferencesKeys.appSettings.value);
