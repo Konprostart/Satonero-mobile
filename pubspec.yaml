@@ -37,7 +37,7 @@ dependencies:
   dart_nostr:
     git:
       url: https://github.com/anasfik/nostr.git
-      ref: ca07ddd
+      ref: ca07ddd691516aed450658e068a0f4f228c5efe4
   qr_flutter: ^4.0.0
   mobile_scanner: ^7.0.1
   heroicons: ^0.11.0
@@ -75,7 +75,7 @@ dependencies:
   nip44:
     git:
       url: https://github.com/MostroP2P/dart-nip44.git
-      ref: master
+      ref: 73379b8b1332f1ee78a250055494e6b73e673ea2
 
   share_plus: ^10.0.0
   flutter_local_notifications: ^19.0.0

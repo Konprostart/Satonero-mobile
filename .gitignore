@@ -2,7 +2,6 @@
 **/build/
 **/.dart_tool/
 **/.packages
-**/pubspec.lock
 **/.flutter-plugins
 **/.flutter-plugins-dependencies
 **/.flutter-versions
@@ -77,6 +76,7 @@ chrome/.packages
 # Misc
 *.log
 *.lock
+!pubspec.lock
 .pdm
 bfg-1.14.0.jar
 lib/generated/
