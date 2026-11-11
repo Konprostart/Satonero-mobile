@@ -52,7 +52,7 @@ trustedCommunities (static config)
         |
         v
 CommunityRepository.fetchCommunityMetadata(pubkeys)
-        |   WebSocket -> Config.nostrRelays (with fallback)
+        |   WebSocket -> Config.discoveryRelays (with fallback)
         |   REQ kind 0 (profile: name, about, picture)
         |   REQ kind 38385 (trade info: currencies, fee, min/max)
         |   Timeout: 10s, partial data OK
@@ -110,7 +110,10 @@ lib/
 
 Located at `lib/data/repositories/community_repository.dart`. Uses a standalone `dart:io` WebSocket connection, independent of the app's `NostrService`, so it works before full app initialization.
 
-**Connection:** `wss://relay.mostro.network`
+**Connection:** `Config.discoveryRelays` — `wss://nos.lol` and `wss://relay.damus.io` in
+normal builds (public bootstrap relays, not operated by Satonero), or the seeded local relay
+list in the Mortsom test environment. Relays are tried in order; a relay that connects but
+returns no matching event is treated as a failed attempt so the next relay is tried.
 **Timeout:** 10 seconds
 **Error handling:** Errors propagate to `communityListProvider` which shows the error state with retry.
 

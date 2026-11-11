@@ -15,13 +15,22 @@ import 'package:satonero_mobile/services/logger_service.dart';
 class CommunityRepository {
   static const Duration _timeout = Duration(seconds: 10);
 
+  /// Optional relay list used instead of [Config.discoveryRelays].
+  ///
+  /// Tests inject local relays here; production callers leave it null so the
+  /// discovery list is resolved at request time (it depends on the Mortsom
+  /// test environment switch).
+  CommunityRepository({List<String>? relays}) : _relaysOverride = relays;
+
+  final List<String>? _relaysOverride;
+
   /// Fetches kind 0 and kind 38385 events for the given pubkeys.
-  /// Tries each relay from [Config.nostrRelays] until one succeeds.
+  /// Tries each relay from [Config.discoveryRelays] until one succeeds.
   /// Throws if all relays fail.
   Future<Map<String, CommunityMetadata>> fetchCommunityMetadata(
     List<String> pubkeys,
   ) async {
-    final relays = Config.nostrRelays;
+    final relays = _relaysOverride ?? Config.discoveryRelays;
     Object? lastError;
 
     for (final relayUrl in relays) {
@@ -138,6 +147,13 @@ class CommunityRepository {
         ws.add(jsonEncode(['CLOSE', subIdKind38385]));
       } catch (_) {}
       await subscription.cancel();
+
+      // A relay can connect and answer both EOSEs yet return no matching
+      // event. Treat that as a failed attempt so the next relay is tried
+      // instead of silently producing an empty community list.
+      if (!hasEvents) {
+        throw Exception('No community events returned by $relayUrl');
+      }
     } catch (e) {
       logger.e('Failed to fetch community data from $relayUrl: $e');
       rethrow;
