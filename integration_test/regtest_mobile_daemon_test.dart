@@ -1,0 +1,332 @@
+// Phase 6A-0 / 6A — real Satonero mobile app against a Satonero daemon.
+//
+// This is the first end-to-end test in which the Android application itself
+// talks to a running `mostrod` on a disposable regtest stack. It replaces the
+// CLI-only evidence of Phase 4G/4H/5A for the app-to-daemon leg.
+//
+// The test is driven entirely through the production entry point
+// (`bootstrapAndRun`) and the production UI. No production code is changed and
+// no service is faked: the app connects to the harness relay over a real
+// WebSocket, receives the maker's kind-38383 order, takes it with a real
+// `take-sell` DM, submits the buyer payout invoice from the harness, and then
+// observes the daemon move the trade to `active`.
+//
+// Everything is seeded before bootstrap so the app never shows onboarding and
+// never touches a public bootstrap relay or a third-party Mostro node:
+//
+//   --dart-define=REGTEST_DAEMON_PUBKEY=<64-hex daemon Nostr pubkey>
+//   --dart-define=REGTEST_ORDER_ID=<uuid of the CLI maker's sell order>
+//   --dart-define=REGTEST_BUYER_INVOICE=<lnbcrt1... payout invoice for bob_lnd>
+//   --dart-define=REGTEST_RELAY_URL=ws://10.0.2.2:8080   (optional, this default)
+//
+// Run with:
+//   flutter test integration_test/regtest_mobile_daemon_test.dart \
+//     -d <android device> --dart-define=REGTEST_DAEMON_PUBKEY=... ...
+//
+// Must never be run against mainnet: the invoice is asserted to be a regtest
+// bolt11 before anything is submitted, and the harness is regtest-only.
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:satonero_mobile/core/app.dart';
+import 'package:satonero_mobile/core/app_bootstrap.dart';
+import 'package:satonero_mobile/data/models/enums/role.dart';
+import 'package:satonero_mobile/data/models/enums/status.dart';
+import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
+import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/home/providers/home_order_providers.dart';
+import 'package:satonero_mobile/features/home/widgets/order_list_item.dart';
+import 'package:satonero_mobile/features/order/models/order_state.dart';
+import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
+
+// --- Harness inputs (non-secret, so they travel as Dart defines) -----------
+
+/// Nostr pubkey the daemon signs its kind-0/38385/10002/14 events with.
+const String _daemonPubkey = String.fromEnvironment('REGTEST_DAEMON_PUBKEY');
+
+/// Id of the pending sell order the CLI maker published before the app starts.
+const String _makerOrderId = String.fromEnvironment('REGTEST_ORDER_ID');
+
+/// Regtest payout invoice for `bob_lnd`, minted by the harness.
+const String _buyerInvoice = String.fromEnvironment('REGTEST_BUYER_INVOICE');
+
+/// Relay the emulator can reach: the harness publishes the relay on :8080.
+const String _relayUrl = String.fromEnvironment(
+  'REGTEST_RELAY_URL',
+  defaultValue: 'ws://10.0.2.2:8080',
+);
+
+/// The daemon advertises its container-internal relay URL in its kind-10002
+/// list. The emulator cannot resolve that host, so it is blacklisted up front
+/// instead of being appended to the live relay set.
+const String _daemonInternalRelayUrl = 'ws://nostr_relay:8080';
+
+const Duration _uiTimeout = Duration(seconds: 120);
+const Duration _activeTimeout = Duration(seconds: 240);
+const Duration _pollInterval = Duration(milliseconds: 250);
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  // The automation identifiers live on Semantics nodes (`Semantics.identifier`),
+  // which only exist when the semantics tree is enabled. Mortsom's entry point
+  // does the same; here the test arms it because it starts the production
+  // entry point.
+  final SemanticsHandle semantics = SemanticsBinding.instance.ensureSemantics();
+
+  tearDownAll(() {
+    semantics.dispose();
+  });
+
+  testWidgets(
+    'app takes a sell order and reaches active against a Satonero daemon',
+    (tester) async {
+      _expectHarnessInputs();
+
+      // Fresh install state: wipe whatever a previous run left behind so the
+      // assertions below always describe this run.
+      await _seedSettings();
+
+      await bootstrapAndRun();
+      await tester.pump();
+
+      final container = _containerOf(tester);
+
+      // ---- Gate 1: the maker's order is visible in the real order book ----
+      await _waitFor(
+        tester,
+        () => container.read(filteredOrdersProvider).isNotEmpty,
+        label: 'order book to receive the maker order',
+      );
+
+      final book = container.read(filteredOrdersProvider);
+      final visibleIds = book.map((order) => order.orderId).toList();
+      expect(
+        visibleIds,
+        contains(_makerOrderId),
+        reason: 'the CLI maker order must reach the app through the relay, '
+            'got $visibleIds',
+      );
+      // The provider can hold the order one frame before the list renders.
+      await _waitFor(
+        tester,
+        () => find.byType(OrderListItem).evaluate().isNotEmpty,
+        label: 'order book list item',
+      );
+      expect(
+        find.byType(OrderListItem),
+        findsOneWidget,
+        reason: 'exactly the maker order is pending on this fresh regtest',
+      );
+      debugPrint('REGTEST_GATE1_ORDER_VISIBLE order=$_makerOrderId '
+          'items=${book.length}');
+
+      // ---- Gate 2: take-sell, then submit the buyer payout invoice --------
+      await tester.tap(find.byType(OrderListItem).first);
+      await _waitFor(
+        tester,
+        () => find
+            .bySemanticsIdentifier('order.take.confirm')
+            .evaluate()
+            .isNotEmpty,
+        label: 'take-order screen',
+      );
+
+      await tester.tap(find.bySemanticsIdentifier('order.take.confirm').first);
+      await tester.pump(const Duration(milliseconds: 500));
+
+      // The fixture is a fixed-price order, so taking it needs no amount
+      // dialog. A range order would open one first; handle it defensively so
+      // a fixture change fails on an assertion, not on a missing tap.
+      if (find.bySemanticsIdentifier('order.take.amount').evaluate().isNotEmpty) {
+        await tester.enterText(find.byType(TextField).last, '10');
+        await tester.pump();
+        await tester.tap(find.bySemanticsIdentifier('order.take.amount.confirm'));
+        await tester.pump(const Duration(milliseconds: 500));
+      }
+
+      // The daemon answers the take-sell with `add-invoice`, which makes the
+      // app open the buyer invoice screen on its own.
+      await _waitFor(
+        tester,
+        () => find.bySemanticsIdentifier('invoice.text').evaluate().isNotEmpty,
+        label: 'buyer invoice screen (daemon add-invoice)',
+      );
+      debugPrint('REGTEST_GATE2_TAKE_ACCEPTED order=$_makerOrderId');
+
+      await tester.enterText(
+        find.byKey(const Key('invoiceTextField')),
+        _buyerInvoice,
+      );
+      await tester.pump();
+
+      expect(
+        find.bySemanticsIdentifier('invoice.submit'),
+        findsOneWidget,
+        reason: 'the invoice submit control carries its automation id',
+      );
+      await tester.tap(find.byKey(const Key('submitInvoiceButton')));
+      await tester.pump();
+
+      // ---- Gate 2: follow the daemon-driven status transitions ------------
+      // Subscribe before waiting: a status that the app passes through for a
+      // few hundred milliseconds (the seller hold invoice is paid by the
+      // harness seconds after it appears) must not be missed by polling.
+      // `add-invoice` maps to `waiting-buyer-invoice`, `waiting-seller-to-pay`
+      // maps to `waiting-payment`, and `hold-invoice-payment-accepted` maps to
+      // `active` once the seller has paid the hold invoice.
+      final observed = <Status>[];
+      final subscription = container.listen<OrderState>(
+        orderNotifierProvider(_makerOrderId),
+        (previous, next) {
+          if (observed.isEmpty || observed.last != next.status) {
+            observed.add(next.status);
+          }
+        },
+        fireImmediately: true,
+      );
+      addTearDown(subscription.close);
+
+      await _waitFor(
+        tester,
+        () =>
+            container.read(orderNotifierProvider(_makerOrderId)).status ==
+            Status.active,
+        timeout: _activeTimeout,
+        label: 'trade to reach active',
+      );
+
+      final finalState = container.read(orderNotifierProvider(_makerOrderId));
+      final sequence = observed.map((status) => status.value).toList();
+      debugPrint('REGTEST_GATE2_STATUS_SEQUENCE=${sequence.join(',')}');
+      debugPrint('REGTEST_GATE2_FINAL_STATUS=${finalState.status.value}');
+      debugPrint('REGTEST_GATE2_SAW_WAITING_PAYMENT='
+          '${sequence.contains(Status.waitingPayment.value)}');
+
+      // The daemon processed the take-sell: it answered with the add-invoice
+      // request that the app rendered, and the trade later reached active.
+      expect(
+        sequence,
+        contains(Status.waitingBuyerInvoice.value),
+        reason: 'the daemon must answer the take-sell with add-invoice, saw '
+            '$sequence',
+      );
+      expect(finalState.status, Status.active);
+
+      final sessions = container.read(sessionNotifierProvider);
+      final session = sessions.where((s) => s.orderId == _makerOrderId).toList();
+      expect(session, hasLength(1), reason: 'exactly one trade session');
+      expect(session.single.role, Role.buyer);
+
+      // No settlement and no release are exercised by this test. Active is the
+      // last state it asserts, which is what Phase 6A is scoped to.
+      expect(
+        finalState.status,
+        isNot(Status.fiatSent),
+        reason: 'Phase 6A stops at active; fiat-sent would mean the test '
+            'moved past its scope',
+      );
+
+      debugPrint('REGTEST_GATE2_ACTIVE order=$_makerOrderId '
+          'role=buyer status=${finalState.status.value}');
+    },
+    timeout: const Timeout(Duration(minutes: 15)),
+  );
+}
+
+/// Fails fast, and legibly, when a define is missing.
+void _expectHarnessInputs() {
+  expect(
+    _daemonPubkey,
+    matches(RegExp(r'^[0-9a-f]{64}$')),
+    reason: '--dart-define=REGTEST_DAEMON_PUBKEY must be the daemon Nostr '
+        'pubkey (64 lowercase hex)',
+  );
+  expect(
+    _makerOrderId,
+    matches(RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-'
+        r'[0-9a-f]{12}$')),
+    reason: '--dart-define=REGTEST_ORDER_ID must be the maker order uuid',
+  );
+  expect(
+    _buyerInvoice,
+    startsWith('lnbcrt1'),
+    reason: 'the buyer invoice must be a regtest invoice (lnbcrt1...), '
+        'never mainnet',
+  );
+  expect(
+    _relayUrl,
+    startsWith('ws://'),
+    reason: 'the regtest relay is plain ws:// on the emulator host alias',
+  );
+}
+
+/// Seeds the complete settings object the app reads at startup.
+///
+/// `Settings.fromJson` casts `fullPrivacyMode` and `mostroPublicKey`, so a
+/// partial JSON would throw and silently fall back to defaults; every field is
+/// therefore written. Seeding `first_run_complete` and `community_selected`
+/// skips onboarding, so the app never selects the third-party Mostro default
+/// node and never asks the community selector for metadata.
+Future<void> _seedSettings() async {
+  final prefs = SharedPreferencesAsync();
+  await prefs.clear();
+
+  final settings = Settings(
+    relays: const [_relayUrl],
+    fullPrivacyMode: false,
+    privateMode: false,
+    mostroPublicKey: _daemonPubkey,
+    defaultFiatCode: 'USD',
+    selectedLanguage: 'en',
+    userRelays: [
+      {
+        'url': _relayUrl,
+        'isHealthy': true,
+        'source': 'user',
+        'addedAt': DateTime.now().millisecondsSinceEpoch,
+      },
+    ],
+    blacklistedRelays: const [_daemonInternalRelayUrl],
+  );
+
+  await prefs.setString(
+    SharedPreferencesKeys.appSettings.value,
+    jsonEncode(settings.toJson()),
+  );
+  await prefs.setBool(SharedPreferencesKeys.firstRunComplete.value, true);
+  await prefs.setBool(SharedPreferencesKeys.communitySelected.value, true);
+  // Our daemon is not the legacy upstream node, so the migration is a no-op;
+  // writing the marker keeps it from rewriting the seeded settings.
+  await prefs.setBool(SharedPreferencesKeys.legacyDaemonMigrated.value, true);
+}
+
+ProviderContainer _containerOf(WidgetTester tester) => ProviderScope.containerOf(
+      tester.element(find.byType(SatoneroApp)),
+      listen: false,
+    );
+
+/// Pumps frames until [condition] holds, failing the test on timeout.
+Future<void> _waitFor(
+  WidgetTester tester,
+  bool Function() condition, {
+  required String label,
+  Duration timeout = _uiTimeout,
+}) async {
+  final deadline = DateTime.now().add(timeout);
+  while (DateTime.now().isBefore(deadline)) {
+    if (condition()) return;
+    await tester.pump(_pollInterval);
+  }
+  fail('Timed out after ${timeout.inSeconds}s waiting for $label');
+}
+
