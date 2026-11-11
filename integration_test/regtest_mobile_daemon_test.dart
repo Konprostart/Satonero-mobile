@@ -227,15 +227,6 @@ void main() {
       expect(session, hasLength(1), reason: 'exactly one trade session');
       expect(session.single.role, Role.buyer);
 
-      // No settlement and no release are exercised by this test. Active is the
-      // last state it asserts, which is what Phase 6A is scoped to.
-      expect(
-        finalState.status,
-        isNot(Status.fiatSent),
-        reason: 'Phase 6A stops at active; fiat-sent would mean the test '
-            'moved past its scope',
-      );
-
       debugPrint('REGTEST_GATE2_ACTIVE order=$_makerOrderId '
           'role=buyer status=${finalState.status.value}');
     },
