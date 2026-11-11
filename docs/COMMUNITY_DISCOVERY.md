@@ -113,7 +113,12 @@ Located at `lib/data/repositories/community_repository.dart`. Uses a standalone 
 **Connection:** `Config.discoveryRelays` — `wss://nos.lol` and `wss://relay.damus.io` in
 normal builds (public bootstrap relays, not operated by Satonero), or the seeded local relay
 list in the Mortsom test environment. Relays are tried in order; a relay that connects but
-returns no matching event is treated as a failed attempt so the next relay is tried.
+returns no matching event is treated as a failed attempt so the next relay is tried. Results
+from successive relays are merged (newest `created_at` wins per pubkey, independently for kind
+0 and kind 38385), and relay fetching continues until every requested community has kind 38385
+trade info or the relay list is exhausted, so a relay that only holds profiles cannot hide the
+communities another relay knows about. If no relay provides trade info, any profile-only data
+collected is still returned.
 **Timeout:** 10 seconds
 **Error handling:** Errors propagate to `communityListProvider` which shows the error state with retry.
 

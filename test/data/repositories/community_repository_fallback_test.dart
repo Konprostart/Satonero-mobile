@@ -149,5 +149,79 @@ void main() {
       expect(metadata.containsKey(otherKeyPair.public), isFalse);
       expect(metadata[keyPair.public]!.hasTradeInfo, isTrue);
     });
+
+    test('falls back when the first relay has kind 0 but no kind 38385',
+        () async {
+      final profileOnlyRelay = await _FakeRelay.start(events: [kind0Event()]);
+      final populatedRelay = await _FakeRelay.start(
+        events: [kind0Event(), kind38385Event()],
+      );
+      addTearDown(profileOnlyRelay.close);
+      addTearDown(populatedRelay.close);
+
+      final repository = CommunityRepository(
+        relays: [profileOnlyRelay.url, populatedRelay.url],
+      );
+
+      final metadata =
+          await repository.fetchCommunityMetadata([keyPair.public]);
+
+      final meta = metadata[keyPair.public]!;
+      expect(meta.kind0, isNotNull);
+      expect(meta.name, 'Test Community');
+      expect(meta.hasTradeInfo, isTrue);
+      expect(meta.fee, 0.01);
+    });
+
+    test('merges kind 0 and kind 38385 events split across relays', () async {
+      final firstKeyPair = NostrUtils.generateKeyPair();
+      final secondKeyPair = NostrUtils.generateKeyPair();
+
+      Map<String, dynamic> profile(NostrKeyPairs keys, String name) =>
+          NostrEvent.fromPartialData(
+            kind: 0,
+            content: jsonEncode({'name': name}),
+            keyPairs: keys,
+          ).toMap();
+
+      Map<String, dynamic> info(NostrKeyPairs keys, String fee) =>
+          NostrEvent.fromPartialData(
+            kind: 38385,
+            content: '',
+            keyPairs: keys,
+            tags: [
+              ['y', 'mostro'],
+              ['fee', fee],
+            ],
+          ).toMap();
+
+      final profileRelay = await _FakeRelay.start(
+        events: [
+          profile(firstKeyPair, 'First'),
+          profile(secondKeyPair, 'Second'),
+          info(firstKeyPair, '0.01'),
+        ],
+      );
+      final infoRelay = await _FakeRelay.start(
+        events: [info(secondKeyPair, '0.02')],
+      );
+      addTearDown(profileRelay.close);
+      addTearDown(infoRelay.close);
+
+      final repository = CommunityRepository(
+        relays: [profileRelay.url, infoRelay.url],
+      );
+
+      final metadata = await repository.fetchCommunityMetadata(
+        [firstKeyPair.public, secondKeyPair.public],
+      );
+
+      expect(metadata[firstKeyPair.public]!.hasTradeInfo, isTrue);
+      expect(metadata[firstKeyPair.public]!.name, 'First');
+      expect(metadata[firstKeyPair.public]!.fee, 0.01);
+      expect(metadata[secondKeyPair.public]!.hasTradeInfo, isTrue);
+      expect(metadata[secondKeyPair.public]!.name, 'Second');
+      expect(metadata[secondKeyPair.public]!.fee, 0.02);
+    });
   });
 }

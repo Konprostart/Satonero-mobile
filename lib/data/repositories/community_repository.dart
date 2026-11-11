@@ -25,24 +25,66 @@ class CommunityRepository {
   final List<String>? _relaysOverride;
 
   /// Fetches kind 0 and kind 38385 events for the given pubkeys.
-  /// Tries each relay from [Config.discoveryRelays] until one succeeds.
-  /// Throws if all relays fail.
+  /// Tries each relay from [Config.discoveryRelays], merging what each one
+  /// returns, until every requested pubkey has kind 38385 trade info or the
+  /// relay list is exhausted.
+  /// Throws if no relay returns any verified event.
   Future<Map<String, CommunityMetadata>> fetchCommunityMetadata(
     List<String> pubkeys,
   ) async {
     final relays = _relaysOverride ?? Config.discoveryRelays;
+    final merged = <String, CommunityMetadata>{};
     Object? lastError;
 
     for (final relayUrl in relays) {
       try {
-        return await _fetchFromRelay(relayUrl, pubkeys);
+        final result = await _fetchFromRelay(relayUrl, pubkeys);
+        _mergeMetadata(merged, result);
+
+        // Relays do not share events: one may hold the kind 0 profiles while
+        // another holds the kind 38385 trade info (or only part of it). Keep
+        // trying the remaining relays until every community has trade info so
+        // a partial relay response cannot hide communities.
+        if (pubkeys.every((pk) => merged[pk]?.hasTradeInfo ?? false)) {
+          return merged;
+        }
       } catch (e) {
         logger.w('Community fetch failed on $relayUrl: $e');
         lastError = e;
       }
     }
 
+    if (merged.isNotEmpty) return merged;
     throw lastError ?? Exception('No relays configured');
+  }
+
+  /// Merges [incoming] into [target], keeping the newest profile and trade
+  /// info per pubkey. Replacement semantics match [_processEvent]: a newer
+  /// created_at wins, and ties prefer the later relay.
+  void _mergeMetadata(
+    Map<String, CommunityMetadata> target,
+    Map<String, CommunityMetadata> incoming,
+  ) {
+    for (final entry in incoming.entries) {
+      final existing = target[entry.key];
+      if (existing == null) {
+        target[entry.key] = entry.value;
+        continue;
+      }
+
+      final next = entry.value;
+      if (next.kind0 != null &&
+          (next.kind0CreatedAt ?? 0) >= (existing.kind0CreatedAt ?? 0)) {
+        existing.kind0 = next.kind0;
+        existing.kind0CreatedAt = next.kind0CreatedAt;
+      }
+      if (next.kind38385Tags != null &&
+          (next.kind38385CreatedAt ?? 0) >=
+              (existing.kind38385CreatedAt ?? 0)) {
+        existing.kind38385Tags = next.kind38385Tags;
+        existing.kind38385CreatedAt = next.kind38385CreatedAt;
+      }
+    }
   }
 
   Future<Map<String, CommunityMetadata>> _fetchFromRelay(
