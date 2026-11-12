@@ -264,11 +264,41 @@ void main() {
             find.bySemanticsIdentifier('trade.fiatSent').evaluate().isNotEmpty,
         label: 'buyer fiat-sent control on the active trade',
       );
-      final fiatSentButton = find.bySemanticsIdentifier('trade.fiatSent').first;
-      await tester.ensureVisible(fiatSentButton);
-      await tester.pump(const Duration(milliseconds: 300));
-      await tester.tap(fiatSentButton);
-      await tester.pump(const Duration(milliseconds: 500));
+
+      // The daemon's `active` notification is delivered through the app's top
+      // snackbar, which floats just above the embedded bottom navigation bar
+      // and therefore covers the action row at the bottom of this screen for
+      // about two seconds. A tap issued while it is visible lands on the
+      // snackbar instead of the control (observed in run 43244609877), so wait
+      // for it to clear and re-tap only when the round trip clearly did not
+      // happen — never spamming a second action speculatively.
+      var fiatSentSent = false;
+      for (var attempt = 0; attempt < 3 && !fiatSentSent; attempt++) {
+        await _waitFor(
+          tester,
+          () => find.byType(SnackBar).evaluate().isEmpty,
+          timeout: const Duration(seconds: 15),
+          label: 'the trade-status snackbar to clear before tapping fiat-sent',
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        final control = find.bySemanticsIdentifier('trade.fiatSent');
+        if (control.evaluate().isEmpty) {
+          // The control already left the tree: the action was accepted.
+          fiatSentSent = true;
+          break;
+        }
+        await tester.ensureVisible(control.first);
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.tap(control.first);
+        await tester.pump(const Duration(milliseconds: 500));
+        // Allow the relay round trip before deciding the tap missed.
+        for (var i = 0; i < 16 && !fiatSentSent; i++) {
+          await tester.pump(const Duration(milliseconds: 500));
+          fiatSentSent =
+              container.read(orderNotifierProvider(_makerOrderId)).status !=
+              Status.active;
+        }
+      }
       debugPrint('REGTEST_GATE3_FIAT_SENT_TAPPED order=$_makerOrderId');
 
       // `fiat-sent-ok` moves the buyer to `fiat-sent`.
