@@ -1,8 +1,8 @@
-// Phase 6A-0 / 6A — real Satonero mobile app against a Satonero daemon.
+// Phase 6A-0 / 6A / 6B — real Satonero mobile app against a Satonero daemon.
 //
-// This is the first end-to-end test in which the Android application itself
-// talks to a running `mostrod` on a disposable regtest stack. It replaces the
-// CLI-only evidence of Phase 4G/4H/5A for the app-to-daemon leg.
+// This is the end-to-end test in which the Android application itself talks to
+// a running `mostrod` on a disposable regtest stack. It replaces the CLI-only
+// evidence of Phase 4G/4H/5A for the app-to-daemon leg.
 //
 // The test is driven entirely through the production entry point
 // (`bootstrapAndRun`) and the production UI. No production code is changed and
@@ -10,6 +10,12 @@
 // WebSocket, receives the maker's kind-38383 order, takes it with a real
 // `take-sell` DM, submits the buyer payout invoice from the harness, and then
 // observes the daemon move the trade to `active`.
+//
+// Phase 6B adds one more user action: the buyer marks the fiat as sent, the
+// harness maker (seller) releases, and the daemon settles the seller hold
+// invoice, pays this buyer payout invoice and finalises the order as `success`.
+// The test only taps the production `fiat-sent` control; it never releases,
+// settles or pays anything itself.
 //
 // Everything is seeded before bootstrap so the app never shows onboarding and
 // never touches a public bootstrap relay or a third-party Mostro node:
@@ -46,6 +52,7 @@ import 'package:satonero_mobile/features/home/widgets/order_list_item.dart';
 import 'package:satonero_mobile/features/order/models/order_state.dart';
 import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/shared/providers/navigation_notifier_provider.dart';
 import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
 
 // --- Harness inputs (non-secret, so they travel as Dart defines) -----------
@@ -72,6 +79,14 @@ const String _daemonInternalRelayUrl = 'ws://nostr_relay:8080';
 
 const Duration _uiTimeout = Duration(seconds: 120);
 const Duration _activeTimeout = Duration(seconds: 240);
+
+/// The daemon acks `fiat-sent` with `fiat-sent-ok` almost immediately; the
+/// allowance is for the round trip through the relay, not for the release.
+const Duration _fiatSentTimeout = Duration(seconds: 180);
+
+/// Settlement is driven by the harness maker (release) and then by the
+/// daemon's payout retry loop, so it gets a wider allowance than the DM hops.
+const Duration _settlementTimeout = Duration(seconds: 420);
 const Duration _pollInterval = Duration(milliseconds: 250);
 
 void main() {
@@ -229,8 +244,70 @@ void main() {
 
       debugPrint('REGTEST_GATE2_ACTIVE order=$_makerOrderId '
           'role=buyer status=${finalState.status.value}');
+
+      // ---- Gate 3 (Phase 6B): fiat-sent, then settlement and success -------
+      // Submitting the buyer invoice sends the app back to the home screen, so
+      // bring the active trade back up through the production navigation state
+      // before looking for the action control.
+      container
+          .read(navigationProvider.notifier)
+          .go('/trade_detail/$_makerOrderId');
+      await tester.pump(const Duration(milliseconds: 500));
+
+      // The only settlement-side input the app contributes: the buyer marks
+      // the fiat as sent. The harness maker (seller) answers with `release`;
+      // the daemon settles the hold invoice, pays the buyer payout invoice and
+      // finalises the order. Nothing here releases or settles.
+      await _waitFor(
+        tester,
+        () =>
+            find.bySemanticsIdentifier('trade.fiatSent').evaluate().isNotEmpty,
+        label: 'buyer fiat-sent control on the active trade',
+      );
+      final fiatSentButton = find.bySemanticsIdentifier('trade.fiatSent').first;
+      await tester.ensureVisible(fiatSentButton);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(fiatSentButton);
+      await tester.pump(const Duration(milliseconds: 500));
+      debugPrint('REGTEST_GATE3_FIAT_SENT_TAPPED order=$_makerOrderId');
+
+      // `fiat-sent-ok` moves the buyer to `fiat-sent`.
+      await _waitFor(
+        tester,
+        () =>
+            container.read(orderNotifierProvider(_makerOrderId)).status ==
+            Status.fiatSent,
+        timeout: _fiatSentTimeout,
+        label: 'trade to reach fiat-sent after the buyer marks the fiat sent',
+      );
+      debugPrint('REGTEST_GATE3_STATUS_FIAT_SENT=true');
+
+      // The seller release produces `released`/`settled-hold-invoice` and then,
+      // once the payout settles, `purchase-completed` plus `rate`, both of
+      // which the app maps to `success`.
+      await _waitFor(
+        tester,
+        () =>
+            container.read(orderNotifierProvider(_makerOrderId)).status ==
+            Status.success,
+        timeout: _settlementTimeout,
+        label: 'trade to settle and reach success',
+      );
+
+      final settledState = container.read(orderNotifierProvider(_makerOrderId));
+      final settledSequence = observed.map((status) => status.value).toList();
+      debugPrint('REGTEST_GATE3_STATUS_SEQUENCE=${settledSequence.join(',')}');
+      expect(
+        settledSequence,
+        contains(Status.fiatSent.value),
+        reason: 'the daemon must ack the fiat-sent action, saw '
+            '$settledSequence',
+      );
+      expect(settledState.status, Status.success);
+      debugPrint('REGTEST_GATE3_SUCCESS order=$_makerOrderId '
+          'role=buyer status=${settledState.status.value}');
     },
-    timeout: const Timeout(Duration(minutes: 15)),
+    timeout: const Timeout(Duration(minutes: 20)),
   );
 }
 
@@ -301,7 +378,8 @@ Future<void> _seedSettings() async {
   await prefs.setBool(SharedPreferencesKeys.legacyDaemonMigrated.value, true);
 }
 
-ProviderContainer _containerOf(WidgetTester tester) => ProviderScope.containerOf(
+ProviderContainer _containerOf(WidgetTester tester) =>
+    ProviderScope.containerOf(
       tester.element(find.byType(SatoneroApp)),
       listen: false,
     );
@@ -320,4 +398,3 @@ Future<void> _waitFor(
   }
   fail('Timed out after ${timeout.inSeconds}s waiting for $label');
 }
-
