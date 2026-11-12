@@ -17,6 +17,11 @@
 // The test only taps the production `fiat-sent` control; it never releases,
 // settles or pays anything itself.
 //
+// Phase 6C adds the post-settlement reputation leg: the buyer rates the seller
+// through the production rating screen, observes the daemon's `rate-received`
+// acknowledgement, and then reads back the seller's updated reputation on a
+// fresh pending order the harness maker publishes after the rating.
+//
 // Everything is seeded before bootstrap so the app never shows onboarding and
 // never touches a public bootstrap relay or a third-party Mostro node:
 //
@@ -24,6 +29,7 @@
 //   --dart-define=REGTEST_ORDER_ID=<uuid of the CLI maker's sell order>
 //   --dart-define=REGTEST_BUYER_INVOICE=<lnbcrt1... payout invoice for bob_lnd>
 //   --dart-define=REGTEST_RELAY_URL=ws://10.0.2.2:8080   (optional, this default)
+//   --dart-define=REGTEST_REPUTATION_ORDER_AMOUNT=1234   (optional, this default)
 //
 // Run with:
 //   flutter test integration_test/regtest_mobile_daemon_test.dart \
@@ -43,6 +49,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:satonero_mobile/core/app.dart';
 import 'package:satonero_mobile/core/app_bootstrap.dart';
+import 'package:satonero_mobile/data/models/enums/action.dart' as mostro;
 import 'package:satonero_mobile/data/models/enums/role.dart';
 import 'package:satonero_mobile/data/models/enums/status.dart';
 import 'package:satonero_mobile/data/models/enums/storage_keys.dart';
@@ -51,6 +58,8 @@ import 'package:satonero_mobile/features/home/providers/home_order_providers.dar
 import 'package:satonero_mobile/features/home/widgets/order_list_item.dart';
 import 'package:satonero_mobile/features/order/models/order_state.dart';
 import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
+import 'package:satonero_mobile/features/rate/rate_counterpart_screen.dart';
+import 'package:satonero_mobile/features/rate/star_rating.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/shared/providers/navigation_notifier_provider.dart';
 import 'package:satonero_mobile/shared/providers/session_notifier_provider.dart';
@@ -72,6 +81,14 @@ const String _relayUrl = String.fromEnvironment(
   defaultValue: 'ws://10.0.2.2:8080',
 );
 
+/// Sats amount of the fresh pending sell order the harness maker publishes
+/// after the buyer's rating, so the app can render the seller's updated
+/// reputation. Distinct from the traded order's amount on purpose.
+const String _reputationOrderAmount = String.fromEnvironment(
+  'REGTEST_REPUTATION_ORDER_AMOUNT',
+  defaultValue: '1234',
+);
+
 /// The daemon advertises its container-internal relay URL in its kind-10002
 /// list. The emulator cannot resolve that host, so it is blacklisted up front
 /// instead of being appended to the live relay set.
@@ -87,6 +104,14 @@ const Duration _fiatSentTimeout = Duration(seconds: 180);
 /// Settlement is driven by the harness maker (release) and then by the
 /// daemon's payout retry loop, so it gets a wider allowance than the DM hops.
 const Duration _settlementTimeout = Duration(seconds: 420);
+
+/// The rating round trip is a DM hop plus the daemon's rating-event tick, so
+/// it is generous but bounded.
+const Duration _ratingTimeout = Duration(seconds: 240);
+
+/// The harness maker publishes the reputation order only after the daemon has
+/// published the rating event, so this covers the whole rater sequence.
+const Duration _reputationTimeout = Duration(seconds: 360);
 const Duration _pollInterval = Duration(milliseconds: 250);
 
 void main() {
@@ -162,10 +187,14 @@ void main() {
       // The fixture is a fixed-price order, so taking it needs no amount
       // dialog. A range order would open one first; handle it defensively so
       // a fixture change fails on an assertion, not on a missing tap.
-      if (find.bySemanticsIdentifier('order.take.amount').evaluate().isNotEmpty) {
+      if (find
+          .bySemanticsIdentifier('order.take.amount')
+          .evaluate()
+          .isNotEmpty) {
         await tester.enterText(find.byType(TextField).last, '10');
         await tester.pump();
-        await tester.tap(find.bySemanticsIdentifier('order.take.amount.confirm'));
+        await tester
+            .tap(find.bySemanticsIdentifier('order.take.amount.confirm'));
         await tester.pump(const Duration(milliseconds: 500));
       }
 
@@ -238,7 +267,8 @@ void main() {
       expect(finalState.status, Status.active);
 
       final sessions = container.read(sessionNotifierProvider);
-      final session = sessions.where((s) => s.orderId == _makerOrderId).toList();
+      final session =
+          sessions.where((s) => s.orderId == _makerOrderId).toList();
       expect(session, hasLength(1), reason: 'exactly one trade session');
       expect(session.single.role, Role.buyer);
 
@@ -296,7 +326,7 @@ void main() {
           await tester.pump(const Duration(milliseconds: 500));
           fiatSentSent =
               container.read(orderNotifierProvider(_makerOrderId)).status !=
-              Status.active;
+                  Status.active;
         }
       }
       debugPrint('REGTEST_GATE3_FIAT_SENT_TAPPED order=$_makerOrderId');
@@ -336,8 +366,141 @@ void main() {
       expect(settledState.status, Status.success);
       debugPrint('REGTEST_GATE3_SUCCESS order=$_makerOrderId '
           'role=buyer status=${settledState.status.value}');
+
+      // ---- Gate 4 (Phase 6C): rate the seller, then read the reputation ----
+      // `rate` is the buyer's only remaining action at `success`. The daemon
+      // accepts the rating because the harness maker created the order with a
+      // proven identity key distinct from its trade key: mostro-core silently
+      // drops a rating aimed at a full-privacy counterpart. The accepted rating
+      // makes the daemon publish the seller's aggregate as a signed kind-38384
+      // event and answer this app with `rate-received`, which maps to
+      // `success` with the `rateReceived` action (and no follow-up button).
+      container
+          .read(navigationProvider.notifier)
+          .go('/trade_detail/$_makerOrderId');
+      await tester.pump(const Duration(milliseconds: 500));
+
+      await _waitFor(
+        tester,
+        () => find.bySemanticsIdentifier('trade.rate').evaluate().isNotEmpty,
+        timeout: _ratingTimeout,
+        label: 'the RATE control on the successful trade',
+      );
+
+      // As with fiat-sent: the status snackbar floats over the action row for
+      // about two seconds and would absorb the tap. Re-tap only if the route
+      // clearly did not open.
+      var rateOpened = false;
+      for (var attempt = 0; attempt < 3 && !rateOpened; attempt++) {
+        await _waitFor(
+          tester,
+          () => find.byType(SnackBar).evaluate().isEmpty,
+          timeout: const Duration(seconds: 15),
+          label: 'the trade-status snackbar to clear before tapping RATE',
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        final control = find.bySemanticsIdentifier('trade.rate');
+        if (control.evaluate().isEmpty) {
+          // Already past the rate screen (route opened and the control left).
+          rateOpened = find.byType(StarRating).evaluate().isNotEmpty;
+          break;
+        }
+        await tester.ensureVisible(control.first);
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.tap(control.first);
+        await tester.pump(const Duration(milliseconds: 800));
+        rateOpened = find.byType(StarRating).evaluate().isNotEmpty;
+      }
+      expect(rateOpened, isTrue,
+          reason: 'the RATE control must open the counterpart rating screen');
+      debugPrint('REGTEST_GATE4_RATE_OPENED order=$_makerOrderId');
+
+      // The rating screen is the production star row; the fifth outlined star
+      // sets a 5/5 rating and fills all five.
+      final stars = find.descendant(
+        of: find.byType(StarRating),
+        matching: find.byIcon(Icons.star_border),
+      );
+      await _waitFor(
+        tester,
+        () => stars.evaluate().length == 5,
+        label: 'the five rating stars',
+      );
+      await tester.tap(stars.at(4));
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byIcon(Icons.star).evaluate().length, 5,
+          reason: 'tapping the fifth star must fill all five');
+
+      final submit = find.descendant(
+        of: find.byType(RateCounterpartScreen),
+        matching: find.byType(ElevatedButton),
+      );
+      expect(submit, findsOneWidget,
+          reason: 'the rate screen has exactly one submit control');
+      await tester.tap(submit);
+      await tester.pump(const Duration(milliseconds: 500));
+      debugPrint(
+          'REGTEST_GATE4_RATING_SUBMITTED order=$_makerOrderId rating=5');
+
+      await _waitFor(
+        tester,
+        () =>
+            container.read(orderNotifierProvider(_makerOrderId)).action ==
+            mostro.Action.rateReceived,
+        timeout: _ratingTimeout,
+        label: 'the daemon rate-received acknowledgement',
+      );
+      final ratedState = container.read(orderNotifierProvider(_makerOrderId));
+      expect(ratedState.status, Status.success,
+          reason: 'rate-received keeps the trade at success');
+      debugPrint('REGTEST_GATE4_RATE_RECEIVED order=$_makerOrderId '
+          'action=${ratedState.action.name} status=${ratedState.status.value}');
+
+      // The daemon stored the seller's aggregate and the harness maker then
+      // published one fresh pending sell order. The daemon attaches the rated
+      // reputation to every pending order of that seller, so the app's own
+      // order book renders it. mostro-core weights the first review by 1/2
+      // (User::update_rating), so a single 5-star rating reads 2.5 / 1 review.
+      const expectedTotalRating = 2.5;
+      bool hasRatedOrder() => container.read(filteredOrdersProvider).any((o) =>
+          o.amount == _reputationOrderAmount &&
+          o.rating != null &&
+          o.rating!.totalReviews == 1 &&
+          o.rating!.totalRating == expectedTotalRating);
+
+      container.read(navigationProvider.notifier).go('/');
+      await tester.pump(const Duration(milliseconds: 500));
+      await _waitFor(
+        tester,
+        hasRatedOrder,
+        timeout: _reputationTimeout,
+        label: 'the rated seller reputation on a fresh pending order',
+      );
+      final ratedOrder = container.read(filteredOrdersProvider).firstWhere(
+          (o) =>
+              o.amount == _reputationOrderAmount &&
+              o.rating != null &&
+              o.rating!.totalReviews == 1 &&
+              o.rating!.totalRating == expectedTotalRating);
+      await _waitFor(
+        tester,
+        () => tester
+            .widgetList<OrderListItem>(find.byType(OrderListItem))
+            .any((w) => w.order.orderId == ratedOrder.orderId),
+        timeout: _uiTimeout,
+        label: 'the rated order rendered in the order book',
+      );
+      final rendered = tester
+          .widgetList<OrderListItem>(find.byType(OrderListItem))
+          .firstWhere((w) => w.order.orderId == ratedOrder.orderId);
+      expect(rendered.order.rating?.totalReviews, 1);
+      expect(rendered.order.rating?.totalRating, expectedTotalRating);
+      debugPrint('REGTEST_GATE4_REPUTATION order=${ratedOrder.orderId} '
+          'amount=${ratedOrder.amount} total_reviews='
+          '${rendered.order.rating?.totalReviews} total_rating='
+          '${rendered.order.rating?.totalRating}');
     },
-    timeout: const Timeout(Duration(minutes: 20)),
+    timeout: const Timeout(Duration(minutes: 25)),
   );
 }
 
