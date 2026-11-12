@@ -172,6 +172,51 @@ void main() {
   );
 
   testWidgets(
+    'the banner never overlaps the Scaffold.bottomNavigationBar slot',
+    (tester) async {
+      _configureView(tester);
+      late BuildContext context;
+      await tester.pumpWidget(
+        _app(
+          body: Builder(
+            builder: (ctx) {
+              context = ctx;
+              return const SizedBox.expand();
+            },
+          ),
+          // The standard Scaffold slot, used by
+          // `lib/features/order/screens/payment_confirmation_screen.dart`.
+          bottomNavigationBar: const _EmbeddedBottomBar(),
+        ),
+      );
+
+      SnackBarHelper.showTopSnackBar(context, _message);
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text(_message), findsOneWidget);
+
+      final Rect banner = _bannerRect(tester);
+      final Rect bar = tester.getRect(find.byKey(_embeddedBarKey));
+
+      // Still below the status bar / app bar area.
+      expect(banner.top, greaterThanOrEqualTo(24.0 + kToolbarHeight));
+      expect(banner.center.dy, lessThan(_screenSize.height / 2));
+      // The reserved bottom slot keeps the bar in the bottom half, and the
+      // banner stays clear of it.
+      expect(bar.top, greaterThan(_screenSize.height / 2));
+      expect(
+        banner.overlaps(bar),
+        isFalse,
+        reason: 'banner $banner overlaps bottom navigation bar $bar',
+      );
+
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
     'the banner never covers a bottom action row and the action stays tappable',
     (tester) async {
       _configureView(tester);
