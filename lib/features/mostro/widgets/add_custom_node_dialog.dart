@@ -16,6 +16,7 @@ class AddCustomNodeDialog {
     // Capture parent context values before entering dialog
     final parentMessenger = ScaffoldMessenger.of(context);
     final parentMediaQuery = MediaQuery.of(context);
+    final parentOverlay = Overlay.of(context, rootOverlay: true);
 
     await showDialog<void>(
       context: context,
@@ -25,6 +26,7 @@ class AddCustomNodeDialog {
           ref: ref,
           parentMessenger: parentMessenger,
           screenHeight: parentMediaQuery.size.height,
+          overlay: parentOverlay,
           statusBarPadding: parentMediaQuery.padding.top,
         );
       },
@@ -42,12 +44,14 @@ class AddCustomNodeDialog {
 class _AddCustomNodeDialogContent extends StatefulWidget {
   final WidgetRef ref;
   final ScaffoldMessengerState parentMessenger;
+  final OverlayState overlay;
   final double screenHeight;
   final double statusBarPadding;
 
   const _AddCustomNodeDialogContent({
     required this.ref,
     required this.parentMessenger,
+    required this.overlay,
     required this.screenHeight,
     required this.statusBarPadding,
   });
@@ -243,6 +247,7 @@ class _AddCustomNodeDialogContentState
                 messenger: widget.parentMessenger,
                 screenHeight: widget.screenHeight,
                 statusBarHeight: widget.statusBarPadding,
+                overlay: widget.overlay,
                 message: localizations.nodeAddedSuccess,
                 backgroundColor: Colors.green,
               );
