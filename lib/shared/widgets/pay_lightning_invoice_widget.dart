@@ -100,6 +100,7 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
                 // Capture context values before async gap
                 final messenger = ScaffoldMessenger.of(context);
                 final mediaQuery = MediaQuery.of(context);
+                final overlay = Overlay.of(context, rootOverlay: true);
                 final errorMessage = S.of(context)!.failedToShareInvoice;
 
                 try {
@@ -123,6 +124,7 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
                       messenger: messenger,
                       screenHeight: mediaQuery.size.height,
                       statusBarHeight: mediaQuery.padding.top,
+                      overlay: overlay,
                       message: errorMessage,
                       duration: const Duration(seconds: 3),
                     );

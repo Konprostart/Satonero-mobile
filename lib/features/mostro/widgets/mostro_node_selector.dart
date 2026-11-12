@@ -305,6 +305,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
     // Capture context values before async
     final messenger = ScaffoldMessenger.of(context);
     final mediaQuery = MediaQuery.of(context);
+    final overlay = Overlay.of(context, rootOverlay: true);
     final localizations = S.of(context)!;
     final navigator = Navigator.of(context);
 
@@ -330,6 +331,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
             messenger: messenger,
             screenHeight: mediaQuery.size.height,
             statusBarHeight: mediaQuery.padding.top,
+            overlay: overlay,
             message: localizations.errorSwitchingNode,
           );
           return;
@@ -342,6 +344,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
         messenger: messenger,
         screenHeight: mediaQuery.size.height,
         statusBarHeight: mediaQuery.padding.top,
+        overlay: overlay,
         message: localizations.nodeSwitchedSuccess(node.displayName),
         backgroundColor: Colors.green,
       );
@@ -356,6 +359,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
         messenger: messenger,
         screenHeight: mediaQuery.size.height,
         statusBarHeight: mediaQuery.padding.top,
+        overlay: overlay,
         message: localizations.errorSwitchingNode,
       );
     }
