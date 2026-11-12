@@ -69,8 +69,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             ),
             child: Text(
               s.yes,
@@ -96,6 +95,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
   Future<void> _shareInvoice(BuildContext context, String lnInvoice) async {
     final messenger = ScaffoldMessenger.of(context);
     final mediaQuery = MediaQuery.of(context);
+    final overlay = Overlay.of(context, rootOverlay: true);
     final errorMessage = S.of(context)!.failedToShareInvoice;
 
     try {
@@ -113,6 +113,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
         messenger: messenger,
         screenHeight: mediaQuery.size.height,
         statusBarHeight: mediaQuery.padding.top,
+        overlay: overlay,
         message: errorMessage,
         duration: const Duration(seconds: 3),
       );
@@ -132,7 +133,8 @@ class PayBondInvoiceScreen extends ConsumerWidget {
             .getSessionByOrderId(orderId)
             ?.bondPending ??
         false;
-    final explanation = isMakerBond ? s.bondExplanationMaker : s.bondExplanation;
+    final explanation =
+        isMakerBond ? s.bondExplanationMaker : s.bondExplanation;
 
     return Scaffold(
       backgroundColor: AppTheme.dark1,

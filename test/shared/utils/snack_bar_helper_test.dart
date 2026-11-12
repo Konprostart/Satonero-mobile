@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 
-const String _message = 'hello snackbar';
+const String _message = 'hello notification';
 const double _safeBottom = 24.0;
 const double _navBarHeight = 80.0;
 const Size _screenSize = Size(400, 800);
 const Key _embeddedBarKey = Key('embedded_bottom_bar');
-const Key _scaffoldBarKey = Key('scaffold_bottom_bar');
+const Key _actionButtonKey = Key('bottom_action_button');
 
 /// Applies the phone-shaped viewport and the bottom safe-area inset used by
 /// every test in this file.
@@ -39,10 +39,7 @@ class _EmbeddedBottomBar extends StatelessWidget {
   }
 }
 
-Widget _app({
-  required Widget body,
-  Widget? bottomNavigationBar,
-}) {
+Widget _app({required Widget body, Widget? bottomNavigationBar}) {
   return MaterialApp(
     home: Scaffold(
       appBar: AppBar(title: const Text('title')),
@@ -52,19 +49,21 @@ Widget _app({
   );
 }
 
-/// The visible SnackBar surface. The [SnackBar] widget's own box includes the
-/// (transparent) margins, so geometry that must not cover the bottom bar is
-/// measured on the [Material] inside it.
-Rect _snackBarMaterialRect(WidgetTester tester) {
+/// The banner surface (the [Material] rendered by the helper).
+Rect _bannerRect(WidgetTester tester) {
   return tester.getRect(
-    find.descendant(
-      of: find.byType(SnackBar),
-      matching: find.byType(Material),
-    ),
+    find
+        .ancestor(
+          of: find.text(_message),
+          matching: find.byType(Material),
+        )
+        .first,
   );
 }
 
 void main() {
+  tearDown(SnackBarHelper.dismiss);
+
   testWidgets(
     'the previous full-screen margin still triggers the off-screen assertion '
     '(guards this regression test)',
@@ -106,7 +105,9 @@ void main() {
       final Object? error = tester.takeException();
       expect(error, isA<FlutterError>());
       expect(
-          error.toString(), contains('Floating SnackBar presented off screen'));
+        error.toString(),
+        contains('Floating SnackBar presented off screen'),
+      );
 
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       await tester.pumpAndSettle();
@@ -114,8 +115,8 @@ void main() {
   );
 
   testWidgets(
-    'floating snackbar stays above the embedded 80dp bottom bar and never '
-    'goes off screen',
+    'the banner is rendered at the top, below the app bar, and never overlaps '
+    'the embedded bottom bar',
     (tester) async {
       _configureView(tester);
       late BuildContext context;
@@ -142,36 +143,36 @@ void main() {
 
       SnackBarHelper.showTopSnackBar(context, _message);
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
 
       expect(tester.takeException(), isNull);
+      expect(find.text(_message), findsOneWidget);
+      // The notification is no longer a bottom SnackBar.
+      expect(find.byType(SnackBar), findsNothing);
 
-      final Rect snackBarRect = tester.getRect(find.byType(SnackBar));
-      final Rect materialRect = _snackBarMaterialRect(tester);
-      final Rect textRect = tester.getRect(find.text(_message));
-      final Rect barRect = tester.getRect(find.byKey(_embeddedBarKey));
+      final Rect banner = _bannerRect(tester);
+      final Rect bar = tester.getRect(find.byKey(_embeddedBarKey));
 
-      // Flutter's assertion is `snackBarTop >= 0`.
-      expect(snackBarRect.top, greaterThanOrEqualTo(0.0));
       // Below the status bar / app bar area.
-      expect(textRect.top, greaterThanOrEqualTo(kToolbarHeight));
-      // Fully above the embedded 80dp bar.
-      expect(textRect.bottom, lessThanOrEqualTo(barRect.top));
-      // The whole layout box is far smaller than the screen (the old bug).
-      expect(snackBarRect.height, lessThan(_screenSize.height - _safeBottom));
-      // The visible SnackBar never covers the bar. The outer SnackBar box
-      // includes the transparent margin, so measure the Material itself.
       expect(
-        materialRect.overlaps(barRect),
-        isFalse,
-        reason: 'snackbar material $materialRect overlaps bar $barRect',
+        banner.top,
+        greaterThanOrEqualTo(24.0 + kToolbarHeight),
       );
+      // Always in the top half of the viewport.
+      expect(banner.center.dy, lessThan(_screenSize.height / 2));
+      // Never covers the embedded 80dp bottom bar.
+      expect(
+        banner.overlaps(bar),
+        isFalse,
+        reason: 'banner $banner overlaps bottom bar $bar',
+      );
+
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump();
     },
   );
 
   testWidgets(
-    'floating snackbar stays above Scaffold.bottomNavigationBar and never '
-    'goes off screen',
+    'the banner never overlaps the Scaffold.bottomNavigationBar slot',
     (tester) async {
       _configureView(tester);
       late BuildContext context;
@@ -183,39 +184,208 @@ void main() {
               return const SizedBox.expand();
             },
           ),
-          bottomNavigationBar: Container(
-            key: _scaffoldBarKey,
-            height: _navBarHeight,
-            color: Colors.black,
+          // The standard Scaffold slot, used by
+          // `lib/features/order/screens/payment_confirmation_screen.dart`.
+          bottomNavigationBar: const _EmbeddedBottomBar(),
+        ),
+      );
+
+      SnackBarHelper.showTopSnackBar(context, _message);
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text(_message), findsOneWidget);
+
+      final Rect banner = _bannerRect(tester);
+      final Rect bar = tester.getRect(find.byKey(_embeddedBarKey));
+
+      // Still below the status bar / app bar area.
+      expect(banner.top, greaterThanOrEqualTo(24.0 + kToolbarHeight));
+      expect(banner.center.dy, lessThan(_screenSize.height / 2));
+      // The reserved bottom slot keeps the bar in the bottom half, and the
+      // banner stays clear of it.
+      expect(bar.top, greaterThan(_screenSize.height / 2));
+      expect(
+        banner.overlaps(bar),
+        isFalse,
+        reason: 'banner $banner overlaps bottom navigation bar $bar',
+      );
+
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump();
+    },
+  );
+
+  testWidgets(
+    'the banner never covers a bottom action row and the action stays tappable',
+    (tester) async {
+      _configureView(tester);
+      var taps = 0;
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        _app(
+          body: Column(
+            children: [
+              Expanded(
+                child: Builder(
+                  builder: (ctx) {
+                    context = ctx;
+                    return const SizedBox.expand();
+                  },
+                ),
+              ),
+              // Mirrors the trade detail action row pinned to the bottom of
+              // the body, above the bottom safe area.
+              SafeArea(
+                top: false,
+                child: SizedBox(
+                  height: _navBarHeight,
+                  child: Center(
+                    child: ElevatedButton(
+                      key: _actionButtonKey,
+                      onPressed: () => taps++,
+                      child: const Text('fiat sent'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
 
       SnackBarHelper.showTopSnackBar(context, _message);
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text(_message), findsOneWidget);
 
-      expect(tester.takeException(), isNull);
-
-      final Rect snackBarRect = tester.getRect(find.byType(SnackBar));
-      final Rect materialRect = _snackBarMaterialRect(tester);
-      final Rect textRect = tester.getRect(find.text(_message));
-      final Rect barRect = tester.getRect(find.byKey(_scaffoldBarKey));
-
-      expect(snackBarRect.top, greaterThanOrEqualTo(0.0));
-      expect(textRect.top, greaterThanOrEqualTo(kToolbarHeight));
-      expect(textRect.bottom, lessThanOrEqualTo(barRect.top));
+      final Rect banner = _bannerRect(tester);
+      final Rect action = tester.getRect(find.byKey(_actionButtonKey));
       expect(
-        materialRect.overlaps(barRect),
+        banner.overlaps(action),
         isFalse,
-        reason: 'snackbar material $materialRect overlaps bar $barRect',
+        reason: 'banner $banner overlaps action $action',
       );
+
+      // The transient notification must not intercept the action tap.
+      await tester.tap(find.byKey(_actionButtonKey));
+      await tester.pump();
+      expect(taps, 1);
+
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump();
     },
   );
 
+  testWidgets('the banner auto-dismisses after the requested duration',
+      (tester) async {
+    _configureView(tester);
+    late BuildContext context;
+    await tester.pumpWidget(
+      _app(
+        body: Builder(
+          builder: (ctx) {
+            context = ctx;
+            return const SizedBox.expand();
+          },
+        ),
+      ),
+    );
+
+    SnackBarHelper.showTopSnackBar(
+      context,
+      _message,
+      duration: const Duration(seconds: 5),
+    );
+    await tester.pump();
+    expect(find.text(_message), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 4));
+    expect(find.text(_message), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump();
+    expect(find.text(_message), findsNothing);
+  });
+
+  testWidgets('a newer notification replaces the visible one', (tester) async {
+    _configureView(tester);
+    late BuildContext context;
+    await tester.pumpWidget(
+      _app(
+        body: Builder(
+          builder: (ctx) {
+            context = ctx;
+            return const SizedBox.expand();
+          },
+        ),
+      ),
+    );
+
+    SnackBarHelper.showTopSnackBar(context, 'first');
+    await tester.pump();
+    expect(find.text('first'), findsOneWidget);
+
+    SnackBarHelper.showTopSnackBar(context, _message);
+    await tester.pump();
+
+    expect(find.text('first'), findsNothing);
+    expect(find.text(_message), findsOneWidget);
+    expect(find.byType(Material), findsWidgets);
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pump();
+  });
+
+  testWidgets('async helper uses the supplied overlay and keeps the colour',
+      (tester) async {
+    _configureView(tester);
+    late ScaffoldMessengerState messenger;
+    late OverlayState overlay;
+    await tester.pumpWidget(
+      _app(
+        body: Builder(
+          builder: (ctx) {
+            messenger = ScaffoldMessenger.of(ctx);
+            overlay = Overlay.of(ctx, rootOverlay: true);
+            return const SizedBox.expand();
+          },
+        ),
+      ),
+    );
+
+    final Size size = tester.getSize(find.byType(Scaffold));
+    SnackBarHelper.showTopSnackBarAsync(
+      messenger: messenger,
+      screenHeight: size.height,
+      statusBarHeight: 24,
+      message: _message,
+      backgroundColor: Colors.red,
+      duration: const Duration(seconds: 5),
+      overlay: overlay,
+    );
+    await tester.pump();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text(_message), findsOneWidget);
+    expect(find.byType(SnackBar), findsNothing);
+
+    final Material material = tester.widget<Material>(
+      find
+          .ancestor(
+            of: find.text(_message),
+            matching: find.byType(Material),
+          )
+          .first,
+    );
+    expect(material.color, Colors.red);
+
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pump();
+  });
+
   testWidgets(
-    'async helper keeps the public behaviour: clears previous snackbars, '
-    'uses the requested colour and duration',
+    'async helper without an overlay keeps the legacy SnackBar fallback',
     (tester) async {
       _configureView(tester);
       late ScaffoldMessengerState messenger;
@@ -235,31 +405,18 @@ void main() {
         messenger: messenger,
         screenHeight: size.height,
         statusBarHeight: 24,
-        message: 'first',
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
-
-      SnackBarHelper.showTopSnackBarAsync(
-        messenger: messenger,
-        screenHeight: size.height,
-        statusBarHeight: 24,
         message: _message,
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 5),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
       expect(tester.takeException(), isNull);
       expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('first'), findsNothing);
-      expect(find.text(_message), findsOneWidget);
-
       final SnackBar snackBar = tester.widget<SnackBar>(find.byType(SnackBar));
-      expect(snackBar.backgroundColor, Colors.red);
-      expect(snackBar.duration, const Duration(seconds: 5));
       expect(snackBar.behavior, SnackBarBehavior.floating);
+
+      messenger.removeCurrentSnackBar();
+      await tester.pumpAndSettle();
     },
   );
 }
