@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'  # Only match semver tags (v1.2.3), NOT v1.2.3+456
+  # Verification build only. A manual run builds and verifies a signed artifact
+  # but every publishing step is gated to tag refs, so it cannot create a
+  # release, a changelog PR or a desktop dispatch.
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,8 +27,14 @@ jobs:
       - name: Extract version from tag
         id: version
         run: |
-          FULL_TAG=${GITHUB_REF#refs/tags/}
-          TAG=$(echo "${FULL_TAG#v}" | cut -d'+' -f1)
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            FULL_TAG=${GITHUB_REF#refs/tags/}
+            TAG=$(echo "${FULL_TAG#v}" | cut -d'+' -f1)
+          else
+            # workflow_dispatch: verification build, never published
+            TAG="0.0.0-verify"
+            FULL_TAG="v${TAG}"
+          fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "full_tag=$FULL_TAG" >> $GITHUB_OUTPUT
 
@@ -109,29 +119,32 @@ jobs:
 
           cat RELEASE_BODY.md
 
-      - name: Verify signing secrets
+      - name: Verify signing configuration
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          EXPECTED_CERT_SHA256: ${{ vars.ANDROID_RELEASE_CERT_SHA256 }}
         run: |
+          set -euo pipefail
           missing=""
-          [ -z "${{ secrets.ANDROID_KEYSTORE_FILE }}" ] && missing="$missing ANDROID_KEYSTORE_FILE"
-          [ -z "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" ] && missing="$missing ANDROID_KEYSTORE_PASSWORD"
-          [ -z "${{ secrets.ANDROID_KEY_PASSWORD }}" ] && missing="$missing ANDROID_KEY_PASSWORD"
-          [ -z "${{ secrets.ANDROID_KEY_ALIAS }}" ] && missing="$missing ANDROID_KEY_ALIAS"
-          if [ -n "$missing" ]; then echo "::error::Missing signing secrets:$missing"; exit 1; fi
+          [ -z "$KEYSTORE_B64" ] && missing="$missing ANDROID_KEYSTORE_FILE"
+          [ -z "$STORE_PASSWORD" ] && missing="$missing ANDROID_KEYSTORE_PASSWORD"
+          [ -z "$KEY_PASSWORD" ] && missing="$missing ANDROID_KEY_PASSWORD"
+          [ -z "$KEY_ALIAS" ] && missing="$missing ANDROID_KEY_ALIAS"
+          [ -z "$EXPECTED_CERT_SHA256" ] && missing="$missing vars.ANDROID_RELEASE_CERT_SHA256"
+          if [ -n "$missing" ]; then echo "::error::Missing signing configuration:$missing"; exit 1; fi
+          if ! printf '%s' "$EXPECTED_CERT_SHA256" | grep -Eq '^[0-9a-fA-F]{64}$'; then
+            echo "::error::ANDROID_RELEASE_CERT_SHA256 must be 64 hex characters"; exit 1
+          fi
+          echo "signing configuration present; values are never printed"
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Setup Android keystore
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_FILE }}" | base64 --decode > android/app/upload-keystore.jks
-          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" > android/key.properties
-          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=upload-keystore.jks" >> android/key.properties
-          echo "storeType=PKCS12" >> android/key.properties
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -162,6 +175,28 @@ jobs:
 
       - name: Run tests
         run: flutter test
+
+      # The keystore does not exist while the test suite runs: no test can read
+      # it, and a failing test suite never creates signing material.
+      - name: Load release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > android/app/upload-keystore.jks
+          chmod 600 android/app/upload-keystore.jks
+          umask 077
+          {
+            printf 'storePassword=%s\n' "$STORE_PASSWORD"
+            printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+            printf 'keyAlias=%s\n' "$KEY_ALIAS"
+            printf 'storeFile=upload-keystore.jks\n'
+            printf 'storeType=PKCS12\n'
+          } > android/key.properties
+          echo "release keystore materialized for the build"
 
       - name: Update version in pubspec for build
         run: |
@@ -196,36 +231,59 @@ jobs:
              build/app/outputs/flutter-apk/satonero-${VERSION}-arm64-v8a.apk
           ls -lh build/app/outputs/flutter-apk/satonero-${VERSION}-*.apk
 
-      - name: Verify APK signing
+      - name: Verify APK and AAB signing, identity and certificate
+        env:
+          EXPECTED_CERT_SHA256: ${{ vars.ANDROID_RELEASE_CERT_SHA256 }}
         run: |
           set -euo pipefail
           VERSION=${{ steps.version.outputs.full_tag }}
           SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
-          APKSIGNER=$(find "$SDK_ROOT"/build-tools -name apksigner -type f 2>/dev/null | sort -V | tail -1 || true)
+          APKSIGNER=$(find "$SDK_ROOT"/build-tools -name apksigner -type f 2>/dev/null | sort -V | tail -1)
+          AAPT=$(find "$SDK_ROOT"/build-tools -name aapt -type f 2>/dev/null | sort -V | tail -1)
+          echo "apksigner=${APKSIGNER:-<none>} aapt=${AAPT:-<none>}"
+          # apksigner is mandatory: fail closed when it cannot be found.
+          if [ ! -x "${APKSIGNER:-}" ] || [ ! -x "${AAPT:-}" ]; then
+            echo "::error::apksigner/aapt not found under $SDK_ROOT/build-tools"; exit 1
+          fi
+          EXPECTED=$(printf '%s' "$EXPECTED_CERT_SHA256" | tr 'A-F' 'a-f')
+          test -n "$EXPECTED"
           for ARCH in armeabi-v7a arm64-v8a; do
             APK="build/app/outputs/flutter-apk/satonero-${VERSION}-${ARCH}.apk"
-            echo "Verifying ${ARCH}..."
-            jarsigner -verify "$APK" > /dev/null
-            if [ -n "$APKSIGNER" ]; then "$APKSIGNER" verify --print-certs "$APK"; fi
-            echo "✅ ${ARCH} verified"
-          done
-
-      - name: Verify release certificate fingerprint
-        run: |
-          set -euo pipefail
-          EXPECTED_FP="04c6fb5976787d1ddd07bc9973dbe06b7d227f0bd082aabb3f2225acf1e3a1d0"
-          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
-          APKSIGNER=$(find "$SDK_ROOT"/build-tools -name apksigner -type f 2>/dev/null | sort -V | tail -1 || true)
-          for ARCH in armeabi-v7a arm64-v8a; do
-            APK="build/app/outputs/flutter-apk/satonero-${{ steps.version.outputs.full_tag }}-${ARCH}.apk"
-            FP=$("$APKSIGNER" verify --print-certs "$APK" 2>/dev/null | grep -i "SHA-256 digest" | head -1 | sed -n 's/.*SHA-256 digest: *//p' | tr -d ' ' | tr '[:upper:]' '[:lower:]' || true)
-            echo "${ARCH} cert fingerprint: $FP"
-            if [ "$FP" != "$EXPECTED_FP" ]; then
-              echo "::error::Certificate fingerprint mismatch for ${ARCH}: expected $EXPECTED_FP, got $FP"
-              exit 1
+            test -f "$APK"
+            if ! "$APKSIGNER" verify --print-certs "$APK" > /tmp/apk_signing.txt 2>&1; then
+              echo "::error::apksigner verification failed ($ARCH)"; cat /tmp/apk_signing.txt; exit 1
             fi
-            echo "✅ ${ARCH} uses correct release certificate"
+            # Public certificate data only (no key material): safe to log.
+            echo "--- apksigner output ($ARCH) ---"; cat /tmp/apk_signing.txt
+            if grep -qi 'Android Debug' /tmp/apk_signing.txt; then
+              echo "::error::debug-signed APK rejected ($ARCH)"; exit 1
+            fi
+            SIGNERS=$(grep 'certificate SHA-256 digest' /tmp/apk_signing.txt | sed -E 's/.*digest: *//' | tr -d ' \r' | tr 'A-F' 'a-f' || true)
+            if [ "$(printf '%s\n' "$SIGNERS" | sed '/^$/d' | wc -l)" -ne 1 ]; then
+              echo "::error::expected exactly one signer ($ARCH)"; exit 1
+            fi
+            if [ "$SIGNERS" != "$EXPECTED" ]; then
+              echo "::error::certificate SHA-256 mismatch ($ARCH): expected $EXPECTED, got $SIGNERS"; exit 1
+            fi
+            "$AAPT" dump badging "$APK" | grep -q "package: name='com.konprostart.satonero'" \
+              || { echo "::error::wrong package ($ARCH)"; exit 1; }
+            echo "verified $ARCH against the expected release certificate"
           done
+          # The .aab is JAR-signed with the same key; verification is separate
+          # because apksigner does not read app bundles.
+          AAB=build/app/outputs/bundle/release/app-release.aab
+          test -f "$AAB"
+          if ! jarsigner -verify "$AAB" > /tmp/aab_signing.txt 2>&1; then
+            echo "::error::AAB signature verification failed"; cat /tmp/aab_signing.txt; exit 1
+          fi
+          grep -q 'jar verified' /tmp/aab_signing.txt \
+            || { echo "::error::AAB not reported as verified"; cat /tmp/aab_signing.txt; exit 1; }
+          AAB_FP=$(keytool -printcert -jarfile "$AAB" | grep 'SHA256:' | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
+          echo "AAB cert fingerprint: $AAB_FP"
+          if [ "$AAB_FP" != "$EXPECTED" ]; then
+            echo "::error::AAB certificate mismatch: expected $EXPECTED, got $AAB_FP"; exit 1
+          fi
+          echo "verified AAB against the expected release certificate"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -237,6 +295,7 @@ jobs:
             build/app/outputs/bundle/release/app-release.aab
 
       - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           body_path: RELEASE_BODY.md
@@ -249,6 +308,7 @@ jobs:
           prerelease: false
 
       - name: Open changelog PR
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -322,6 +382,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger desktop builds
+        if: startsWith(github.ref, 'refs/tags/')
         uses: peter-evans/repository-dispatch@v3
         with:
           event-type: build-desktop
