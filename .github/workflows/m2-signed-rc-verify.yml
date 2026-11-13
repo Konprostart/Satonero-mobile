@@ -1,0 +1,253 @@
+name: M2 signed RC verify (no publish)
+
+# CI-only verification build. It produces a RELEASE-SIGNED APK/AAB from the
+# verified main tree and verifies package identity, version, APK signature
+# scheme, AAB signature and release certificate fingerprint.
+#
+# It never creates a tag, a GitHub release or a desktop dispatch, and it does
+# not push any image or artifact outside of the repository's own Actions
+# artifacts. Publication stays a separate, manually approved step.
+
+on:
+  push:
+    branches:
+      - ci/m2-signed-rc-verify
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m2-signed-rc-verify-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-signed-rc:
+    name: Build and verify release-signed APK/AAB
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      EXPECTED_CERT_SHA256: 04c6fb5976787d1ddd07bc9973dbe06b7d227f0bd082aabb3f2225acf1e3a1d0
+      VERIFIED_MAIN_SHA: 4baf81dce265d14f6e9f6308d3877f965d02e4c7
+      RC_VERSION_NAME: 1.5.5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assert source provenance
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          BASE=$(git rev-parse origin/main)
+          echo "origin/main = $BASE"
+          test "$BASE" = "$VERIFIED_MAIN_SHA" || {
+            echo "::error::origin/main moved: expected $VERIFIED_MAIN_SHA, got $BASE"; exit 1; }
+          # The only difference between the built tree and main must be this
+          # CI-only workflow file; the application sources are byte-identical.
+          CHANGED=$(git diff --name-only "$BASE" HEAD -- . ':(exclude).github/workflows/m2-signed-rc-verify.yml')
+          if [ -n "$CHANGED" ]; then
+            echo "::error::application sources differ from verified main:"; echo "$CHANGED"; exit 1
+          fi
+          echo "source tree == main ($BASE) + this workflow file only"
+
+      - name: Verify signing configuration is present
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          missing=""
+          [ -z "$KEYSTORE_B64" ] && missing="$missing ANDROID_KEYSTORE_FILE"
+          [ -z "$STORE_PASSWORD" ] && missing="$missing ANDROID_KEYSTORE_PASSWORD"
+          [ -z "$KEY_PASSWORD" ] && missing="$missing ANDROID_KEY_PASSWORD"
+          [ -z "$KEY_ALIAS" ] && missing="$missing ANDROID_KEY_ALIAS"
+          if [ -n "$missing" ]; then echo "::error::Missing signing secrets:$missing"; exit 1; fi
+          echo "signing configuration present (values not printed)"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.2'
+          channel: stable
+          cache: true
+
+      - name: Disable analytics and configure minSdk
+        run: |
+          set -euo pipefail
+          flutter config --no-analytics
+          mkdir -p android
+          touch android/local.properties
+          if grep -qE '^flutter\.minSdkVersion=' android/local.properties; then
+            sed -i 's/^flutter\.minSdkVersion=.*/flutter.minSdkVersion=23/' android/local.properties
+          else
+            echo "flutter.minSdkVersion=23" >> android/local.properties
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate localization and required files
+        run: dart run build_runner build -d
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests (without keystore present)
+        run: flutter test
+
+      - name: Load release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > android/app/upload-keystore.jks
+          chmod 600 android/app/upload-keystore.jks
+          umask 077
+          {
+            printf 'storePassword=%s\n' "$STORE_PASSWORD"
+            printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+            printf 'keyAlias=%s\n' "$KEY_ALIAS"
+            printf 'storeFile=upload-keystore.jks\n'
+            printf 'storeType=PKCS12\n'
+          } > android/key.properties
+          echo "keystore and key.properties materialized for the build"
+
+      - name: Set release version identity
+        id: ver
+        run: |
+          set -euo pipefail
+          BUILD=$(git rev-list --count "$VERIFIED_MAIN_SHA")
+          VERSION="${RC_VERSION_NAME}"
+          sed -i "s/^version: .*/version: ${VERSION}+${BUILD}/" pubspec.yaml
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "build=${BUILD}" >> "$GITHUB_OUTPUT"
+          echo "Building with version: ${VERSION}+${BUILD}"
+
+      - name: Build APK (split per ABI, release-signed)
+        run: |
+          flutter build apk --release --split-per-abi \
+            --dart-define=APP_VERSION=${{ env.RC_VERSION_NAME }} \
+            --dart-define=GIT_COMMIT=${{ github.sha }}
+
+      - name: Build appBundle (release-signed)
+        run: |
+          flutter build appbundle --release \
+            --dart-define=APP_VERSION=${{ env.RC_VERSION_NAME }} \
+            --dart-define=GIT_COMMIT=${{ github.sha }}
+
+      - name: Collect artifacts
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
+             out/satonero-${RC_VERSION_NAME}-rc1-armeabi-v7a.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
+             out/satonero-${RC_VERSION_NAME}-rc1-arm64-v8a.apk
+          cp build/app/outputs/bundle/release/app-release.aab \
+             out/satonero-${RC_VERSION_NAME}-rc1.aab
+          ls -lh out
+
+      - name: Verify APK signatures, identity and certificate
+        run: |
+          set -euo pipefail
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          APKSIGNER=$(find "$SDK_ROOT"/build-tools -name apksigner -type f 2>/dev/null | sort -V | tail -1)
+          AAPT=$(find "$SDK_ROOT"/build-tools -name aapt -type f 2>/dev/null | sort -V | tail -1)
+          echo "apksigner=${APKSIGNER:-<none>} aapt=${AAPT:-<none>}"
+          if [ ! -x "${APKSIGNER:-}" ] || [ ! -x "${AAPT:-}" ]; then
+            echo "::error::apksigner/aapt not found under $SDK_ROOT/build-tools"; exit 1
+          fi
+          EXPECTED=$(printf '%s' "$EXPECTED_CERT_SHA256" | tr 'A-F' 'a-f')
+          : > signing-evidence.txt
+          for ARCH in armeabi-v7a arm64-v8a; do
+            APK="out/satonero-${RC_VERSION_NAME}-rc1-${ARCH}.apk"
+            test -f "$APK"
+            if ! "$APKSIGNER" verify --verbose --print-certs "$APK" > "/tmp/sig-${ARCH}.txt" 2>&1; then
+              echo "::error::apksigner verification failed ($ARCH)"; cat "/tmp/sig-${ARCH}.txt"; exit 1
+            fi
+            echo "===== $APK =====" >> signing-evidence.txt
+            cat "/tmp/sig-${ARCH}.txt" >> signing-evidence.txt
+            if grep -qi 'Android Debug' "/tmp/sig-${ARCH}.txt"; then
+              echo "::error::debug-signed APK rejected ($ARCH)"; exit 1
+            fi
+            SIGNERS=$(grep 'certificate SHA-256 digest' "/tmp/sig-${ARCH}.txt" | sed -E 's/.*digest: *//' | tr -d ' \r' | tr 'A-F' 'a-f' | sed '/^$/d')
+            if [ "$(printf '%s\n' "$SIGNERS" | wc -l)" -ne 1 ]; then
+              echo "::error::expected exactly one signer ($ARCH)"; exit 1
+            fi
+            if [ "$SIGNERS" != "$EXPECTED" ]; then
+              echo "::error::certificate SHA-256 mismatch ($ARCH): got $SIGNERS expected $EXPECTED"; exit 1
+            fi
+            "$AAPT" dump badging "$APK" > "/tmp/badging-${ARCH}.txt"
+            grep -q "package: name='com.konprostart.satonero'" "/tmp/badging-${ARCH}.txt" \
+              || { echo "::error::wrong package ($ARCH)"; exit 1; }
+            grep -q "versionName='${RC_VERSION_NAME}'" "/tmp/badging-${ARCH}.txt" \
+              || { echo "::error::wrong versionName ($ARCH)"; exit 1; }
+            grep -q "versionCode='${{ steps.ver.outputs.build }}'" "/tmp/badging-${ARCH}.txt" \
+              || { echo "::error::wrong versionCode ($ARCH)"; exit 1; }
+            echo "===== badging $ARCH =====" >> signing-evidence.txt
+            grep -E "^package:" "/tmp/badging-${ARCH}.txt" >> signing-evidence.txt
+            echo "APK $ARCH: release-signed, single signer, cert $EXPECTED, com.konprostart.satonero ${RC_VERSION_NAME}+${{ steps.ver.outputs.build }}"
+          done
+
+      - name: Verify AAB signature and certificate
+        run: |
+          set -euo pipefail
+          AAB="out/satonero-${RC_VERSION_NAME}-rc1.aab"
+          test -f "$AAB"
+          jarsigner -verify "$AAB" > /tmp/aab-jarsigner.txt 2>&1 || {
+            echo "::error::AAB JAR signature verification failed"; cat /tmp/aab-jarsigner.txt; exit 1; }
+          grep -q 'jar verified' /tmp/aab-jarsigner.txt || {
+            echo "::error::AAB not reported as verified"; cat /tmp/aab-jarsigner.txt; exit 1; }
+          EXPECTED=$(printf '%s' "$EXPECTED_CERT_SHA256" | tr 'A-F' 'a-f')
+          AAB_FP=$(keytool -printcert -jarfile "$AAB" | grep 'SHA256:' | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
+          echo "AAB cert SHA-256: $AAB_FP"
+          if [ "$AAB_FP" != "$EXPECTED" ]; then echo "::error::AAB certificate mismatch"; exit 1; fi
+          {
+            echo "===== AAB ====="
+            grep -E 'jar verified|warning' /tmp/aab-jarsigner.txt | head -5
+            keytool -printcert -jarfile "$AAB" | grep -E 'Owner|SHA256'
+          } >> signing-evidence.txt
+          echo "AAB: JAR-signed, cert $EXPECTED"
+
+      - name: Record hashes and evidence
+        run: |
+          set -euo pipefail
+          sha256sum out/*.apk out/*.aab | tee hashes.txt
+          {
+            echo "source main: $VERIFIED_MAIN_SHA"
+            echo "built at commit: $GITHUB_SHA"
+            echo "version: ${RC_VERSION_NAME}+${{ steps.ver.outputs.build }}"
+            echo "cert SHA-256: $EXPECTED_CERT_SHA256"
+            echo "artifact: unpublished RC (no tag, no release)"
+          } > rc-metadata.txt
+          cat rc-metadata.txt
+
+      - name: Upload signed RC (private Actions artifact, not published)
+        uses: actions/upload-artifact@v4
+        with:
+          name: m2-signed-rc
+          path: |
+            out/*.apk
+            out/*.aab
+            hashes.txt
+            rc-metadata.txt
+            signing-evidence.txt
+          retention-days: 7
+
+      - name: Confirm nothing was published
+        run: |
+          echo "No tag created, no GitHub release, no desktop dispatch, no registry push."
+          echo "Signed artifacts exist only as repository Actions artifacts."
