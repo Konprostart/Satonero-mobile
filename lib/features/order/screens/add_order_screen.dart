@@ -22,6 +22,7 @@ import 'package:satonero_mobile/features/order/widgets/form_section.dart';
 import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
 import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
 import 'package:satonero_mobile/features/mostro/mostro_instance.dart';
+import 'package:satonero_mobile/features/cashu/cashu_mint_selector.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
@@ -55,6 +56,9 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
   Timer? _fixedPriceRangeErrorTimer;
 
   List<String> _selectedPaymentMethods = [];
+
+  /// The Cashu mint the maker chose for this order's escrow (Cashu nodes only).
+  String? _cashuMintUrl;
 
   @override
   void initState() {
@@ -341,6 +345,18 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
+                        // Cashu escrow: only rendered when the connected node
+                        // runs Cashu. The maker names the mint that will hold
+                        // the escrow before the order is published.
+                        CashuMintSelector(
+                          selectedMintUrl: _cashuMintUrl,
+                          onChanged: (mint) {
+                            setState(() {
+                              _cashuMintUrl = mint;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
                         PriceTypeSection(
                           isMarketRate: _marketRate,
                           errorMessage: _fixedPriceRangeError,
@@ -525,6 +541,26 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
         return;
       }
 
+      // Cashu escrow: the maker must name the mint that will hold the escrow.
+      // A node with exactly one advertised mint defaults to it; an open node
+      // (no advertised mints) still requires an explicit choice.
+      String? cashuMintUrl;
+      if (mostroInstance.escrowMode == EscrowMode.cashu) {
+        final advertised = mostroInstance.cashuMintUrls;
+        cashuMintUrl =
+            _cashuMintUrl ?? (advertised.length == 1 ? advertised.first : null);
+        if (cashuMintUrl == null || cashuMintUrl.trim().isEmpty) {
+          SnackBarHelper.showTopSnackBar(
+            context,
+            l10n.cashuMintNotSelected,
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.orange.withValues(alpha: 0.8),
+          );
+          return;
+        }
+        cashuMintUrl = cashuMintUrl.trim();
+      }
+
       try {
         final uuid = const Uuid();
         final tempOrderId = uuid.v4();
@@ -575,6 +611,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
           amount: _marketRate ? 0 : satsAmount,
           premium: _marketRate ? _premiumValue.toInt() : 0,
           buyerInvoice: buyerInvoice,
+          cashuMintUrl: cashuMintUrl,
         );
 
         notifier.submitOrder(order);
@@ -584,8 +621,8 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
             context: context,
             builder: (context) => AlertDialog(
               backgroundColor: AppTheme.backgroundCard,
-              title: Text(l10n.error,
-                  style: const TextStyle(color: Colors.white)),
+              title:
+                  Text(l10n.error, style: const TextStyle(color: Colors.white)),
               content: Text(e.toString(),
                   style: const TextStyle(color: Colors.white)),
               actions: [

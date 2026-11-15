@@ -1837,5 +1837,17 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "appearance": "Aparência",
+    "appearanceDescription": "Escolha a aparência do Satonero. O modo escuro usa um preto OLED profundo; o claro usa superfícies de alto contraste.",
+    "themeSystem": "Sistema",
+    "themeLight": "Claro",
+    "themeDark": "Escuro",
+    "cashuMint": "Mint Cashu",
+    "cashuMintDescription": "Escolha o mint Cashu que custodiará o escrow deste pedido.",
+    "selectCashuMint": "Selecionar mint",
+    "cashuEscrowMode": "Modo de escrow",
+    "escrowLightning": "Lightning",
+    "escrowCashu": "Cashu",
+    "cashuMintNotSelected": "Por favor, selecione um mint Cashu"
 }

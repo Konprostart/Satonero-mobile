@@ -25,6 +25,10 @@ class Order extends Equatable implements Payload {
   final int? createdAt;
   final int? expiresAt;
 
+  /// URL of the Cashu mint hosting the escrow (Cashu escrow mode only).
+  /// Null for Lightning orders.
+  final String? cashuMintUrl;
+
   const Order({
     this.id,
     required this.kind,
@@ -43,6 +47,7 @@ class Order extends Equatable implements Payload {
     this.buyerInvoice,
     this.createdAt = 0,
     this.expiresAt,
+    this.cashuMintUrl,
   });
 
   /// Value equality: OrderState.== compares its order payload, and identity
@@ -66,6 +71,7 @@ class Order extends Equatable implements Payload {
         buyerInvoice,
         createdAt,
         expiresAt,
+        cashuMintUrl,
       ];
 
   @override
@@ -87,6 +93,10 @@ class Order extends Equatable implements Payload {
     if (id != null) data[type]['id'] = id;
 
     if (buyerInvoice != null) data[type]['buyer_invoice'] = buyerInvoice;
+
+    // Omitted when null, matching the wire contract: a Lightning order never
+    // carries the field, and a Cashu order names exactly one mint.
+    if (cashuMintUrl != null) data[type]['cashu_mint_url'] = cashuMintUrl;
 
     data[type]['created_at'] = createdAt;
     data[type]['expires_at'] = expiresAt;
@@ -188,9 +198,8 @@ class Order extends Equatable implements Payload {
       return Order(
         id: parseOptionalStringField('id'),
         kind: OrderType.fromString(parseStringField('kind')),
-        status: statusRaw != null
-            ? Status.fromString(statusRaw)
-            : Status.pending,
+        status:
+            statusRaw != null ? Status.fromString(statusRaw) : Status.pending,
         amount: amount,
         fiatCode: parseStringField('fiat_code'),
         minAmount: minAmount,
@@ -205,6 +214,7 @@ class Order extends Equatable implements Payload {
         buyerInvoice: parseOptionalStringField('buyer_invoice'),
         createdAt: parseOptionalIntField('created_at'),
         expiresAt: parseOptionalIntField('expires_at'),
+        cashuMintUrl: parseOptionalStringField('cashu_mint_url'),
       );
     } catch (e) {
       throw FormatException('Failed to parse Order from JSON: $e');
@@ -222,9 +232,9 @@ class Order extends Equatable implements Payload {
       paymentMethod: event.paymentMethods.join(','),
       premium: event.premium as int,
       createdAt: event.createdAt as int,
-      expiresAt: event.expiresAt != null
-          ? int.tryParse(event.expiresAt!)
-          : null,
+      expiresAt:
+          event.expiresAt != null ? int.tryParse(event.expiresAt!) : null,
+      cashuMintUrl: event.cashuMintUrl,
     );
   }
 
@@ -245,6 +255,7 @@ class Order extends Equatable implements Payload {
       'buyerInvoice': buyerInvoice,
       'createdAt': createdAt,
       'expiresAt': expiresAt,
+      'cashuMintUrl': cashuMintUrl,
     };
   }
 
@@ -266,6 +277,7 @@ class Order extends Equatable implements Payload {
       buyerInvoice: map['buyerInvoice'] as String?,
       createdAt: map['createdAt'] as int?,
       expiresAt: map['expiresAt'] as int?,
+      cashuMintUrl: map['cashuMintUrl'] as String?,
     );
   }
 

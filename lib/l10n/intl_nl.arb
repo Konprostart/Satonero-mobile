@@ -1837,5 +1837,17 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "appearance": "Weergave",
+    "appearanceDescription": "Kies hoe Satonero eruitziet. Donker gebruikt diep OLED-zwart; licht gebruikt contrastrijke vlakken.",
+    "themeSystem": "Systeem",
+    "themeLight": "Licht",
+    "themeDark": "Donker",
+    "cashuMint": "Cashu-mint",
+    "cashuMintDescription": "Kies de Cashu-mint die de escrow van deze order bewaart.",
+    "selectCashuMint": "Mint selecteren",
+    "cashuEscrowMode": "Escrow-modus",
+    "escrowLightning": "Lightning",
+    "escrowCashu": "Cashu",
+    "cashuMintNotSelected": "Selecteer een Cashu-mint"
 }

@@ -2,11 +2,155 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Semantic color tokens for a Satonero theme.
+///
+/// Exposed through Flutter's `ThemeExtension` mechanism so a widget can resolve
+/// the correct color for the active [ThemeMode] via
+/// `Theme.of(context).extension<AppColors>()!` instead of hardcoding a palette.
+/// Both variants ship in this one file; the design intentionally stays a pure
+/// color system (no assets, no icons) so it never depends on third-party
+/// design code.
+@immutable
+class AppColors extends ThemeExtension<AppColors> {
+  const AppColors({
+    required this.scaffoldBackground,
+    required this.cardBackground,
+    required this.inputBackground,
+    required this.navBarBackground,
+    required this.textPrimary,
+    required this.textSecondary,
+    required this.textInactive,
+    required this.divider,
+    required this.accent,
+    required this.lightningBlue,
+    required this.lightningYellow,
+  });
+
+  /// Main screen background. Deep OLED black in dark mode.
+  final Color scaffoldBackground;
+
+  /// Elevated surface color for cards and dialogs.
+  final Color cardBackground;
+
+  /// Field / embedded-control background.
+  final Color inputBackground;
+
+  /// Bottom navigation bar background.
+  final Color navBarBackground;
+
+  final Color textPrimary;
+  final Color textSecondary;
+  final Color textInactive;
+
+  /// Hairline separators (borders between cards / app bar / nav bar).
+  final Color divider;
+
+  /// Primary brand accent: Bitcoin orange.
+  final Color accent;
+
+  /// Lightning-network electric blue accent.
+  final Color lightningBlue;
+
+  /// Lightning-network yellow accent.
+  final Color lightningYellow;
+
+  /// High-contrast light palette.
+  static const AppColors light = AppColors(
+    scaffoldBackground: Color(0xFFF7F7F8),
+    cardBackground: Color(0xFFFFFFFF),
+    inputBackground: Color(0xFFEFEFF1),
+    navBarBackground: Color(0xFFFFFFFF),
+    textPrimary: Color(0xFF111114),
+    textSecondary: Color(0xFF4B4B52),
+    textInactive: Color(0xFF8A8A92),
+    divider: Color(0xFFE3E3E6),
+    accent: Color(0xFFF7931A),
+    lightningBlue: Color(0xFF2979FF),
+    lightningYellow: Color(0xFFF3CA29),
+  );
+
+  /// Deep OLED dark palette.
+  static const AppColors dark = AppColors(
+    scaffoldBackground: Color(0xFF000000),
+    cardBackground: Color(0xFF121212),
+    inputBackground: Color(0xFF1C1C1C),
+    navBarBackground: Color(0xFF0A0A0A),
+    textPrimary: Color(0xFFF9F8F1),
+    textSecondary: Color(0xFFCCCCCC),
+    textInactive: Color(0xFF8A8D98),
+    divider: Color(0xFF1F1F1F),
+    accent: Color(0xFFF7931A),
+    lightningBlue: Color(0xFF2979FF),
+    lightningYellow: Color(0xFFF3CA29),
+  );
+
+  @override
+  AppColors copyWith({
+    Color? scaffoldBackground,
+    Color? cardBackground,
+    Color? inputBackground,
+    Color? navBarBackground,
+    Color? textPrimary,
+    Color? textSecondary,
+    Color? textInactive,
+    Color? divider,
+    Color? accent,
+    Color? lightningBlue,
+    Color? lightningYellow,
+  }) {
+    return AppColors(
+      scaffoldBackground: scaffoldBackground ?? this.scaffoldBackground,
+      cardBackground: cardBackground ?? this.cardBackground,
+      inputBackground: inputBackground ?? this.inputBackground,
+      navBarBackground: navBarBackground ?? this.navBarBackground,
+      textPrimary: textPrimary ?? this.textPrimary,
+      textSecondary: textSecondary ?? this.textSecondary,
+      textInactive: textInactive ?? this.textInactive,
+      divider: divider ?? this.divider,
+      accent: accent ?? this.accent,
+      lightningBlue: lightningBlue ?? this.lightningBlue,
+      lightningYellow: lightningYellow ?? this.lightningYellow,
+    );
+  }
+
+  @override
+  AppColors lerp(AppColors? other, double t) {
+    if (other is! AppColors) return this;
+    return AppColors(
+      scaffoldBackground:
+          Color.lerp(scaffoldBackground, other.scaffoldBackground, t)!,
+      cardBackground: Color.lerp(cardBackground, other.cardBackground, t)!,
+      inputBackground: Color.lerp(inputBackground, other.inputBackground, t)!,
+      navBarBackground:
+          Color.lerp(navBarBackground, other.navBarBackground, t)!,
+      textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
+      textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
+      textInactive: Color.lerp(textInactive, other.textInactive, t)!,
+      divider: Color.lerp(divider, other.divider, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
+      lightningBlue: Color.lerp(lightningBlue, other.lightningBlue, t)!,
+      lightningYellow: Color.lerp(lightningYellow, other.lightningYellow, t)!,
+    );
+  }
+}
+
 class AppTheme {
-  // Original colors
+  // Brand accents
+  /// Bitcoin orange, the Satonero primary accent.
+  static const Color bitcoinOrange = Color(0xFFF7931A);
+
+  /// Kept as an alias so the ~100 existing `AppTheme.satoneroOrange` references
+  /// resolve to the Bitcoin orange identity without a mechanical rename.
+  static const Color satoneroOrange = bitcoinOrange;
+
+  /// Lightning electric blue accent.
+  static const Color lightningBlue = Color(0xFF2979FF);
+
+  /// Lightning yellow accent.
+  static const Color lightningYellow = Color(0xFFF3CA29);
+
+  // Original colors (dark palette)
   static const Color grey = Color(0xFFCCCCCC);
-  static const Color satoneroOrange = Color(0xFFFF9C24);
-  static const Color dark1 = Color(0xFF1D212C);
   static const Color grey2 = Color(0xFF92949A);
   static const Color yellow = Color(0xFFF3CA29);
 
@@ -14,17 +158,19 @@ class AppTheme {
   /// Use for: Cancel buttons, dispute buttons, sell actions, inactive states
   static const Color red1 = Color(0xFFD84D4D);
 
-  static const Color dark2 = Color(0xFF303544);
+  // Colors for backgrounds — deep OLED blacks.
+  static const Color dark1 = Color(0xFF0A0A0A);
+  static const Color dark2 = Color(0xFF1A1A1A);
   static const Color cream1 = Color(0xFFF9F8F1);
 
   // New colors
 
   // Colors for backgrounds
-  static const Color backgroundDark = Color(0xFF171A23); // Main dark background
-  static const Color backgroundCard = Color(0xFF1E2230);
-  static const Color backgroundInput = Color(0xFF252A3A);
-  static const Color backgroundInactive = Color(0xFF2A3042);
-  static const Color backgroundNavBar = Color(0xFF1A1F2C);
+  static const Color backgroundDark = Color(0xFF000000); // OLED main background
+  static const Color backgroundCard = Color(0xFF121212);
+  static const Color backgroundInput = Color(0xFF1C1C1C);
+  static const Color backgroundInactive = Color(0xFF1F1F1F);
+  static const Color backgroundNavBar = Color(0xFF0A0A0A);
 
   // Colors for text
   static const Color textPrimary = Colors.white;
@@ -51,13 +197,16 @@ class AppTheme {
 
   static const Color statusActive = satoneroOrange;
   static const Color statusInfo = Color.fromARGB(255, 42, 123, 214);
-  
+
   // Colors for role chips
-  static const Color createdByYouChip = Color(0xFF1565C0); // Colors.blue.shade700
-  static const Color takenByYouChip = Color(0xFF00796B);   // Colors.teal.shade700
-  static const Color premiumPositiveChip = Color(0xFF388E3C); // Colors.green.shade700
-  static const Color premiumNegativeChip = Color(0xFFC62828); // Colors.red.shade700
-  
+  static const Color createdByYouChip =
+      Color(0xFF1565C0); // Colors.blue.shade700
+  static const Color takenByYouChip = Color(0xFF00796B); // Colors.teal.shade700
+  static const Color premiumPositiveChip =
+      Color(0xFF388E3C); // Colors.green.shade700
+  static const Color premiumNegativeChip =
+      Color(0xFFC62828); // Colors.red.shade700
+
   // Colors for status chips
   static const Color statusPendingBackground = Color(0xFF854D0E);
   static const Color statusPendingText = Color(0xFFFCD34D);
@@ -71,11 +220,13 @@ class AppTheme {
   static const Color statusDisputeText = Color(0xFFFCA5A5);
   static const Color statusSettledBackground = Color(0xFF581C87);
   static const Color statusSettledText = Color(0xFFC084FC);
-  static const Color statusInactiveBackground = Color(0xFF1F2937); // Colors.grey.shade800
-  static const Color statusInactiveText = Color(0xFFD1D5DB);     // Colors.grey.shade300
-  
+  static const Color statusInactiveBackground =
+      Color(0xFF1F2937); // Colors.grey.shade800
+  static const Color statusInactiveText =
+      Color(0xFFD1D5DB); // Colors.grey.shade300
+
   // Text colors
-  static const Color secondaryText = Color(0xFFBDBDBD);  // Colors.grey.shade400
+  static const Color secondaryText = Color(0xFFBDBDBD); // Colors.grey.shade400
 
   // Padding  and margin constants
   static const EdgeInsets smallPadding = EdgeInsets.all(8.0);
@@ -91,35 +242,77 @@ class AppTheme {
   /// Built once: `ThemeData` is immutable and this is read on every rebuild
   /// of the root `MaterialApp`, the drawer and the reactive buttons. A getter
   /// rebuilt the whole theme (plus ~20 `GoogleFonts` descriptors) per access.
-  static final ThemeData theme = _buildTheme();
+  static final ThemeData darkTheme = _buildDarkTheme();
+  static final ThemeData lightTheme = _buildLightTheme();
 
-  static ThemeData _buildTheme() {
+  /// Backward-compatible alias: the app's default (dark) theme.
+  static final ThemeData theme = darkTheme;
+
+  /// Resolves the semantic palette for the active theme. Falls back to the
+  /// dark tokens when the extension is absent (e.g. in a bare test harness).
+  static AppColors colors(BuildContext context) =>
+      Theme.of(context).extension<AppColors>() ?? AppColors.dark;
+
+  static ThemeData _buildDarkTheme() {
+    return _buildThemeData(
+      brightness: Brightness.dark,
+      colors: AppColors.dark,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+    );
+  }
+
+  static ThemeData _buildLightTheme() {
+    return _buildThemeData(
+      brightness: Brightness.light,
+      colors: AppColors.light,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+    );
+  }
+
+  static ThemeData _buildThemeData({
+    required Brightness brightness,
+    required AppColors colors,
+    required SystemUiOverlayStyle systemOverlayStyle,
+  }) {
+    final isDark = brightness == Brightness.dark;
     return ThemeData(
-      hoverColor: dark1,
+      brightness: brightness,
+      extensions: [colors],
+      hoverColor: isDark ? dark1 : Colors.black12,
       primaryColor: satoneroOrange,
-      scaffoldBackgroundColor: backgroundDark,
-      appBarTheme: const AppBarTheme(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: satoneroOrange,
+        brightness: brightness,
+      ),
+      scaffoldBackgroundColor: colors.scaffoldBackground,
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
+        systemOverlayStyle: systemOverlayStyle,
+        iconTheme: IconThemeData(color: colors.textPrimary),
+        titleTextStyle: GoogleFonts.robotoCondensed(
+          fontWeight: FontWeight.w600,
+          fontSize: 20.0,
+          color: colors.textPrimary,
+        ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: dark2,
+        backgroundColor: colors.cardBackground,
         titleTextStyle: GoogleFonts.robotoCondensed(
           fontWeight: FontWeight.bold,
           fontSize: 20.0,
-          color: cream1,
+          color: colors.textPrimary,
         ),
         contentTextStyle: GoogleFonts.robotoCondensed(
           fontWeight: FontWeight.w400,
           fontSize: 16.0,
-          color: grey,
+          color: colors.textSecondary,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      textTheme: _buildTextTheme(),
+      textTheme: _buildTextTheme(colors.textPrimary),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.black,
@@ -160,37 +353,39 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         ),
       ),
-      inputDecorationTheme: const InputDecorationTheme(
-        labelStyle: TextStyle(color: grey),
+      inputDecorationTheme: InputDecorationTheme(
+        labelStyle: TextStyle(color: colors.textSecondary),
+        hintStyle: TextStyle(color: colors.textInactive),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: grey),
+          borderSide: BorderSide(color: colors.textSecondary),
         ),
-        focusedBorder: UnderlineInputBorder(
+        focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: satoneroOrange),
         ),
       ),
       cardTheme: CardThemeData(
-        color: dark2,
+        color: colors.cardBackground,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: dark2),
+          side: BorderSide(color: colors.divider),
         ),
       ),
-      iconTheme: const IconThemeData(
-        color: cream1,
+      iconTheme: IconThemeData(
+        color: colors.textPrimary,
         size: 24.0,
       ),
       listTileTheme: ListTileThemeData(
         titleTextStyle: TextStyle(
-          color: grey,
+          color: colors.textSecondary,
           fontFamily: GoogleFonts.robotoCondensed().fontFamily,
         ),
       ),
+      dividerColor: colors.divider,
     );
   }
 
-  static TextTheme _buildTextTheme() {
+  static TextTheme _buildTextTheme(Color textColor) {
     return GoogleFonts.robotoCondensedTextTheme(
       const TextTheme(
         displayLarge: TextStyle(
@@ -234,33 +429,33 @@ class AppTheme {
         ),
       ),
     ).apply(
-      bodyColor: cream1,
-      displayColor: cream1,
+      bodyColor: textColor,
+      displayColor: textColor,
     );
   }
 
   // helpers for shadows
   static final List<BoxShadow> cardShadow = List.unmodifiable([
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.7),
-          blurRadius: 15,
-          offset: const Offset(0, 5),
-          spreadRadius: -3,
-        ),
-        BoxShadow(
-          color: Colors.white.withValues(alpha: 0.07),
-          blurRadius: 1,
-          offset: const Offset(0, -1),
-          spreadRadius: 0,
-        ),
-      ]);
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.7),
+      blurRadius: 15,
+      offset: const Offset(0, 5),
+      spreadRadius: -3,
+    ),
+    BoxShadow(
+      color: Colors.white.withValues(alpha: 0.07),
+      blurRadius: 1,
+      offset: const Offset(0, -1),
+      spreadRadius: 0,
+    ),
+  ]);
 
   static final List<BoxShadow> buttonShadow = List.unmodifiable([
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.4),
-          blurRadius: 6,
-          offset: const Offset(0, 3),
-          spreadRadius: -2,
-        ),
-      ]);
+    BoxShadow(
+      color: Colors.black.withValues(alpha: 0.4),
+      blurRadius: 6,
+      offset: const Offset(0, 3),
+      spreadRadius: -2,
+    ),
+  ]);
 }

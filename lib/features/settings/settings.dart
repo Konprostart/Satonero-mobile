@@ -1,5 +1,24 @@
 import 'package:equatable/equatable.dart';
 
+/// User-facing theme preference, persisted independently of Flutter so the
+/// settings model stays free of a `material` import and unit-testable.
+enum ThemeModePreference { system, light, dark }
+
+/// Parses [name] into a [ThemeModePreference]; defaults to [ThemeModePreference.dark]
+/// (the app's historical default) for null or unrecognized values.
+ThemeModePreference themeModePreferenceFromName(String? name) {
+  switch (name) {
+    case 'system':
+      return ThemeModePreference.system;
+    case 'light':
+      return ThemeModePreference.light;
+    case 'dark':
+      return ThemeModePreference.dark;
+    default:
+      return ThemeModePreference.dark;
+  }
+}
+
 class Settings extends Equatable {
   final bool fullPrivacyMode;
   final bool privateMode;
@@ -16,6 +35,7 @@ class Settings extends Equatable {
   final bool notificationSoundEnabled;
   final bool notificationVibrationEnabled;
   final int? sessionExpirationHours;
+  final ThemeModePreference themeMode;
 
   const Settings({
     required this.relays,
@@ -32,6 +52,7 @@ class Settings extends Equatable {
     this.notificationSoundEnabled = true,
     this.notificationVibrationEnabled = true,
     this.sessionExpirationHours,
+    this.themeMode = ThemeModePreference.dark,
   });
 
   /// Value equality (deep on lists): the relay sync rewrites settings twice
@@ -52,6 +73,7 @@ class Settings extends Equatable {
         notificationSoundEnabled,
         notificationVibrationEnabled,
         sessionExpirationHours,
+        themeMode,
       ];
 
   Settings copyWith({
@@ -71,6 +93,7 @@ class Settings extends Equatable {
     bool? notificationVibrationEnabled,
     int? sessionExpirationHours,
     bool clearSessionExpiration = false,
+    ThemeModePreference? themeMode,
   }) {
     return Settings(
       relays: relays ?? this.relays,
@@ -85,12 +108,16 @@ class Settings extends Equatable {
       blacklistedRelays: blacklistedRelays ?? this.blacklistedRelays,
       userRelays: userRelays ?? this.userRelays,
       isLoggingEnabled: isLoggingEnabled ?? this.isLoggingEnabled,
-      pushNotificationsEnabled: pushNotificationsEnabled ?? this.pushNotificationsEnabled,
-      notificationSoundEnabled: notificationSoundEnabled ?? this.notificationSoundEnabled,
-      notificationVibrationEnabled: notificationVibrationEnabled ?? this.notificationVibrationEnabled,
+      pushNotificationsEnabled:
+          pushNotificationsEnabled ?? this.pushNotificationsEnabled,
+      notificationSoundEnabled:
+          notificationSoundEnabled ?? this.notificationSoundEnabled,
+      notificationVibrationEnabled:
+          notificationVibrationEnabled ?? this.notificationVibrationEnabled,
       sessionExpirationHours: clearSessionExpiration
           ? null
           : (sessionExpirationHours ?? this.sessionExpirationHours),
+      themeMode: themeMode ?? this.themeMode,
     );
   }
 
@@ -108,6 +135,7 @@ class Settings extends Equatable {
         'notificationSoundEnabled': notificationSoundEnabled,
         'notificationVibrationEnabled': notificationVibrationEnabled,
         'sessionExpirationHours': sessionExpirationHours,
+        'themeMode': themeMode.name,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -119,14 +147,20 @@ class Settings extends Equatable {
       defaultFiatCode: json['defaultFiatCode'],
       selectedLanguage: json['selectedLanguage'],
       defaultLightningAddress: json['defaultLightningAddress'],
-      blacklistedRelays: (json['blacklistedRelays'] as List<dynamic>?)?.cast<String>() ?? [],
+      blacklistedRelays:
+          (json['blacklistedRelays'] as List<dynamic>?)?.cast<String>() ?? [],
       userRelays: (json['userRelays'] as List<dynamic>?)
-          ?.cast<Map<String, dynamic>>() ?? [],
+              ?.cast<Map<String, dynamic>>() ??
+          [],
       isLoggingEnabled: false,
-      pushNotificationsEnabled: json['pushNotificationsEnabled'] as bool? ?? true,
-      notificationSoundEnabled: json['notificationSoundEnabled'] as bool? ?? true,
-      notificationVibrationEnabled: json['notificationVibrationEnabled'] as bool? ?? true,
+      pushNotificationsEnabled:
+          json['pushNotificationsEnabled'] as bool? ?? true,
+      notificationSoundEnabled:
+          json['notificationSoundEnabled'] as bool? ?? true,
+      notificationVibrationEnabled:
+          json['notificationVibrationEnabled'] as bool? ?? true,
       sessionExpirationHours: json['sessionExpirationHours'] as int?,
+      themeMode: themeModePreferenceFromName(json['themeMode'] as String?),
     );
   }
 }

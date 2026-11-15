@@ -81,16 +81,18 @@ class SatoneroAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = AppTheme.colors(context);
+
     // Determine what to show in the leading position
     Widget? leading;
     if (showBackButton) {
       leading = Padding(
         padding: const EdgeInsets.only(left: 16.0),
         child: IconButton(
-          icon: const HeroIcon(
+          icon: HeroIcon(
             HeroIcons.arrowLeft,
             style: HeroIconStyle.outline,
-            color: AppTheme.cream1,
+            color: colors.textPrimary,
             size: 28,
           ),
           onPressed: () => context.pop(),
@@ -100,10 +102,10 @@ class SatoneroAppBar extends ConsumerWidget implements PreferredSizeWidget {
       leading = Padding(
         padding: const EdgeInsets.only(left: 16.0),
         child: IconButton(
-          icon: const HeroIcon(
+          icon: HeroIcon(
             HeroIcons.bars3,
             style: HeroIconStyle.outline,
-            color: AppTheme.cream1,
+            color: colors.textPrimary,
             size: 28,
           ),
           onPressed: () => ref.read(drawerProvider.notifier).toggleDrawer(),
@@ -119,7 +121,7 @@ class SatoneroAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ];
 
     return AppBar(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: colors.scaffoldBackground,
       elevation: 0,
       leadingWidth: 70,
       title: title ?? const AnimatedSatoneroLogo(),
@@ -129,7 +131,7 @@ class SatoneroAppBar extends ConsumerWidget implements PreferredSizeWidget {
         preferredSize: const Size.fromHeight(1.0),
         child: Container(
           height: 1.0,
-          color: Colors.white.withValues(alpha: 0.1),
+          color: colors.divider,
         ),
       ),
       leading: leading,

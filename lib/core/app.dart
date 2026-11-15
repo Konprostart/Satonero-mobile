@@ -15,6 +15,7 @@ import 'package:satonero_mobile/services/lifecycle_manager.dart';
 import 'package:satonero_mobile/features/notifications/services/background_notification_service.dart';
 import 'package:satonero_mobile/shared/providers/app_init_provider.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
+import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/shared/notifiers/locale_notifier.dart';
 import 'package:satonero_mobile/features/community/providers/community_selector_provider.dart';
 import 'package:satonero_mobile/features/walkthrough/providers/first_run_provider.dart';
@@ -156,6 +157,8 @@ class _SatoneroAppState extends ConsumerState<SatoneroApp> {
         final systemLocale = ref.watch(systemLocaleProvider);
         final selectedLanguage =
             ref.watch(settingsProvider.select((s) => s.selectedLanguage));
+        final themePreference =
+            ref.watch(settingsProvider.select((s) => s.themeMode));
 
         // Initialize router if not already done
         _router ??= createRouter(ref);
@@ -194,8 +197,13 @@ class _SatoneroAppState extends ConsumerState<SatoneroApp> {
 
         return MaterialApp.router(
           title: 'Satonero',
-          theme: AppTheme.theme,
-          darkTheme: AppTheme.theme,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: switch (themePreference) {
+            ThemeModePreference.light => ThemeMode.light,
+            ThemeModePreference.dark => ThemeMode.dark,
+            ThemeModePreference.system => ThemeMode.system,
+          },
           routerConfig: _router!,
           builder: (context, child) {
             return NwcNotificationListener(
@@ -242,8 +250,8 @@ class _SatoneroAppState extends ConsumerState<SatoneroApp> {
         );
       },
       loading: () => MaterialApp(
-        theme: AppTheme.theme,
-        darkTheme: AppTheme.theme,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         home: Scaffold(
           backgroundColor: AppTheme.dark1,
           body: const Center(child: CircularProgressIndicator()),

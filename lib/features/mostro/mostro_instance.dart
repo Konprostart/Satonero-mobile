@@ -15,6 +15,12 @@ enum BondPolicy { unsupported, disabled, enabled }
 /// Which side of a trade a bond applies to.
 enum BondApplyTo { take, make, both }
 
+/// The escrow backend a node runs, advertised via the kind-38385 `escrow_mode`
+/// tag. A node runs exactly one: Lightning (LND hold invoices) or Cashu
+/// (NUT-11 P2PK escrow on the mint each order names). A missing tag means a
+/// legacy daemon that predates Cashu escrow, treated as Lightning.
+enum EscrowMode { lightning, cashu }
+
 class MostroInstance {
   final String pubKey;
   final String mostroVersion;
@@ -60,6 +66,18 @@ class MostroInstance {
   final double? bondSlashNodeSharePct;
   final int? bondPayoutClaimWindowDays;
 
+  /// Escrow backend advertised by the node. See [EscrowMode].
+  final EscrowMode escrowMode;
+
+  /// The Cashu mints a maker may choose for an order's escrow. Empty when the
+  /// node is open (`mint_urls = []`) and accepts any mint, or when the node is
+  /// in Lightning mode.
+  final List<String> cashuMintUrls;
+
+  /// Seller-recovery locktime floor (days) a Cashu escrow token must carry.
+  /// Null when the node is in Lightning mode.
+  final int? cashuEscrowLocktimeDays;
+
   MostroInstance(
     this.pubKey,
     this.mostroVersion,
@@ -90,6 +108,9 @@ class MostroInstance {
     this.bondBaseAmountSats,
     this.bondSlashNodeSharePct,
     this.bondPayoutClaimWindowDays,
+    this.escrowMode = EscrowMode.lightning,
+    this.cashuMintUrls = const [],
+    this.cashuEscrowLocktimeDays,
   });
 
   factory MostroInstance.fromEvent(NostrEvent event) {
@@ -123,6 +144,9 @@ class MostroInstance {
       bondBaseAmountSats: event.bondBaseAmountSats,
       bondSlashNodeSharePct: event.bondSlashNodeSharePct,
       bondPayoutClaimWindowDays: event.bondPayoutClaimWindowDays,
+      escrowMode: event.escrowMode,
+      cashuMintUrls: event.cashuMintUrls,
+      cashuEscrowLocktimeDays: event.cashuEscrowLocktimeDays,
     );
   }
 }
@@ -229,8 +253,8 @@ extension MostroInstanceExtensions on NostrEvent {
   /// other than `"true"` or `"false"` (case-insensitive) so malformed data
   /// is not silently collapsed into a valid policy state.
   bool? get bondSlashOnWaitingTimeout {
-    final raw = _getOptionalTagValue('bond_slash_on_waiting_timeout')
-        ?.toLowerCase();
+    final raw =
+        _getOptionalTagValue('bond_slash_on_waiting_timeout')?.toLowerCase();
     if (raw == 'true') return true;
     if (raw == 'false') return false;
     return null;
@@ -269,5 +293,40 @@ extension MostroInstanceExtensions on NostrEvent {
     final value = raw == null ? null : int.tryParse(raw);
     if (value == null) return null;
     return value > 0 ? value : null;
+  }
+
+  /// Every value of a repeated tag (the daemon emits one `cashu_mint_url`
+  /// tag per mint), trimmed and filtered of blanks. Single-value tags also
+  /// work through this helper.
+  List<String> _getTagValues(String key) {
+    final result = <String>[];
+    for (final t in tags ?? const <List<String>>[]) {
+      if (t.isNotEmpty && t[0] == key && t.length > 1) {
+        final value = t[1].trim();
+        if (value.isNotEmpty) result.add(value);
+      }
+    }
+    return result;
+  }
+
+  /// Escrow backend. The daemon treats a missing `escrow_mode` tag as
+  /// Lightning, so any value other than `"cashu"` resolves to
+  /// [EscrowMode.lightning] (defensive default for malformed payloads).
+  EscrowMode get escrowMode {
+    final raw = _getOptionalTagValue('escrow_mode')?.toLowerCase();
+    return raw == 'cashu' ? EscrowMode.cashu : EscrowMode.lightning;
+  }
+
+  /// The mints a maker may choose. Empty on a Lightning node or on an open
+  /// Cashu node that accepts any mint.
+  List<String> get cashuMintUrls => _getTagValues('cashu_mint_url');
+
+  /// Seller-recovery locktime floor in days. Non-negative and unparseable
+  /// values yield `null`.
+  int? get cashuEscrowLocktimeDays {
+    final raw = _getOptionalTagValue('cashu_escrow_locktime_days');
+    final value = raw == null ? null : int.tryParse(raw);
+    if (value == null) return null;
+    return value >= 0 ? value : null;
   }
 }

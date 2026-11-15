@@ -46,6 +46,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppTheme.colors(context);
+
     // Listen to settings changes and update controllers
     ref.listen<Settings>(settingsProvider, (previous, next) {
       if (previous?.defaultLightningAddress != next.defaultLightningAddress) {
@@ -61,20 +63,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon:
-              const HeroIcon(HeroIcons.arrowLeft, color: AppTheme.textPrimary),
+          icon: HeroIcon(HeroIcons.arrowLeft, color: colors.textPrimary),
           onPressed: () => context.pop(),
         ).withAutomationId(AutomationIds.appBarBack),
         title: Text(
           S.of(context)!.settings,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: colors.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: colors.scaffoldBackground,
       body: Column(
         children: [
           Expanded(
@@ -88,6 +89,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Appearance Card
+                  _buildAppearanceCard(context),
+                  const SizedBox(height: 16),
+
                   // Language Card
                   _buildLanguageCard(context),
                   const SizedBox(height: 16),
@@ -136,6 +141,81 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  Widget _buildAppearanceCard(BuildContext context) {
+    final colors = AppTheme.colors(context);
+    final themeMode = ref.watch(settingsProvider.select((s) => s.themeMode));
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.cardBackground,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.divider),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(LucideIcons.sunMoon,
+                    color: AppTheme.lightningBlue, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  S.of(context)!.appearance,
+                  style: TextStyle(
+                    color: colors.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              S.of(context)!.appearanceDescription,
+              style: TextStyle(
+                color: colors.textSecondary,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<ThemeModePreference>(
+                segments: [
+                  ButtonSegment(
+                    value: ThemeModePreference.system,
+                    label: Text(S.of(context)!.themeSystem),
+                    icon: const Icon(LucideIcons.monitor, size: 16),
+                  ),
+                  ButtonSegment(
+                    value: ThemeModePreference.light,
+                    label: Text(S.of(context)!.themeLight),
+                    icon: const Icon(LucideIcons.sun, size: 16),
+                  ),
+                  ButtonSegment(
+                    value: ThemeModePreference.dark,
+                    label: Text(S.of(context)!.themeDark),
+                    icon: const Icon(LucideIcons.moon, size: 16),
+                  ),
+                ],
+                selected: {themeMode},
+                showSelectedIcon: false,
+                onSelectionChanged: (selection) {
+                  ref
+                      .read(settingsProvider.notifier)
+                      .updateThemeMode(selection.first);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildPrivateModeCard(BuildContext context) {
     final settings = ref.watch(settingsProvider);
 
@@ -152,26 +232,40 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(LucideIcons.shield, color: AppTheme.activeColor, size: 24),
+                const Icon(LucideIcons.shield,
+                    color: AppTheme.activeColor, size: 24),
                 const SizedBox(width: 12),
                 Text(S.of(context)!.privateModeTitle,
-                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.w600)),
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600)),
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () => _showPrivateModeInfo(context),
-                  child: const Icon(Icons.help_outline, color: AppTheme.textSecondary, size: 20),
+                  child: const Icon(Icons.help_outline,
+                      color: AppTheme.textSecondary, size: 20),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             Text(S.of(context)!.privateModeDescription,
-                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w500)),
+                style: const TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500)),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(settings.privateMode ? S.of(context)!.privateModeOn : S.of(context)!.privateModeOff,
-                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w500)),
+                Text(
+                    settings.privateMode
+                        ? S.of(context)!.privateModeOn
+                        : S.of(context)!.privateModeOff,
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500)),
                 Switch(
                   value: settings.privateMode,
                   onChanged: (value) async {
@@ -180,14 +274,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         context: context,
                         builder: (dialogContext) => AlertDialog(
                           title: Text(S.of(context)!.privateModeTitle),
-                          content: Text(S.of(context)!.privateModeDisableWarning),
+                          content:
+                              Text(S.of(context)!.privateModeDisableWarning),
                           actions: [
                             TextButton(
-                              onPressed: () => Navigator.of(dialogContext).pop(false),
+                              onPressed: () =>
+                                  Navigator.of(dialogContext).pop(false),
                               child: Text(S.of(context)!.cancel),
                             ),
                             TextButton(
-                              onPressed: () => Navigator.of(dialogContext).pop(true),
+                              onPressed: () =>
+                                  Navigator.of(dialogContext).pop(true),
                               child: Text(S.of(context)!.privateModeClose),
                             ),
                           ],
@@ -195,7 +292,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                       if (confirmed != true) return;
                     }
-                    await ref.read(settingsProvider.notifier).updatePrivateMode(value);
+                    await ref
+                        .read(settingsProvider.notifier)
+                        .updatePrivateMode(value);
                   },
                 ),
               ],
@@ -205,7 +304,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               settings.privateMode
                   ? S.of(context)!.privateModeStatusOn
                   : S.of(context)!.privateModeStatusOff,
-              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+              style:
+                  const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
             ),
           ],
         ),
@@ -228,7 +328,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context)!.privateModeClose)),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(S.of(context)!.privateModeClose)),
         ],
       ),
     );

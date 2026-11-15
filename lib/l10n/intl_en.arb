@@ -1849,5 +1849,17 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "appearance": "Appearance",
+    "appearanceDescription": "Choose how Satonero looks. Dark uses a deep OLED black; Light uses high-contrast surfaces.",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "cashuMint": "Cashu mint",
+    "cashuMintDescription": "Choose the Cashu mint that will hold this order's escrow.",
+    "selectCashuMint": "Select mint",
+    "cashuEscrowMode": "Escrow mode",
+    "escrowLightning": "Lightning",
+    "escrowCashu": "Cashu",
+    "cashuMintNotSelected": "Please select a Cashu mint"
 }

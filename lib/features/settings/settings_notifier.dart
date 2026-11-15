@@ -31,7 +31,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
     _unregisterPushTokens = unregisterTokens;
   }
 
-  SettingsNotifier(this._prefs, {this.hasActiveSessions}) : super(_defaultSettings());
+  SettingsNotifier(this._prefs, {this.hasActiveSessions})
+      : super(_defaultSettings());
 
   @override
   bool updateShouldNotify(Settings old, Settings current) => old != current;
@@ -129,6 +130,12 @@ class SettingsNotifier extends StateNotifier<Settings> {
   Future<void> updateSelectedLanguage(String? newValue) async {
     state = state.copyWith(selectedLanguage: newValue);
     await _saveToPrefs();
+  }
+
+  Future<void> updateThemeMode(ThemeModePreference newValue) async {
+    state = state.copyWith(themeMode: newValue);
+    await _saveToPrefs();
+    logger.i('Theme mode changed to ${newValue.name}');
   }
 
   Future<void> updateDefaultLightningAddress(String? newValue) async {

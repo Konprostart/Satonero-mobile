@@ -18,6 +18,7 @@ class BottomNavBar extends ConsumerWidget {
     final int chatCount = ref.watch(chatCountProvider);
     final int orderNotificationCount =
         ref.watch(orderBookNotificationCountProvider);
+    final colors = AppTheme.colors(context);
 
     return SafeArea(
       top: false,
@@ -26,10 +27,10 @@ class BottomNavBar extends ConsumerWidget {
         width: double.infinity,
         height: 80,
         decoration: BoxDecoration(
-          color: AppTheme.backgroundNavBar,
+          color: colors.navBarBackground,
           border: Border(
             top: BorderSide(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: colors.divider,
               width: 1,
             ),
           ),
@@ -74,9 +75,10 @@ class BottomNavBar extends ConsumerWidget {
       BuildContext context, IconData icon, String label, int index,
       {int? notificationCount}) {
     bool isActive = _isActive(context, index);
+    final colors = AppTheme.colors(context);
 
-    Color iconColor = isActive ? AppTheme.activeColor : Colors.white;
-    Color textColor = isActive ? AppTheme.activeColor : Colors.white;
+    Color iconColor = isActive ? AppTheme.activeColor : colors.textPrimary;
+    Color textColor = isActive ? AppTheme.activeColor : colors.textPrimary;
 
     return Expanded(
       child: Semantics(

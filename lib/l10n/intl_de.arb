@@ -1792,5 +1792,17 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "appearance": "Erscheinungsbild",
+    "appearanceDescription": "Wähle das Aussehen von Satonero. Der dunkle Modus verwendet ein tiefes OLED-Schwarz; der helle Modus kontrastreiche Flächen.",
+    "themeSystem": "System",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "cashuMint": "Cashu-Mint",
+    "cashuMintDescription": "Wähle das Cashu-Mint, das den Escrow dieser Order verwahrt.",
+    "selectCashuMint": "Mint auswählen",
+    "cashuEscrowMode": "Escrow-Modus",
+    "escrowLightning": "Lightning",
+    "escrowCashu": "Cashu",
+    "cashuMintNotSelected": "Bitte wähle ein Cashu-Mint"
 }
