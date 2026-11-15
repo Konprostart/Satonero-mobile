@@ -48,8 +48,8 @@ class TradeDetailScreen extends ConsumerWidget {
     // book cache only holds the last 48h, so it must not gate the whole screen.
     final orderPayload = tradeState.order;
     if (orderPayload == null) {
-      return const Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+      return Scaffold(
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         body: Center(child: CircularProgressIndicator()),
       );
     }
@@ -60,7 +60,7 @@ class TradeDetailScreen extends ConsumerWidget {
     final isCreator = _isUserCreator(session, tradeState);
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: OrderAppBar(title: S.of(context)!.orderDetailsTitle),
       body: Builder(
         builder: (context) {
@@ -307,7 +307,7 @@ class TradeDetailScreen extends ConsumerWidget {
       key: const Key('bondPayoutClaimButton'),
       onPressed: () => context.push('/bond_payout/$orderId'),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.satoneroOrange,
+        backgroundColor: AppTheme.colors(context).accent,
       ),
       child: Text(S.of(context)!.addBondInvoiceButton),
     );
@@ -372,7 +372,7 @@ class TradeDetailScreen extends ConsumerWidget {
               widgets.add(_buildNostrButton(
                 S.of(context)!.payInvoiceButton,
                 action: actions.Action.payInvoice,
-                backgroundColor: AppTheme.satoneroOrange,
+                backgroundColor: AppTheme.colors(context).accent,
                 onPressed: () => context.push('/pay_invoice/$orderId'),
               ));
             }
@@ -385,7 +385,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.payBondButton,
               action: actions.Action.payBondInvoice,
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               onPressed: () => context.push('/pay_bond/$orderId'),
             ));
           }
@@ -400,7 +400,7 @@ class TradeDetailScreen extends ConsumerWidget {
                   ? S.of(context)!.collectSatsButton
                   : S.of(context)!.addInvoiceButton,
               action: actions.Action.addInvoice,
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               onPressed: () => context.push('/add_invoice/$orderId'),
             ));
           }
@@ -411,7 +411,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.fiatSentButton,
               action: actions.Action.fiatSent,
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               onPressed: () => ref
                   .read(orderNotifierProvider(orderId).notifier)
                   .sendFiatSent(),
@@ -444,13 +444,13 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.release.toUpperCase(),
               action: actions.Action.release,
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               controller: buttonController,
               onPressed: () async {
                 final result = await showDialog<bool>(
                   context: context,
                   builder: (dialogContext) => AlertDialog(
-                    backgroundColor: AppTheme.backgroundCard,
+                    backgroundColor: AppTheme.colors(context).cardBackground,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                       side: BorderSide(
@@ -458,16 +458,16 @@ class TradeDetailScreen extends ConsumerWidget {
                     ),
                     title: Text(
                       S.of(context)!.releaseTradeDialogTitle,
-                      style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     content: Text(
                       S.of(context)!.areYouSureRelease,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 14,
                         height: 1.5,
                       ),
@@ -477,8 +477,8 @@ class TradeDetailScreen extends ConsumerWidget {
                         onPressed: () => Navigator.of(dialogContext).pop(false),
                         child: Text(
                           S.of(context)!.no,
-                          style: const TextStyle(
-                            color: AppTheme.textSecondary,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textSecondary,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
@@ -492,7 +492,7 @@ class TradeDetailScreen extends ConsumerWidget {
                               .releaseOrder();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.activeColor,
+                          backgroundColor: AppTheme.colors(context).accent,
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -526,7 +526,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.takeSell,
               action: actions.Action.takeSell,
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               onPressed: () => context.push('/take_sell/$orderId'),
             ));
           }
@@ -537,7 +537,7 @@ class TradeDetailScreen extends ConsumerWidget {
             widgets.add(_buildNostrButton(
               S.of(context)!.takeBuy,
               action: actions.Action.takeBuy,
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               onPressed: () => context.push('/take_buy/$orderId'),
             ));
           }
@@ -562,7 +562,7 @@ class TradeDetailScreen extends ConsumerWidget {
           widgets.add(_buildNostrButton(
             S.of(context)!.completePurchaseButton,
             action: actions.Action.purchaseCompleted,
-            backgroundColor: AppTheme.satoneroOrange,
+            backgroundColor: AppTheme.colors(context).accent,
             onPressed: () => ref
                 .read(orderNotifierProvider(orderId).notifier)
                 .releaseOrder(),
@@ -579,7 +579,7 @@ class TradeDetailScreen extends ConsumerWidget {
           widgets.add(_buildNostrButton(
             S.of(context)!.rate.toUpperCase(),
             action: actions.Action.rate,
-            backgroundColor: AppTheme.satoneroOrange,
+            backgroundColor: AppTheme.colors(context).accent,
             onPressed: () => context.push('/rate_user/$orderId'),
           ));
           break;
@@ -655,23 +655,23 @@ class TradeDetailScreen extends ConsumerWidget {
         final result = await showDialog<bool>(
           context: context,
           builder: (dialogContext) => AlertDialog(
-            backgroundColor: AppTheme.backgroundCard,
+            backgroundColor: AppTheme.colors(context).cardBackground,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             ),
             title: Text(
               S.of(context)!.cancelTradeDialogTitle,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
             content: Text(
               cancelMessage,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
                 height: 1.5,
               ),
@@ -681,8 +681,8 @@ class TradeDetailScreen extends ConsumerWidget {
                 onPressed: () => Navigator.of(dialogContext).pop(false),
                 child: Text(
                   S.of(context)!.no,
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -693,7 +693,7 @@ class TradeDetailScreen extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () => Navigator.of(dialogContext).pop(true),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.activeColor,
+                  backgroundColor: AppTheme.colors(context).accent,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -720,7 +720,7 @@ class TradeDetailScreen extends ConsumerWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.red1,
+        backgroundColor: AppTheme.colors(context).danger,
         foregroundColor: Colors.white,
       ),
       child: Text(buttonText),
@@ -736,23 +736,23 @@ class TradeDetailScreen extends ConsumerWidget {
         final result = await showDialog<bool>(
           context: context,
           builder: (dialogContext) => AlertDialog(
-            backgroundColor: AppTheme.backgroundCard,
+            backgroundColor: AppTheme.colors(context).cardBackground,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             ),
             title: Text(
               S.of(context)!.disputeTradeDialogTitle,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
             content: Text(
               S.of(context)!.disputeTradeDialogContent,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
                 height: 1.5,
               ),
@@ -762,8 +762,8 @@ class TradeDetailScreen extends ConsumerWidget {
                 onPressed: () => Navigator.of(dialogContext).pop(false),
                 child: Text(
                   S.of(context)!.no,
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -772,7 +772,7 @@ class TradeDetailScreen extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () => Navigator.of(dialogContext).pop(true),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.activeColor,
+                  backgroundColor: AppTheme.colors(context).accent,
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -801,13 +801,13 @@ class TradeDetailScreen extends ConsumerWidget {
               SnackBarHelper.showTopSnackBar(
                 context,
                 S.of(context)!.disputeCreatedSuccessfully,
-                backgroundColor: AppTheme.satoneroOrange,
+                backgroundColor: AppTheme.colors(context).accent,
               );
             } else if (context.mounted) {
               SnackBarHelper.showTopSnackBar(
                 context,
                 S.of(context)!.disputeCreationFailed,
-                backgroundColor: AppTheme.red1,
+                backgroundColor: AppTheme.colors(context).danger,
               );
             }
           } catch (e) {
@@ -815,14 +815,14 @@ class TradeDetailScreen extends ConsumerWidget {
               SnackBarHelper.showTopSnackBar(
                 context,
                 S.of(context)!.disputeCreationErrorWithMessage(e.toString()),
-                backgroundColor: AppTheme.red1,
+                backgroundColor: AppTheme.colors(context).danger,
               );
             }
           }
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.red1,
+        backgroundColor: AppTheme.colors(context).danger,
         foregroundColor: Colors.white,
       ),
       child: Text(S.of(context)!.disputeButton),
@@ -835,7 +835,7 @@ class TradeDetailScreen extends ConsumerWidget {
         context.push('/chat_room/$orderId');
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.satoneroOrange,
+        backgroundColor: AppTheme.colors(context).accent,
       ),
       child: Text(S.of(context)!.contactButton),
     );
@@ -847,7 +847,7 @@ class TradeDetailScreen extends ConsumerWidget {
         context.push('/dispute_details/$disputeId');
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppTheme.satoneroOrange,
+        backgroundColor: AppTheme.colors(context).accent,
       ),
       child: Text(S.of(context)!.viewDisputeButton),
     );
@@ -926,8 +926,8 @@ class TradeDetailScreen extends ConsumerWidget {
     return OutlinedButton(
       onPressed: () => context.go('/order_book'),
       style: OutlinedButton.styleFrom(
-        foregroundColor: AppTheme.satoneroOrange,
-        side: const BorderSide(color: AppTheme.satoneroOrange),
+        foregroundColor: AppTheme.colors(context).accent,
+        side: BorderSide(color: AppTheme.colors(context).accent),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         minimumSize: const Size(120, 48),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -937,7 +937,7 @@ class TradeDetailScreen extends ConsumerWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
-          color: AppTheme.satoneroOrange,
+          color: AppTheme.colors(context).accent,
         ),
       ),
     );

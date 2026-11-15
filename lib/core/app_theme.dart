@@ -20,10 +20,34 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.textPrimary,
     required this.textSecondary,
     required this.textInactive,
+    required this.textSubtle,
     required this.divider,
     required this.accent,
     required this.lightningBlue,
     required this.lightningYellow,
+    required this.sell,
+    required this.danger,
+    required this.info,
+    required this.purple,
+    required this.warning,
+    required this.statusPendingBackground,
+    required this.statusPendingText,
+    required this.statusWaitingBackground,
+    required this.statusWaitingText,
+    required this.statusActiveBackground,
+    required this.statusActiveText,
+    required this.statusSuccessBackground,
+    required this.statusSuccessText,
+    required this.statusDisputeBackground,
+    required this.statusDisputeText,
+    required this.statusSettledBackground,
+    required this.statusSettledText,
+    required this.statusInactiveBackground,
+    required this.statusInactiveText,
+    required this.createdByYouChip,
+    required this.takenByYouChip,
+    required this.premiumPositiveChip,
+    required this.premiumNegativeChip,
   });
 
   /// Main screen background. Deep OLED black in dark mode.
@@ -42,6 +66,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color textSecondary;
   final Color textInactive;
 
+  /// Low-emphasis text (timestamps, hints). White60 / black54.
+  final Color textSubtle;
+
   /// Hairline separators (borders between cards / app bar / nav bar).
   final Color divider;
 
@@ -54,6 +81,43 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Lightning-network yellow accent.
   final Color lightningYellow;
 
+  /// Sell / negative-action accent.
+  final Color sell;
+
+  /// Error and destructive-action red.
+  final Color danger;
+
+  /// Informational blue.
+  final Color info;
+
+  /// Decorative / interactive purple accent.
+  final Color purple;
+
+  /// Warning amber (darkened in light mode for contrast).
+  final Color warning;
+
+  // Order status chip pairs (background + foreground).
+  final Color statusPendingBackground;
+  final Color statusPendingText;
+  final Color statusWaitingBackground;
+  final Color statusWaitingText;
+  final Color statusActiveBackground;
+  final Color statusActiveText;
+  final Color statusSuccessBackground;
+  final Color statusSuccessText;
+  final Color statusDisputeBackground;
+  final Color statusDisputeText;
+  final Color statusSettledBackground;
+  final Color statusSettledText;
+  final Color statusInactiveBackground;
+  final Color statusInactiveText;
+
+  // Role / premium chips (white text on a saturated fill, same in both modes).
+  final Color createdByYouChip;
+  final Color takenByYouChip;
+  final Color premiumPositiveChip;
+  final Color premiumNegativeChip;
+
   /// High-contrast light palette.
   static const AppColors light = AppColors(
     scaffoldBackground: Color(0xFFF7F7F8),
@@ -63,10 +127,34 @@ class AppColors extends ThemeExtension<AppColors> {
     textPrimary: Color(0xFF111114),
     textSecondary: Color(0xFF4B4B52),
     textInactive: Color(0xFF8A8A92),
+    textSubtle: Color(0x8A000000),
     divider: Color(0xFFE3E3E6),
     accent: Color(0xFFF7931A),
     lightningBlue: Color(0xFF2979FF),
     lightningYellow: Color(0xFFF3CA29),
+    sell: Color(0xFFC62828),
+    danger: Color(0xFFC62828),
+    info: Color(0xFF1565C0),
+    purple: Color(0xFF5E35B1),
+    warning: Color(0xFFB8860B),
+    statusPendingBackground: Color(0xFFFEF3C7),
+    statusPendingText: Color(0xFF92400E),
+    statusWaitingBackground: Color(0xFFFFEDD5),
+    statusWaitingText: Color(0xFF9A3412),
+    statusActiveBackground: Color(0xFFDBEAFE),
+    statusActiveText: Color(0xFF1E40AF),
+    statusSuccessBackground: Color(0xFFD1FAE5),
+    statusSuccessText: Color(0xFF065F46),
+    statusDisputeBackground: Color(0xFFFEE2E2),
+    statusDisputeText: Color(0xFF991B1B),
+    statusSettledBackground: Color(0xFFF3E8FF),
+    statusSettledText: Color(0xFF6B21A8),
+    statusInactiveBackground: Color(0xFFE5E7EB),
+    statusInactiveText: Color(0xFF374151),
+    createdByYouChip: Color(0xFF1565C0),
+    takenByYouChip: Color(0xFF00796B),
+    premiumPositiveChip: Color(0xFF388E3C),
+    premiumNegativeChip: Color(0xFFC62828),
   );
 
   /// Deep OLED dark palette.
@@ -78,10 +166,34 @@ class AppColors extends ThemeExtension<AppColors> {
     textPrimary: Color(0xFFF9F8F1),
     textSecondary: Color(0xFFCCCCCC),
     textInactive: Color(0xFF8A8D98),
+    textSubtle: Color(0x99FFFFFF),
     divider: Color(0xFF1F1F1F),
     accent: Color(0xFFF7931A),
     lightningBlue: Color(0xFF2979FF),
     lightningYellow: Color(0xFFF3CA29),
+    sell: Color(0xFFFF8A8A),
+    danger: Color(0xFFEF6A6A),
+    info: Color(0xFF2A7BD6),
+    purple: Color(0xFF7856AF),
+    warning: Color(0xFFF3CA29),
+    statusPendingBackground: Color(0xFF854D0E),
+    statusPendingText: Color(0xFFFCD34D),
+    statusWaitingBackground: Color(0xFF7C2D12),
+    statusWaitingText: Color(0xFFFED7AA),
+    statusActiveBackground: Color(0xFF1E3A8A),
+    statusActiveText: Color(0xFF93C5FD),
+    statusSuccessBackground: Color(0xFF065F46),
+    statusSuccessText: Color(0xFF6EE7B7),
+    statusDisputeBackground: Color(0xFF7F1D1D),
+    statusDisputeText: Color(0xFFFCA5A5),
+    statusSettledBackground: Color(0xFF581C87),
+    statusSettledText: Color(0xFFC084FC),
+    statusInactiveBackground: Color(0xFF1F2937),
+    statusInactiveText: Color(0xFFD1D5DB),
+    createdByYouChip: Color(0xFF1565C0),
+    takenByYouChip: Color(0xFF00796B),
+    premiumPositiveChip: Color(0xFF388E3C),
+    premiumNegativeChip: Color(0xFFC62828),
   );
 
   @override
@@ -93,10 +205,34 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? textPrimary,
     Color? textSecondary,
     Color? textInactive,
+    Color? textSubtle,
     Color? divider,
     Color? accent,
     Color? lightningBlue,
     Color? lightningYellow,
+    Color? sell,
+    Color? danger,
+    Color? info,
+    Color? purple,
+    Color? warning,
+    Color? statusPendingBackground,
+    Color? statusPendingText,
+    Color? statusWaitingBackground,
+    Color? statusWaitingText,
+    Color? statusActiveBackground,
+    Color? statusActiveText,
+    Color? statusSuccessBackground,
+    Color? statusSuccessText,
+    Color? statusDisputeBackground,
+    Color? statusDisputeText,
+    Color? statusSettledBackground,
+    Color? statusSettledText,
+    Color? statusInactiveBackground,
+    Color? statusInactiveText,
+    Color? createdByYouChip,
+    Color? takenByYouChip,
+    Color? premiumPositiveChip,
+    Color? premiumNegativeChip,
   }) {
     return AppColors(
       scaffoldBackground: scaffoldBackground ?? this.scaffoldBackground,
@@ -106,10 +242,41 @@ class AppColors extends ThemeExtension<AppColors> {
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
       textInactive: textInactive ?? this.textInactive,
+      textSubtle: textSubtle ?? this.textSubtle,
       divider: divider ?? this.divider,
       accent: accent ?? this.accent,
       lightningBlue: lightningBlue ?? this.lightningBlue,
       lightningYellow: lightningYellow ?? this.lightningYellow,
+      sell: sell ?? this.sell,
+      danger: danger ?? this.danger,
+      info: info ?? this.info,
+      purple: purple ?? this.purple,
+      warning: warning ?? this.warning,
+      statusPendingBackground:
+          statusPendingBackground ?? this.statusPendingBackground,
+      statusPendingText: statusPendingText ?? this.statusPendingText,
+      statusWaitingBackground:
+          statusWaitingBackground ?? this.statusWaitingBackground,
+      statusWaitingText: statusWaitingText ?? this.statusWaitingText,
+      statusActiveBackground:
+          statusActiveBackground ?? this.statusActiveBackground,
+      statusActiveText: statusActiveText ?? this.statusActiveText,
+      statusSuccessBackground:
+          statusSuccessBackground ?? this.statusSuccessBackground,
+      statusSuccessText: statusSuccessText ?? this.statusSuccessText,
+      statusDisputeBackground:
+          statusDisputeBackground ?? this.statusDisputeBackground,
+      statusDisputeText: statusDisputeText ?? this.statusDisputeText,
+      statusSettledBackground:
+          statusSettledBackground ?? this.statusSettledBackground,
+      statusSettledText: statusSettledText ?? this.statusSettledText,
+      statusInactiveBackground:
+          statusInactiveBackground ?? this.statusInactiveBackground,
+      statusInactiveText: statusInactiveText ?? this.statusInactiveText,
+      createdByYouChip: createdByYouChip ?? this.createdByYouChip,
+      takenByYouChip: takenByYouChip ?? this.takenByYouChip,
+      premiumPositiveChip: premiumPositiveChip ?? this.premiumPositiveChip,
+      premiumNegativeChip: premiumNegativeChip ?? this.premiumNegativeChip,
     );
   }
 
@@ -126,13 +293,53 @@ class AppColors extends ThemeExtension<AppColors> {
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textInactive: Color.lerp(textInactive, other.textInactive, t)!,
+      textSubtle: Color.lerp(textSubtle, other.textSubtle, t)!,
       divider: Color.lerp(divider, other.divider, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
       lightningBlue: Color.lerp(lightningBlue, other.lightningBlue, t)!,
       lightningYellow: Color.lerp(lightningYellow, other.lightningYellow, t)!,
+      sell: Color.lerp(sell, other.sell, t)!,
+      danger: Color.lerp(danger, other.danger, t)!,
+      info: Color.lerp(info, other.info, t)!,
+      purple: Color.lerp(purple, other.purple, t)!,
+      warning: Color.lerp(warning, other.warning, t)!,
+      statusPendingBackground: Color.lerp(
+          statusPendingBackground, other.statusPendingBackground, t)!,
+      statusPendingText:
+          Color.lerp(statusPendingText, other.statusPendingText, t)!,
+      statusWaitingBackground: Color.lerp(
+          statusWaitingBackground, other.statusWaitingBackground, t)!,
+      statusWaitingText:
+          Color.lerp(statusWaitingText, other.statusWaitingText, t)!,
+      statusActiveBackground:
+          Color.lerp(statusActiveBackground, other.statusActiveBackground, t)!,
+      statusActiveText: Color.lerp(statusActiveText, other.statusActiveText, t)!,
+      statusSuccessBackground: Color.lerp(
+          statusSuccessBackground, other.statusSuccessBackground, t)!,
+      statusSuccessText:
+          Color.lerp(statusSuccessText, other.statusSuccessText, t)!,
+      statusDisputeBackground: Color.lerp(
+          statusDisputeBackground, other.statusDisputeBackground, t)!,
+      statusDisputeText:
+          Color.lerp(statusDisputeText, other.statusDisputeText, t)!,
+      statusSettledBackground: Color.lerp(
+          statusSettledBackground, other.statusSettledBackground, t)!,
+      statusSettledText:
+          Color.lerp(statusSettledText, other.statusSettledText, t)!,
+      statusInactiveBackground: Color.lerp(
+          statusInactiveBackground, other.statusInactiveBackground, t)!,
+      statusInactiveText:
+          Color.lerp(statusInactiveText, other.statusInactiveText, t)!,
+      createdByYouChip: Color.lerp(createdByYouChip, other.createdByYouChip, t)!,
+      takenByYouChip: Color.lerp(takenByYouChip, other.takenByYouChip, t)!,
+      premiumPositiveChip:
+          Color.lerp(premiumPositiveChip, other.premiumPositiveChip, t)!,
+      premiumNegativeChip:
+          Color.lerp(premiumNegativeChip, other.premiumNegativeChip, t)!,
     );
   }
 }
+
 
 class AppTheme {
   // Brand accents

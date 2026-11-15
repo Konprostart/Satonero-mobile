@@ -32,7 +32,7 @@ class OrderListItem extends ConsumerWidget {
         order.premium != null ? double.tryParse(order.premium!) ?? 0.0 : 0.0;
     final isPremiumPositive = premiumValue >= 0;
     final premiumColor =
-        isPremiumPositive ? AppTheme.buyColor : AppTheme.sellColor;
+        isPremiumPositive ? AppTheme.colors(context).accent : AppTheme.colors(context).sell;
     final premiumText = premiumValue == 0
         ? "(0%)"
         : isPremiumPositive
@@ -54,7 +54,7 @@ class OrderListItem extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
+        color: AppTheme.colors(context).scaffoldBackground,
         borderRadius: BorderRadius.circular(20),
         boxShadow: AppTheme.cardShadow,
         border: Border.all(
@@ -95,14 +95,14 @@ class OrderListItem extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundCard,
+                        color: AppTheme.colors(context).cardBackground,
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: _labelShadow,
                       ),
                       child: Text(
                         orderLabel,
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -130,10 +130,10 @@ class OrderListItem extends ConsumerWidget {
                         // Large amount with more contrast
                         Text(
                           order.fiatAmount.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppTheme.colors(context).textPrimary,
                             height: 1.1,
                           ),
                         ),
@@ -142,9 +142,9 @@ class OrderListItem extends ConsumerWidget {
                         // Currency code and flag
                         Text(
                           '${order.currency ?? "CUP"} ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
-                            color: Colors.white,
+                            color: AppTheme.colors(context).textPrimary,
                           ),
                         ),
                         Text(
@@ -167,7 +167,7 @@ class OrderListItem extends ConsumerWidget {
                               S.of(context)!.forSats(order.amount!),
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white70,
+                                color: AppTheme.colors(context).textSecondary,
                                 fontWeight: FontWeight.w500,
                               ),
                             )
@@ -176,7 +176,7 @@ class OrderListItem extends ConsumerWidget {
                                   S.of(context)!.marketPrice,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white70,
+                                    color: AppTheme.colors(context).textSecondary,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 )
@@ -186,7 +186,7 @@ class OrderListItem extends ConsumerWidget {
                                       '${S.of(context)!.marketPrice} ',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Colors.white70,
+                                        color: AppTheme.colors(context).textSecondary,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -212,7 +212,7 @@ class OrderListItem extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundCard,
+                  color: AppTheme.colors(context).cardBackground,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: _innerShadow,
                 ),
@@ -228,8 +228,8 @@ class OrderListItem extends ConsumerWidget {
                         order.paymentMethods.isNotEmpty
                             ? order.paymentMethods.join(', ')
                             : 'tm',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -246,7 +246,7 @@ class OrderListItem extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundCard,
+                  color: AppTheme.colors(context).cardBackground,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: _innerShadow,
                 ),
@@ -274,8 +274,8 @@ class OrderListItem extends ConsumerWidget {
           children: [
             Text(
               rating.toStringAsFixed(1),
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
@@ -296,14 +296,14 @@ class OrderListItem extends ConsumerWidget {
                   ExcludeSemantics(
                     child: Icon(
                       Icons.person_2_outlined,
-                      color: Colors.white,
+                      color: AppTheme.colors(context).textPrimary,
                       size: 14,
                     ),
                   ),
                   Text(
                     reviews.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -321,14 +321,14 @@ class OrderListItem extends ConsumerWidget {
                   ExcludeSemantics(
                     child: Icon(
                       Icons.calendar_today_outlined,
-                      color: Colors.white,
+                      color: AppTheme.colors(context).textPrimary,
                       size: 14,
                     ),
                   ),
                   Text(
                     daysOld.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -388,8 +388,8 @@ class _TimeAgoText extends ConsumerWidget {
       order.timeAgoWithLocale(
               Localizations.localeOf(context).languageCode) ??
           S.of(context)!.hoursAgo('9'),
-      style: const TextStyle(
-        color: Colors.white60,
+      style: TextStyle(
+        color: AppTheme.colors(context).textSubtle,
         fontSize: 14,
       ),
     );

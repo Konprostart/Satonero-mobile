@@ -20,7 +20,7 @@ class TradesScreen extends ConsumerWidget {
     final tradesAsync = ref.watch(filteredTradesWithOrderStateProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: const SatoneroAppBar(),
       body: CustomDrawerOverlay(
         child: RefreshIndicator(
@@ -40,9 +40,9 @@ class TradesScreen extends ConsumerWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundDark,
+                        color: AppTheme.colors(context).scaffoldBackground,
                         border: Border(
-                          bottom: BorderSide(color: Colors.white24, width: 0.5),
+                          bottom: BorderSide(color: AppTheme.colors(context).divider, width: 0.5),
                         ),
                       ),
                       child: Row(
@@ -50,8 +50,8 @@ class TradesScreen extends ConsumerWidget {
                         children: [
                           Text(
                             S.of(context)!.myTrades,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppTheme.colors(context).textPrimary,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -64,8 +64,8 @@ class TradesScreen extends ConsumerWidget {
                     // Content area with dark background
                     Expanded(
                       child: Container(
-                        decoration: const BoxDecoration(
-                          color: AppTheme.backgroundDark,
+                        decoration: BoxDecoration(
+                          color: AppTheme.colors(context).scaffoldBackground,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
@@ -80,7 +80,7 @@ class TradesScreen extends ConsumerWidget {
                                     _buildOrderList(context, trades),
                                 loading: () => Center(
                                   child: CircularProgressIndicator(
-                                    color: AppTheme.cream1,
+                                    color: AppTheme.colors(context).textPrimary,
                                   ),
                                 ),
                                 error: (error, stackTrace) => Center(
@@ -95,8 +95,8 @@ class TradesScreen extends ConsumerWidget {
                                       const SizedBox(height: 16),
                                       Text(
                                         S.of(context)!.errorLoadingTrades,
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: AppTheme.colors(context).textPrimary,
                                           fontSize: 16,
                                         ),
                                         textAlign: TextAlign.center,
@@ -135,7 +135,7 @@ class TradesScreen extends ConsumerWidget {
       return Center(
         child: Text(
           S.of(context)!.noTradesAvailable,
-          style: const TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
       );
     }

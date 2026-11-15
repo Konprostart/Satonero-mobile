@@ -24,7 +24,7 @@ class PeerHeader extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
+        color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 0.5),
         ),
@@ -39,8 +39,8 @@ class PeerHeader extends ConsumerWidget {
               children: [
                 Text(
                   handle,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -48,7 +48,7 @@ class PeerHeader extends ConsumerWidget {
                 Text(
                   S.of(context)!.youAreChatting(handle),
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),

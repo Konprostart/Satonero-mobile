@@ -41,7 +41,7 @@ class _BondPayoutInvoiceScreenState
         ref.watch(mostroMessageHistoryProvider(widget.orderId));
 
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: OrderAppBar(title: s.addBondInvoiceTitle),
       body: historyAsync.when(
         data: (messages) {
@@ -67,7 +67,7 @@ class _BondPayoutInvoiceScreenState
                 padding: const EdgeInsets.all(24),
                 child: Text(
                   s.addBondInvoiceMessage,
-                  style: const TextStyle(color: AppTheme.textPrimary),
+                  style: TextStyle(color: AppTheme.colors(context).textPrimary),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -105,7 +105,7 @@ class _BondPayoutInvoiceScreenState
           return Center(
             child: Text(
               s.errorLoadingBondPayout,
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: TextStyle(color: AppTheme.colors(context).textPrimary),
             ),
           );
         },
@@ -130,8 +130,8 @@ class _BondPayoutInvoiceScreenState
         children: [
           Text(
             s.addBondInvoiceSubmitLine(request.order.amount.toString()),
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -139,16 +139,16 @@ class _BondPayoutInvoiceScreenState
           const SizedBox(height: 12),
           Text(
             s.addBondInvoiceWonLine(request.order.id ?? widget.orderId),
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             s.addBondInvoiceDeadline(formattedDeadline),
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
@@ -156,19 +156,19 @@ class _BondPayoutInvoiceScreenState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundInput,
+              color: AppTheme.colors(context).inputBackground,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             ),
             child: TextFormField(
               key: const Key('bondPayoutInvoiceTextField'),
               controller: _invoiceController,
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: TextStyle(color: AppTheme.colors(context).textPrimary),
               decoration: InputDecoration(
                 labelText: s.addBondInvoiceInputLabel,
-                labelStyle: const TextStyle(color: AppTheme.textSecondary),
+                labelStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                 hintText: s.addBondInvoiceInputHint,
-                hintStyle: const TextStyle(color: AppTheme.textSecondary),
+                hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                 border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -184,7 +184,7 @@ class _BondPayoutInvoiceScreenState
               key: const Key('bondPayoutSubmitButton'),
               onPressed: _submitting ? null : _onSubmit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.activeColor,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -227,8 +227,8 @@ class _BondPayoutInvoiceScreenState
         children: [
           Text(
             message,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -240,7 +240,7 @@ class _BondPayoutInvoiceScreenState
               key: const Key('bondPayoutCloseButton'),
               onPressed: () => context.go('/'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.activeColor,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),

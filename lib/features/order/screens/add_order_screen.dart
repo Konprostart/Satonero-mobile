@@ -280,9 +280,9 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -291,7 +291,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
         title: Text(
           S.of(context)!.creatingNewOrder,
           style: TextStyle(
-            color: Colors.white,
+            color: AppTheme.colors(context).textPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -388,10 +388,10 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                             title: _orderType == OrderType.buy
                                 ? S.of(context)!.enterSatsAmountBuy
                                 : S.of(context)!.enterSatsAmountSell,
-                            icon: const Icon(Icons.bolt,
-                                color: AppTheme.yellow, size: 18),
+                            icon: Icon(Icons.bolt,
+                                color: AppTheme.colors(context).lightningYellow, size: 18),
                             iconBackgroundColor:
-                                AppTheme.yellow.withValues(alpha: 0.3),
+                                AppTheme.colors(context).lightningYellow.withValues(alpha: 0.3),
                             child: TextFormField(
                               controller: _satsAmountController,
                               style: const TextStyle(color: Colors.white),
@@ -620,7 +620,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              backgroundColor: AppTheme.backgroundCard,
+              backgroundColor: AppTheme.colors(context).cardBackground,
               title:
                   Text(l10n.error, style: const TextStyle(color: Colors.white)),
               content: Text(e.toString(),
@@ -629,7 +629,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(S.of(context)!.ok,
-                      style: const TextStyle(color: AppTheme.satoneroOrange)),
+                      style: TextStyle(color: AppTheme.colors(context).accent)),
                 ),
               ],
             ),

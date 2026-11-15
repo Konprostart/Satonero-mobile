@@ -13,8 +13,8 @@ class OrderTypeHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 0),
-      decoration: const BoxDecoration(
-        color: AppTheme.backgroundCard,
+      decoration: BoxDecoration(
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
@@ -27,8 +27,8 @@ class OrderTypeHeader extends StatelessWidget {
               ? S.of(context)!.youWantToBuyBitcoin
               : S.of(context)!.youWantToSellBitcoin,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 16,
           ),
         ),

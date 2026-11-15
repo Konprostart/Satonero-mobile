@@ -43,14 +43,14 @@ class PaymentMethodsSection extends ConsumerWidget {
     return FormSection(
       title: S.of(context)!.paymentMethodsForCurrency(selectedFiatCode ?? ''),
       icon:
-          const Icon(Icons.credit_card, color: AppTheme.satoneroOrange, size: 18),
-      iconBackgroundColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
+          Icon(Icons.credit_card, color: AppTheme.colors(context).accent, size: 18),
+      iconBackgroundColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
       extraContent: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         child: TextField(
           key: const Key('paymentMethodField'),
           controller: customController,
-          style: const TextStyle(color: Colors.white, fontSize: 15),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 15),
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: S.of(context)!.enterCustomPaymentMethod,
@@ -137,10 +137,10 @@ class PaymentMethodsSection extends ConsumerWidget {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              backgroundColor: AppTheme.backgroundCard,
+              backgroundColor: AppTheme.colors(context).cardBackground,
               title: Text(
                 S.of(context)!.selectPaymentMethodsTitle,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 18),
               ),
               content: SizedBox(
                 width: double.maxFinite,
@@ -152,7 +152,7 @@ class PaymentMethodsSection extends ConsumerWidget {
                               title: Text(method,
                                   style: const TextStyle(color: Colors.white)),
                               value: dialogSelectedMethods.contains(method),
-                              activeColor: AppTheme.satoneroOrange,
+                              activeColor: AppTheme.colors(context).accent,
                               checkColor: Colors.black,
                               contentPadding: EdgeInsets.zero,
                               onChanged: (selected) {
@@ -174,8 +174,8 @@ class PaymentMethodsSection extends ConsumerWidget {
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     S.of(context)!.cancel,
-                    style: const TextStyle(
-                      color: AppTheme.textSecondary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textSecondary,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -187,7 +187,7 @@ class PaymentMethodsSection extends ConsumerWidget {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.activeColor,
+                    backgroundColor: AppTheme.colors(context).accent,
                     foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 24),

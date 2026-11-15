@@ -26,9 +26,9 @@ class WalletSettingsScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const HeroIcon(
+          icon: HeroIcon(
             HeroIcons.arrowLeft,
-            color: AppTheme.textPrimary,
+            color: AppTheme.colors(context).textPrimary,
           ),
           onPressed: () {
             if (context.canPop()) {
@@ -40,14 +40,14 @@ class WalletSettingsScreen extends ConsumerWidget {
         ),
         title: Text(
           S.of(context)!.walletSettings,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
           left: 16,
@@ -82,7 +82,7 @@ class WalletSettingsScreen extends ConsumerWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppTheme.backgroundCard,
+            color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
@@ -93,16 +93,16 @@ class WalletSettingsScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       LucideIcons.wallet,
-                      color: AppTheme.activeColor,
+                      color: AppTheme.colors(context).accent,
                       size: 24,
                     ),
                     const SizedBox(width: 12),
                     Text(
                       S.of(context)!.walletInfo,
-                      style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -115,7 +115,7 @@ class WalletSettingsScreen extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -126,8 +126,8 @@ class WalletSettingsScreen extends ConsumerWidget {
                     children: [
                       Text(
                         nwcState.walletAlias ?? S.of(context)!.wallet,
-                        style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -150,8 +150,8 @@ class WalletSettingsScreen extends ConsumerWidget {
                             nwcState.connectionHealthy
                                 ? S.of(context)!.walletConnected
                                 : S.of(context)!.nwcConnectionUnstable,
-                            style: const TextStyle(
-                              color: AppTheme.textSecondary,
+                            style: TextStyle(
+                              color: AppTheme.colors(context).textSecondary,
                               fontSize: 13,
                             ),
                           ),
@@ -200,12 +200,12 @@ class WalletSettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 48),
         child: Column(
           children: [
-            const CircularProgressIndicator(color: AppTheme.activeColor),
+            CircularProgressIndicator(color: AppTheme.colors(context).accent),
             const SizedBox(height: 16),
             Text(
               S.of(context)!.connecting,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 16,
               ),
             ),
@@ -222,7 +222,7 @@ class WalletSettingsScreen extends ConsumerWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppTheme.backgroundCard,
+            color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
@@ -233,16 +233,16 @@ class WalletSettingsScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       LucideIcons.wallet,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                       size: 24,
                     ),
                     const SizedBox(width: 12),
                     Text(
                       S.of(context)!.walletDisconnected,
-                      style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -252,8 +252,8 @@ class WalletSettingsScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Text(
                   S.of(context)!.connectWalletDescription,
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                     height: 1.5,
                   ),
@@ -296,7 +296,7 @@ class WalletSettingsScreen extends ConsumerWidget {
                     icon: const Icon(LucideIcons.plug, size: 18),
                     label: Text(S.of(context)!.connectWallet),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.activeColor,
+                      backgroundColor: AppTheme.colors(context).accent,
                       foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
@@ -317,23 +317,23 @@ class WalletSettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppTheme.backgroundCard,
+        backgroundColor: AppTheme.colors(context).cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         title: Text(
           S.of(context)!.disconnectWallet,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         content: Text(
           S.of(context)!.walletDisconnectConfirm,
-          style: const TextStyle(
-            color: AppTheme.textSecondary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textSecondary,
             fontSize: 14,
           ),
         ),
@@ -342,7 +342,7 @@ class WalletSettingsScreen extends ConsumerWidget {
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(
               S.of(context)!.cancel,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
           ),
           TextButton(

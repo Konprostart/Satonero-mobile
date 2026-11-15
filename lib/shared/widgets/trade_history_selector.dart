@@ -33,16 +33,16 @@ class TradeHistorySelector extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int>(
           value: displayValue,
           isExpanded: true,
-          dropdownColor: AppTheme.dark1,
-          style: const TextStyle(color: AppTheme.cream1),
-          icon: const Icon(Icons.arrow_drop_down, color: AppTheme.cream1),
+          dropdownColor: AppTheme.colors(context).cardBackground,
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
+          icon: Icon(Icons.arrow_drop_down, color: AppTheme.colors(context).textPrimary),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           items: _optionKeys.entries.map((entry) {
             final hours = entry.key;
@@ -53,16 +53,16 @@ class TradeHistorySelector extends ConsumerWidget {
               value: hours,
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.schedule,
-                    color: AppTheme.satoneroOrange,
+                    color: AppTheme.colors(context).accent,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     displayName,
-                    style: const TextStyle(
-                      color: AppTheme.cream1,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 16,
                     ),
                   ),
@@ -85,21 +85,21 @@ class TradeHistorySelector extends ConsumerWidget {
     showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppTheme.dark1,
+        backgroundColor: AppTheme.colors(context).cardBackground,
         title: Text(
           S.of(context)!.tradeHistory,
-          style: const TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           S.of(context)!.tradeHistoryInfoText,
-          style: const TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(
               S.of(context)!.cancel,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
           ),
           TextButton(
@@ -111,7 +111,7 @@ class TradeHistorySelector extends ConsumerWidget {
             },
             child: Text(
               S.of(context)!.confirm,
-              style: const TextStyle(color: AppTheme.satoneroOrange),
+              style: TextStyle(color: AppTheme.colors(context).accent),
             ),
           ),
         ],

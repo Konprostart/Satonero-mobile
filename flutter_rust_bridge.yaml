@@ -1,0 +1,15 @@
+# flutter_rust_bridge codegen config for the Cashu wallet bridge.
+#
+# The bridge is NOT generated yet (prep phase): the Dart `CashuWalletApi`
+# abstraction in lib/features/cashu/wallet/cashu_wallet_api.dart is what the app
+# codes against, and a future `CashuWalletFfi` will call the generated
+# functions below. Run once the Rust crate is wired:
+#
+#   flutter_rust_bridge_codegen generate
+#
+# License note: the generated Dart/Rust glue is MIT (flutter_rust_bridge is
+# MIT); the Cashu crypto it wraps comes from the CDK (MIT OR Apache-2.0).
+
+rust_input: crate::escrow
+rust_root: rust/
+dart_output: lib/features/cashu/wallet/bridge_generated.dart

@@ -210,20 +210,20 @@ class NotificationItem extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         title: Text(
           s.notification_bond_slashed_title,
-          style: const TextStyle(color: AppTheme.textPrimary),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           detail,
-          style: const TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.activeColor,
+              backgroundColor: AppTheme.colors(context).accent,
               foregroundColor: Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -245,21 +245,21 @@ class NotificationItem extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         title: Text(
           S.of(context)!.notificationDelete,
-          style: const TextStyle(color: AppTheme.textPrimary),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           S.of(context)!.confirmDeleteNotification,
-          style: const TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               S.of(context)!.cancel,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
           ),
           TextButton(
@@ -276,7 +276,7 @@ class NotificationItem extends ConsumerWidget {
             },
             child: Text(
               S.of(context)!.notificationDelete,
-              style: const TextStyle(color: AppTheme.statusError),
+              style: TextStyle(color: AppTheme.colors(context).danger),
             ),
           ),
         ],

@@ -67,7 +67,7 @@ class _NwcNotificationListenerState
         message =
             S.of(context)!.nwcNotificationPaymentReceived(formattedAmount);
         icon = LucideIcons.arrowDownCircle;
-        color = AppTheme.satoneroOrange;
+        color = AppTheme.colors(context).accent;
       case 'payment_sent':
         message = S.of(context)!.nwcNotificationPaymentSent(formattedAmount);
         icon = LucideIcons.arrowUpCircle;
@@ -85,8 +85,8 @@ class _NwcNotificationListenerState
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -94,7 +94,7 @@ class _NwcNotificationListenerState
             ),
           ],
         ),
-        backgroundColor: AppTheme.dark2,
+        backgroundColor: AppTheme.colors(context).inputBackground,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

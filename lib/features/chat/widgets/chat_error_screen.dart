@@ -35,17 +35,17 @@ class ChatErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.cream1),
+          icon: Icon(Icons.arrow_back, color: AppTheme.colors(context).textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           S.of(context)!.back,
-          style: const TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
       ),
       body: Center(
@@ -55,13 +55,13 @@ class ChatErrorScreen extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: AppTheme.textSecondary,
+              color: AppTheme.colors(context).textSecondary,
             ),
             const SizedBox(height: 16),
             Text(
               title,
               style: TextStyle(
-                color: AppTheme.textPrimary,
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -70,7 +70,7 @@ class ChatErrorScreen extends StatelessWidget {
             Text(
               subtitle,
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
               textAlign: TextAlign.center,

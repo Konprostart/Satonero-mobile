@@ -1849,5 +1849,17 @@
     "cashuEscrowMode": "Escrow-modus",
     "escrowLightning": "Lightning",
     "escrowCashu": "Cashu",
-    "cashuMintNotSelected": "Selecteer een Cashu-mint"
+    "cashuMintNotSelected": "Selecteer een Cashu-mint",
+    "cashuMintTrustNotice": "Je vertrouwt erop dat deze mint de escrow bewaart totdat de transactie is afgerond.",
+    "@cashuMintTrustNotice": {},
+    "escrowLocktimeLabel": "Escrow-locktime",
+    "@escrowLocktimeLabel": {},
+    "escrowLocktimeDays": "{count, plural, =1{1 dag} other{{count} dagen}}",
+    "@escrowLocktimeDays": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    }
 }

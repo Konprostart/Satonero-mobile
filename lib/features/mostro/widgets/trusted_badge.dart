@@ -11,13 +11,13 @@ class TrustedBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: AppTheme.activeColor.withValues(alpha: 0.2),
+        color: AppTheme.colors(context).accent.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         S.of(context)!.trusted,
-        style: const TextStyle(
-          color: AppTheme.activeColor,
+        style: TextStyle(
+          color: AppTheme.colors(context).accent,
           fontSize: 10,
           fontWeight: FontWeight.w600,
         ),

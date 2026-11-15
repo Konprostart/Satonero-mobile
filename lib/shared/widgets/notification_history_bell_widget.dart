@@ -77,10 +77,10 @@ class _NotificationBellWidgetState extends ConsumerState<NotificationBellWidget>
             return Transform.rotate(
               angle: shouldShowBackupReminder ? _shakeAnimation.value : 0,
               child: IconButton(
-                icon: const HeroIcon(
+                icon: HeroIcon(
                   HeroIcons.bell,
                   style: HeroIconStyle.outline,
-                  color: AppTheme.cream1,
+                  color: AppTheme.colors(context).textPrimary,
                   size: 28,
                 ),
                 onPressed: () => context.push('/notifications'),
@@ -130,7 +130,7 @@ class _NotificationBadge extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: BoxDecoration(
-          color: AppTheme.statusPendingBackground,
+          color: AppTheme.colors(context).statusPendingBackground,
           borderRadius: BorderRadius.circular(8),
         ),
         constraints: const BoxConstraints(
@@ -139,8 +139,8 @@ class _NotificationBadge extends StatelessWidget {
         ),
         child: Text(
           count > 99 ? '99+' : count.toString(),
-          style: const TextStyle(
-            color: AppTheme.statusPendingText,
+          style: TextStyle(
+            color: AppTheme.colors(context).statusPendingText,
             fontSize: 8,
             fontWeight: FontWeight.bold,
           ),

@@ -43,8 +43,8 @@ class BackupReminderNotification extends ConsumerWidget {
                     // Title
                     Text(
                       S.of(context)!.backupAccountReminder,
-                      style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         height: 1.2,
@@ -54,8 +54,8 @@ class BackupReminderNotification extends ConsumerWidget {
                     // Message
                     Text(
                       S.of(context)!.backupAccountReminderMessage,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 14,
                         height: 1.4,
                       ),
@@ -65,9 +65,9 @@ class BackupReminderNotification extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               // Navigation arrow
-              const Icon(
+              Icon(
                 Icons.arrow_forward_ios,
-                color: AppTheme.textSecondary,
+                color: AppTheme.colors(context).textSecondary,
                 size: 16,
               ),
             ],

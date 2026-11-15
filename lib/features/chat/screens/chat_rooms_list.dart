@@ -23,7 +23,7 @@ class ChatRoomsScreen extends ConsumerWidget {
     final currentTab = ref.watch(chatTabProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: const SatoneroAppBar(),
       body: CustomDrawerOverlay(
         child: Stack(
@@ -35,7 +35,7 @@ class ChatRoomsScreen extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundDark,
+                    color: AppTheme.colors(context).scaffoldBackground,
                     border: Border(
                       bottom: BorderSide(
                           color: Colors.white.withValues(alpha: 0.1),
@@ -44,8 +44,8 @@ class ChatRoomsScreen extends ConsumerWidget {
                   ),
                   child: Text(
                     S.of(context)?.chat ?? 'Chat',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -58,7 +58,7 @@ class ChatRoomsScreen extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundDark,
+                    color: AppTheme.colors(context).scaffoldBackground,
                     border: Border(
                       bottom: BorderSide(
                           color: Colors.white.withValues(alpha: 0.1),
@@ -68,7 +68,7 @@ class ChatRoomsScreen extends ConsumerWidget {
                   child: Text(
                     _getTabDescription(context, currentTab),
                     style: TextStyle(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                       fontSize: 14,
                     ),
                   ),
@@ -88,7 +88,7 @@ class ChatRoomsScreen extends ConsumerWidget {
                       }
                     },
                     child: Container(
-                      color: AppTheme.backgroundDark,
+                      color: AppTheme.colors(context).scaffoldBackground,
                       child: currentTab == ChatTabType.messages
                           ? _buildBody(context, ref)
                           : const DisputesList(),

@@ -27,19 +27,19 @@ class AboutScreen extends ConsumerWidget {
         elevation: 0,
         leading: IconButton(
           icon:
-              const HeroIcon(HeroIcons.arrowLeft, color: AppTheme.textPrimary),
+              HeroIcon(HeroIcons.arrowLeft, color: AppTheme.colors(context).textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(
           S.of(context)!.about,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       body: Column(
         children: [
           Expanded(
@@ -92,7 +92,7 @@ class AboutScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -103,16 +103,16 @@ class AboutScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.smartphone,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.appInformation,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -123,6 +123,7 @@ class AboutScreen extends ConsumerWidget {
 
             // Version
             _buildInfoRow(
+              context,
               S.of(context)!.version,
               appVersion,
             ),
@@ -140,6 +141,7 @@ class AboutScreen extends ConsumerWidget {
 
             // Commit Hash
             _buildInfoRow(
+              context,
               S.of(context)!.commitHash,
               gitCommit,
             ),
@@ -156,7 +158,7 @@ class AboutScreen extends ConsumerWidget {
   Widget _buildDocumentationCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -167,16 +169,16 @@ class AboutScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.book,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.documentation,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -224,7 +226,7 @@ class AboutScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -235,16 +237,16 @@ class AboutScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.server,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.mostroNode,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -256,8 +258,8 @@ class AboutScreen extends ConsumerWidget {
             // General Info Section
             Text(
               S.of(context)!.generalInfo,
-              style: const TextStyle(
-                color: AppTheme.activeColor,
+              style: TextStyle(
+                color: AppTheme.colors(context).accent,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -319,8 +321,8 @@ class AboutScreen extends ConsumerWidget {
             // Technical Details Section
             Text(
               S.of(context)!.technicalDetails,
-              style: const TextStyle(
-                color: AppTheme.activeColor,
+              style: TextStyle(
+                color: AppTheme.colors(context).accent,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -402,8 +404,8 @@ class AboutScreen extends ConsumerWidget {
             // Lightning Network Section
             Text(
               S.of(context)!.lightningNetwork,
-              style: const TextStyle(
-                color: AppTheme.activeColor,
+              style: TextStyle(
+                color: AppTheme.colors(context).accent,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -473,7 +475,7 @@ class AboutScreen extends ConsumerWidget {
   Widget _buildLoadingCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -484,16 +486,16 @@ class AboutScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.info,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.mostroNode,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -501,9 +503,9 @@ class AboutScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 20),
-            const Center(
+            Center(
               child: CircularProgressIndicator(
-                color: AppTheme.activeColor,
+                color: AppTheme.colors(context).accent,
               ),
             ),
           ],
@@ -594,8 +596,8 @@ class AboutScreen extends ConsumerWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: AppTheme.activeColor,
+          style: TextStyle(
+            color: AppTheme.colors(context).accent,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -604,12 +606,12 @@ class AboutScreen extends ConsumerWidget {
         InkWell(
           onTap: () => _showInfoDialog(context, title, explanation),
           borderRadius: BorderRadius.circular(12),
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.all(8.0),
             child: Icon(
               Icons.info_outline,
               size: 16,
-              color: AppTheme.activeColor,
+              color: AppTheme.colors(context).accent,
             ),
           ),
         ),
@@ -652,7 +654,7 @@ class AboutScreen extends ConsumerWidget {
     return '${_formatPercentNumber(s, fraction)}%';
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(BuildContext context, String label, String value) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -660,8 +662,8 @@ class AboutScreen extends ConsumerWidget {
           flex: 2,
           child: Text(
             label,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
@@ -671,8 +673,8 @@ class AboutScreen extends ConsumerWidget {
           flex: 3,
           child: Text(
             value,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -692,8 +694,8 @@ class AboutScreen extends ConsumerWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -701,12 +703,12 @@ class AboutScreen extends ConsumerWidget {
             InkWell(
               onTap: () => _showInfoDialog(context, label, explanation),
               borderRadius: BorderRadius.circular(12),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(
                   Icons.info_outline,
                   size: 16,
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.colors(context).textSecondary,
                 ),
               ),
             ),
@@ -716,8 +718,8 @@ class AboutScreen extends ConsumerWidget {
         // Value below the label
         Text(
           value,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -736,8 +738,8 @@ class AboutScreen extends ConsumerWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -745,12 +747,12 @@ class AboutScreen extends ConsumerWidget {
             InkWell(
               onTap: () => _showInfoDialog(context, label, explanation),
               borderRadius: BorderRadius.circular(12),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(
                   Icons.info_outline,
                   size: 16,
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.colors(context).textSecondary,
                 ),
               ),
             ),
@@ -758,10 +760,10 @@ class AboutScreen extends ConsumerWidget {
             InkWell(
               onTap: () => _copyToClipboard(context, value),
               borderRadius: BorderRadius.circular(12),
-              child: const Icon(
+              child: Icon(
                 Icons.copy,
                 size: 16,
-                color: AppTheme.textSecondary,
+                color: AppTheme.colors(context).textSecondary,
               ),
             ),
           ],
@@ -770,8 +772,8 @@ class AboutScreen extends ConsumerWidget {
         // Value below the label
         Text(
           value,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -785,23 +787,23 @@ class AboutScreen extends ConsumerWidget {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           content: Text(
             content,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),
@@ -811,8 +813,8 @@ class AboutScreen extends ConsumerWidget {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 S.of(context)!.ok,
-                style: const TextStyle(
-                  color: AppTheme.activeColor,
+                style: TextStyle(
+                  color: AppTheme.colors(context).accent,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -833,8 +835,8 @@ class AboutScreen extends ConsumerWidget {
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
@@ -856,8 +858,8 @@ class AboutScreen extends ConsumerWidget {
                   children: [
                     Text(
                       value,
-                      style: const TextStyle(
-                        color: AppTheme.activeColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).accent,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -865,7 +867,7 @@ class AboutScreen extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Icon(
                       icon,
-                      color: AppTheme.activeColor,
+                      color: AppTheme.colors(context).accent,
                       size: 16,
                     ),
                   ],
@@ -913,7 +915,7 @@ class AboutScreen extends ConsumerWidget {
       context,
       message,
       duration: const Duration(seconds: 3),
-      backgroundColor: AppTheme.statusError,
+      backgroundColor: AppTheme.colors(context).danger,
     );
   }
 
@@ -925,8 +927,8 @@ class AboutScreen extends ConsumerWidget {
         Expanded(
           child: Text(
             S.of(context)!.license,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
@@ -943,13 +945,13 @@ class AboutScreen extends ConsumerWidget {
               InkWell(
                 onTap: () => _showLicenseDialog(context),
                 borderRadius: BorderRadius.circular(4),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       'MIT',
                       style: TextStyle(
-                        color: AppTheme.activeColor,
+                        color: AppTheme.colors(context).accent,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -971,7 +973,7 @@ class AboutScreen extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        backgroundColor: AppTheme.backgroundCard,
+        backgroundColor: AppTheme.colors(context).cardBackground,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -980,8 +982,8 @@ class AboutScreen extends ConsumerWidget {
               // Title
               Text(
                 S.of(context)!.license,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1000,8 +1002,8 @@ class AboutScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(12),
                   child: Text(
                     S.of(context)!.mitLicenseText.replaceAll('\\n', '\n'),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                       height: 1.4,
                       fontFamily: 'monospace',
@@ -1016,7 +1018,7 @@ class AboutScreen extends ConsumerWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.satoneroOrange,
+                    backgroundColor: AppTheme.colors(context).accent,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -1044,7 +1046,7 @@ class AboutScreen extends ConsumerWidget {
         context,
         S.of(context)!.copiedToClipboard,
         duration: const Duration(seconds: 2),
-        backgroundColor: AppTheme.statusSuccess,
+        backgroundColor: AppTheme.colors(context).accent,
       );
     }
   }

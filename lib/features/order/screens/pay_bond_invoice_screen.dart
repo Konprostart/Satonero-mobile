@@ -26,23 +26,23 @@ class PayBondInvoiceScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppTheme.backgroundCard,
+        backgroundColor: AppTheme.colors(context).cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         title: Text(
           s.cancelTradeDialogTitle,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         content: Text(
           s.areYouSureCancel,
-          style: const TextStyle(
-            color: AppTheme.textSecondary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textSecondary,
             fontSize: 14,
             height: 1.5,
           ),
@@ -52,8 +52,8 @@ class PayBondInvoiceScreen extends ConsumerWidget {
             onPressed: () => Navigator.of(dialogContext).pop(false),
             child: Text(
               s.no,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -64,7 +64,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.activeColor,
+              backgroundColor: AppTheme.colors(context).accent,
               foregroundColor: Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -137,7 +137,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
         isMakerBond ? s.bondExplanationMaker : s.bondExplanation;
 
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: OrderAppBar(title: s.bondScreenTitle),
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(
@@ -151,8 +151,8 @@ class PayBondInvoiceScreen extends ConsumerWidget {
           children: [
             Text(
               explanation,
-              style: const TextStyle(
-                color: AppTheme.cream1,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 15,
                 height: 1.4,
               ),
@@ -161,8 +161,8 @@ class PayBondInvoiceScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               Text(
                 s.bondPayInvoicePrompt(bondAmount),
-                style: const TextStyle(
-                  color: AppTheme.cream1,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 15,
                   height: 1.4,
                   fontWeight: FontWeight.w500,
@@ -173,12 +173,12 @@ class PayBondInvoiceScreen extends ConsumerWidget {
             Center(
               child: Container(
                 padding: const EdgeInsets.all(8.0),
-                color: AppTheme.cream1,
+                color: AppTheme.colors(context).textPrimary,
                 child: QrImageView(
                   data: lnInvoice,
                   version: QrVersions.auto,
                   size: 250.0,
-                  backgroundColor: AppTheme.cream1,
+                  backgroundColor: AppTheme.colors(context).textPrimary,
                   errorStateBuilder: (cxt, err) {
                     return Center(
                       child: Text(
@@ -209,7 +209,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
                   icon: const Icon(Icons.copy),
                   label: Text(s.copy),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.satoneroOrange,
+                    backgroundColor: AppTheme.colors(context).accent,
                   ),
                 ),
                 ElevatedButton.icon(
@@ -219,7 +219,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
                   icon: const Icon(Icons.share),
                   label: Text(s.share),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.satoneroOrange,
+                    backgroundColor: AppTheme.colors(context).accent,
                   ),
                 ),
               ],

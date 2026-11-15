@@ -68,7 +68,7 @@ class _CashuMintSelectorState extends ConsumerState<CashuMintSelector> {
           Row(
             children: [
               Icon(LucideIcons.coins,
-                  color: AppTheme.lightningYellow, size: 20),
+                  color: AppTheme.colors(context).lightningYellow, size: 20),
               const SizedBox(width: 8),
               Text(
                 S.of(context)!.cashuMint,

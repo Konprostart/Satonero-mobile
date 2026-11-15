@@ -36,14 +36,14 @@ class _RateCounterpartScreenState extends ConsumerState<RateCounterpartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(S.of(context)!.rateCounterpart,
-            style: const TextStyle(color: AppTheme.cream1)),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.cream1),
+          icon: Icon(Icons.arrow_back, color: AppTheme.colors(context).textPrimary),
           onPressed: () => context.pop(),
         ),
       ),
@@ -55,7 +55,7 @@ class _RateCounterpartScreenState extends ConsumerState<RateCounterpartScreen> {
             children: [
               Text(
                 S.of(context)!.rate,
-                style: TextStyle(color: AppTheme.cream1, fontSize: 20),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 20),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
@@ -70,12 +70,12 @@ class _RateCounterpartScreenState extends ConsumerState<RateCounterpartScreen> {
               const SizedBox(height: 24),
               Text(
                 '$_rating / 5',
-                style: const TextStyle(color: AppTheme.cream1, fontSize: 18),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 18),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.satoneroOrange,
+                  backgroundColor: AppTheme.colors(context).accent,
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                 ),
                 onPressed: _rating > 0 ? _submitRating : null,

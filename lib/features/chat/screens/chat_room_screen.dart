@@ -114,17 +114,17 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
     final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.cream1),
+          icon: Icon(Icons.arrow_back, color: AppTheme.colors(context).textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           'Back',
-          style: TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -170,7 +170,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           // Message input
           Container(
             decoration: BoxDecoration(
-              color: AppTheme.backgroundDark,
+              color: AppTheme.colors(context).scaffoldBackground,
               border: Border(
                 top: BorderSide(
                   color: Colors.grey.withValues(alpha: 0.15),

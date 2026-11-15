@@ -1861,5 +1861,17 @@
     "cashuEscrowMode": "Escrow mode",
     "escrowLightning": "Lightning",
     "escrowCashu": "Cashu",
-    "cashuMintNotSelected": "Please select a Cashu mint"
+    "cashuMintNotSelected": "Please select a Cashu mint",
+    "cashuMintTrustNotice": "You are trusting this mint to hold the escrow until the trade settles.",
+    "@cashuMintTrustNotice": {},
+    "escrowLocktimeLabel": "Escrow locktime",
+    "@escrowLocktimeLabel": {},
+    "escrowLocktimeDays": "{count, plural, =1{1 day} other{{count} days}}",
+    "@escrowLocktimeDays": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    }
 }

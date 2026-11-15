@@ -20,7 +20,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
     final mostroInstance = ref.watch(orderRepositoryProvider).mostroInstance;
     final expirationHours = mostroInstance?.expirationHours ?? 24;
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: OrderAppBar(title: 'Order Confirmed'),
       body: CustomCard(
         child: Padding(
@@ -30,7 +30,7 @@ class OrderConfirmationScreen extends ConsumerWidget {
             children: [
               Text(
                 S.of(context)!.newOrder(expirationHours.toString()),
-                style: TextStyle(fontSize: 18, color: AppTheme.cream1),
+                style: TextStyle(fontSize: 18, color: AppTheme.colors(context).textPrimary),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),

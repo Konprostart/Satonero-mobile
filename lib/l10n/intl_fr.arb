@@ -1804,5 +1804,17 @@
     "cashuEscrowMode": "Mode de séquestre",
     "escrowLightning": "Lightning",
     "escrowCashu": "Cashu",
-    "cashuMintNotSelected": "Veuillez sélectionner un mint Cashu"
+    "cashuMintNotSelected": "Veuillez sélectionner un mint Cashu",
+    "cashuMintTrustNotice": "Vous faites confiance à ce mint pour conserver le séquestre jusqu'à la liquidation de l'opération.",
+    "@cashuMintTrustNotice": {},
+    "escrowLocktimeLabel": "Verrouillage du séquestre",
+    "@escrowLocktimeLabel": {},
+    "escrowLocktimeDays": "{count, plural, =1{1 jour} other{{count} jours}}",
+    "@escrowLocktimeDays": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    }
 }

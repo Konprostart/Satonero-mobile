@@ -18,16 +18,16 @@ class PaymentConfirmationScreen extends ConsumerWidget {
     final state = ref.watch(orderNotifierProvider(orderId));
 
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'PAYMENT',
-          style: TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.cream1),
+          icon: Icon(Icons.arrow_back, color: AppTheme.colors(context).textPrimary),
           onPressed: () => context.go('/'),
         ),
       ),
@@ -46,7 +46,7 @@ class PaymentConfirmationScreen extends ConsumerWidget {
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppTheme.dark2,
+              color: AppTheme.colors(context).inputBackground,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -55,36 +55,36 @@ class PaymentConfirmationScreen extends ConsumerWidget {
                 Container(
                   width: 80,
                   height: 80,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.satoneroOrange,
+                    color: AppTheme.colors(context).accent,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.check,
                     size: 50,
-                    color: AppTheme.cream1,
+                    color: AppTheme.colors(context).textPrimary,
                   ),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   '$satoshis',
-                  style: const TextStyle(
-                    color: AppTheme.cream1,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   'received',
                   style: TextStyle(
-                    color: AppTheme.cream1,
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.satoneroOrange,
+                    backgroundColor: AppTheme.colors(context).accent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -108,14 +108,14 @@ class PaymentConfirmationScreen extends ConsumerWidget {
         return Center(
           child: Text(
             'Error: ${error?.cantDoReason}',
-            style: const TextStyle(color: AppTheme.cream1),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
           ),
         );
       default:
         return Center(
           child: Text(
             'Unkown Action: ${state.action}',
-            style: const TextStyle(color: AppTheme.cream1),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
           ),
         );
     }

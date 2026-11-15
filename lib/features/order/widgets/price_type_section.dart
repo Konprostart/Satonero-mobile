@@ -24,13 +24,13 @@ class PriceTypeSection extends StatelessWidget {
     final priceTypeIcon = Icon(
       Icons.attach_money,
       size: 18,
-      color: AppTheme.textPrimary,
+      color: AppTheme.colors(context).textPrimary,
     );
 
     return FormSection(
       title: S.of(context)!.priceType,
       icon: priceTypeIcon,
-      iconBackgroundColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
+      iconBackgroundColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
       infoTooltip: S.of(context)!.priceTypeTooltip,
       infoTitle: S.of(context)!.priceType,
       child: Column(
@@ -43,8 +43,8 @@ class PriceTypeSection extends StatelessWidget {
                 isMarketRate
                     ? S.of(context)!.marketPrice
                     : S.of(context)!.fixedPrice,
-                style: const TextStyle(
-                    color: AppTheme.textPrimary, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary, fontWeight: FontWeight.w500),
               ),
               Row(
                 children: [
@@ -52,8 +52,8 @@ class PriceTypeSection extends StatelessWidget {
                     S.of(context)!.market,
                     style: TextStyle(
                       color: isMarketRate
-                          ? AppTheme.statusSuccess
-                          : AppTheme.textInactive,
+                          ? AppTheme.colors(context).accent
+                          : AppTheme.colors(context).textInactive,
                       fontSize: 14,
                     ),
                   ),
@@ -71,10 +71,10 @@ class PriceTypeSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppTheme.statusError.withValues(alpha: 0.1),
+                color: AppTheme.colors(context).danger.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: AppTheme.statusError.withValues(alpha: 0.3),
+                  color: AppTheme.colors(context).danger.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -82,15 +82,15 @@ class PriceTypeSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.warning_amber_rounded,
-                    color: AppTheme.statusError,
+                    color: AppTheme.colors(context).danger,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       errorMessage!,
-                      style: const TextStyle(
-                        color: AppTheme.statusError,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).danger,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),

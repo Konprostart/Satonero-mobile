@@ -45,88 +45,88 @@ class TradeInformationTab extends StatelessWidget {
     switch (status) {
       case Status.active:
         backgroundColor =
-            AppTheme.statusActiveBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusActiveText;
+            AppTheme.colors(context).statusActiveBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusActiveText;
         label = S.of(context)!.active;
         break;
       case Status.pending:
         backgroundColor =
-            AppTheme.statusPendingBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusPendingText;
+            AppTheme.colors(context).statusPendingBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusPendingText;
         label = S.of(context)!.pending;
         break;
       case Status.waitingPayment:
         backgroundColor =
-            AppTheme.statusWaitingBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusWaitingText;
+            AppTheme.colors(context).statusWaitingBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusWaitingText;
         label = S.of(context)!.waitingPayment;
         break;
       case Status.waitingBuyerInvoice:
         backgroundColor =
-            AppTheme.statusWaitingBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusWaitingText;
+            AppTheme.colors(context).statusWaitingBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusWaitingText;
         label = S.of(context)!.waitingInvoice;
         break;
       case Status.paymentFailed:
         backgroundColor =
-            AppTheme.statusInactiveBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusInactiveText;
+            AppTheme.colors(context).statusInactiveBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusInactiveText;
         label = S.of(context)!.paymentFailedText;
         break;
       case Status.fiatSent:
         backgroundColor =
-            AppTheme.statusSuccessBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusSuccessText;
+            AppTheme.colors(context).statusSuccessBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusSuccessText;
         label = S.of(context)!.fiatSent;
         break;
       case Status.canceled:
       case Status.canceledByAdmin:
       case Status.cooperativelyCanceled:
         backgroundColor =
-            AppTheme.statusInactiveBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusInactiveText;
+            AppTheme.colors(context).statusInactiveBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusInactiveText;
         label = S.of(context)!.canceledStatus;
         break;
       case Status.settledByAdmin:
         backgroundColor =
-            AppTheme.statusSettledBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusSettledText;
+            AppTheme.colors(context).statusSettledBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusSettledText;
         label = S.of(context)!.settled;
         break;
       case Status.settledHoldInvoice:
         backgroundColor =
-            AppTheme.statusPendingBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusPendingText;
+            AppTheme.colors(context).statusPendingBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusPendingText;
         label = S.of(context)!.statusSettledHoldInvoice;
         break;
       case Status.completedByAdmin:
         backgroundColor =
-            AppTheme.statusSuccessBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusSuccessText;
+            AppTheme.colors(context).statusSuccessBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusSuccessText;
         label = S.of(context)!.completed;
         break;
       case Status.dispute:
         backgroundColor =
-            AppTheme.statusDisputeBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusDisputeText;
+            AppTheme.colors(context).statusDisputeBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusDisputeText;
         label = S.of(context)!.dispute;
         break;
       case Status.expired:
         backgroundColor =
-            AppTheme.statusInactiveBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusInactiveText;
+            AppTheme.colors(context).statusInactiveBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusInactiveText;
         label = S.of(context)!.expired;
         break;
       case Status.success:
         backgroundColor =
-            AppTheme.statusSuccessBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusSuccessText;
+            AppTheme.colors(context).statusSuccessBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusSuccessText;
         label = S.of(context)!.success;
         break;
       default:
         backgroundColor =
-            AppTheme.statusInactiveBackground.withValues(alpha: 0.3);
-        textColor = AppTheme.statusInactiveText;
+            AppTheme.colors(context).statusInactiveBackground.withValues(alpha: 0.3);
+        textColor = AppTheme.colors(context).statusInactiveText;
         label = status.toString();
         break;
     }
@@ -153,13 +153,13 @@ class TradeInformationTab extends StatelessWidget {
     if (order == null) {
       return Center(
         child: CircularProgressIndicator(
-          color: AppTheme.satoneroOrange,
+          color: AppTheme.colors(context).accent,
         ),
       );
     }
 
     return Container(
-      color: AppTheme.backgroundDark,
+      color: AppTheme.colors(context).scaffoldBackground,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +169,7 @@ class TradeInformationTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard,
+              color: AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -178,15 +178,15 @@ class TradeInformationTab extends StatelessWidget {
                 Text(
                   S.of(context)!.orderId,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   orderId,
-                  style: const TextStyle(
-                    color: AppTheme.cream1,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                   ),
                 ),
@@ -201,7 +201,7 @@ class TradeInformationTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard,
+              color: AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -215,8 +215,8 @@ class TradeInformationTab extends StatelessWidget {
                         order!.kind.value == 'sell'
                             ? S.of(context)!.sellingSats(CurrencyUtils.formatSats(order!.amount))
                             : S.of(context)!.buyingSats(CurrencyUtils.formatSats(order!.amount)),
-                        style: const TextStyle(
-                          color: AppTheme.cream1,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -230,7 +230,7 @@ class TradeInformationTab extends StatelessWidget {
                 Text(
                   S.of(context)!.forAmountWithCurrency(order!.fiatAmount.toString(), order!.fiatCode),
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),
@@ -245,7 +245,7 @@ class TradeInformationTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard,
+              color: AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -254,15 +254,15 @@ class TradeInformationTab extends StatelessWidget {
                 Text(
                   S.of(context)!.paymentMethod,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   order!.paymentMethod,
-                  style: const TextStyle(
-                    color: AppTheme.cream1,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                   ),
                 ),
@@ -277,7 +277,7 @@ class TradeInformationTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard,
+              color: AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -286,15 +286,15 @@ class TradeInformationTab extends StatelessWidget {
                 Text(
                   S.of(context)!.createdOn,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _formatOrderDate(_getOrderCreationDate(), context),
-                  style: const TextStyle(
-                    color: AppTheme.cream1,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                   ),
                 ),

@@ -63,7 +63,7 @@ class InvoiceHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
-    const bodyStyle = TextStyle(color: AppTheme.textPrimary, fontSize: 16);
+    final bodyStyle = TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 16);
     final boldStyle = bodyStyle.copyWith(fontWeight: FontWeight.w600);
 
     return Column(

@@ -44,8 +44,8 @@ class OrderAmountCard extends ConsumerWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -59,16 +59,16 @@ class OrderAmountCard extends ConsumerWidget {
                     text: S
                         .of(context)!
                         .forAmountWithCurrency(amountString, currency),
-                    style: const TextStyle(
-                      color: Colors.white70,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textSecondary,
                       fontSize: 16,
                     ),
                     children: [
                       if (priceText != null && priceText!.isNotEmpty)
                         TextSpan(
                           text: ' $priceText',
-                          style: const TextStyle(
-                            color: Colors.white60,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textSubtle,
                             fontSize: 15,
                           ),
                         ),
@@ -85,8 +85,8 @@ class OrderAmountCard extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               premiumText!,
-              style: const TextStyle(
-                color: Colors.white60,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSubtle,
                 fontSize: 14,
               ),
             ),
@@ -109,9 +109,9 @@ class PaymentMethodCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.payment,
-            color: Colors.white70,
+            color: AppTheme.colors(context).textSecondary,
             size: 24,
           ),
           const SizedBox(width: 16),
@@ -122,15 +122,15 @@ class PaymentMethodCard extends StatelessWidget {
                 Text(
                   S.of(context)!.paymentMethodLabel,
                   style: TextStyle(
-                    color: Colors.white70,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   paymentMethod,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 16,
                   ),
                 ),
@@ -155,9 +155,9 @@ class CreatedDateCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          const Icon(
+          Icon(
             Icons.calendar_today,
-            color: Colors.white70,
+            color: AppTheme.colors(context).textSecondary,
             size: 24,
           ),
           const SizedBox(width: 16),
@@ -168,15 +168,15 @@ class CreatedDateCard extends StatelessWidget {
                 Text(
                   S.of(context)!.createdOnLabel,
                   style: TextStyle(
-                    color: Colors.white70,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   createdDate,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 16,
                   ),
                 ),
@@ -208,7 +208,7 @@ class OrderIdCard extends StatelessWidget {
           Text(
             S.of(context)!.orderIdLabel,
             style: TextStyle(
-              color: Colors.white70,
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 12,
             ),
           ),
@@ -218,16 +218,16 @@ class OrderIdCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   orderId,
-                  style: const TextStyle(
-                    color: AppTheme.satoneroOrange,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).accent,
                     fontSize: 14,
                   ),
                 ).withAutomationId(AutomationIds.orderId),
               ),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.copy,
-                  color: Colors.white70,
+                  color: AppTheme.colors(context).textSecondary,
                   size: 20,
                 ),
                 onPressed: () {
@@ -270,7 +270,7 @@ class CreatorReputationCard extends StatelessWidget {
             Text(
               S.of(context)!.creatorReputationLabel,
               style: TextStyle(
-                color: Colors.white70,
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 12,
               ),
             ),
@@ -313,7 +313,7 @@ class PeerReputationCard extends StatelessWidget {
                   ? S.of(context)!.buyerReputationLabel
                   : S.of(context)!.sellerReputationLabel,
               style: TextStyle(
-                color: Colors.white70,
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 12,
               ),
             ),
@@ -353,8 +353,8 @@ class PeerReputationInline extends StatelessWidget {
           counterpartIsBuyer
               ? S.of(context)!.buyerReputationLabel
               : S.of(context)!.sellerReputationLabel,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -363,9 +363,9 @@ class PeerReputationInline extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.star,
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               size: 18,
             ),
             const SizedBox(width: 6),
@@ -374,8 +374,8 @@ class PeerReputationInline extends StatelessWidget {
                 '${reputation.rating.toStringAsFixed(1)} / 5 · '
                 '${S.of(context)!.reputationReviewsCount(reputation.reviews)} · '
                 '${S.of(context)!.reputationDaysCount(reputation.daysOnMostro)}',
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 16,
                 ),
               ),
@@ -413,14 +413,14 @@ class _ReputationMetricsRow extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.star,
-                    color: AppTheme.satoneroOrange,
+                    color: AppTheme.colors(context).accent,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     rating.toStringAsFixed(1),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -431,7 +431,7 @@ class _ReputationMetricsRow extends StatelessWidget {
               Text(
                 S.of(context)!.ratingTitleLabel,
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -445,16 +445,16 @@ class _ReputationMetricsRow extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.person_outline,
-                    color: Colors.white70,
+                    color: AppTheme.colors(context).textSecondary,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     reviews.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -465,7 +465,7 @@ class _ReputationMetricsRow extends StatelessWidget {
               Text(
                 S.of(context)!.reviewsLabel,
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -479,16 +479,16 @@ class _ReputationMetricsRow extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.calendar_today_outlined,
-                    color: Colors.white70,
+                    color: AppTheme.colors(context).textSecondary,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     days.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -499,7 +499,7 @@ class _ReputationMetricsRow extends StatelessWidget {
               Text(
                 S.of(context)!.daysLabel,
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -515,13 +515,16 @@ class _ReputationMetricsRow extends StatelessWidget {
 class NotificationMessageCard extends StatelessWidget {
   final String message;
   final IconData icon;
-  final Color iconColor;
+
+  /// Optional override; when null the icon falls back to the theme's
+  /// secondary text color (theme-aware, so it adapts to light/dark).
+  final Color? iconColor;
 
   const NotificationMessageCard({
     super.key,
     required this.message,
     this.icon = Icons.info_outline,
-    this.iconColor = Colors.white70,
+    this.iconColor,
   });
 
   @override
@@ -533,15 +536,15 @@ class NotificationMessageCard extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: iconColor,
+            color: iconColor ?? AppTheme.colors(context).textSecondary,
             size: 24,
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 14,
               ),
             ),

@@ -53,7 +53,7 @@ class MessageBubble extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.purpleButton,
+                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.colors(context).purple,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
                       topRight: const Radius.circular(16),
@@ -101,7 +101,7 @@ class MessageBubble extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.purpleButton,
+                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.colors(context).purple,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
                       topRight: const Radius.circular(16),
@@ -149,7 +149,7 @@ class MessageBubble extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.purpleButton,
+                    color: isFromPeer ? _getPeerMessageColor(peerPubkey) : AppTheme.colors(context).purple,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
                       topRight: const Radius.circular(16),
@@ -163,8 +163,8 @@ class MessageBubble extends ConsumerWidget {
                     children: [
                       Text(
                         content,
-                        style: const TextStyle(
-                          color: AppTheme.cream1,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 16,
                           height: 1.4,
                         ),
@@ -209,7 +209,7 @@ class MessageBubble extends ConsumerWidget {
       child: Text(
         time,
         style: TextStyle(
-          color: AppTheme.cream1.withValues(alpha: 0.6),
+          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.6),
           fontSize: 11,
         ),
       ),
@@ -224,7 +224,7 @@ class MessageBubble extends ConsumerWidget {
         context,
         S.of(context)!.messageCopiedToClipboard,
         duration: const Duration(seconds: 2),
-        backgroundColor: AppTheme.backgroundCard,
+        backgroundColor: AppTheme.colors(context).cardBackground,
       );
     }
   }

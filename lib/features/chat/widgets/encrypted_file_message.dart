@@ -113,14 +113,14 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                     children: [
                       Icon(
                         Icons.broken_image,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                         size: 48,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Failed to load image',
                         style: TextStyle(
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.colors(context).textSecondary,
                           fontSize: 12,
                         ),
                       ),
@@ -156,8 +156,8 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                         children: [
                           Text(
                             metadata.filename,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppTheme.colors(context).textPrimary,
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                             ),
@@ -206,10 +206,10 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppTheme.backgroundCard,
+          color: AppTheme.colors(context).cardBackground,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppTheme.textSecondary.withValues(alpha: 0.3),
+            color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -231,10 +231,10 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                     children: [
                       Text(
                         metadata.filename,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          color: AppTheme.colors(context).textPrimary,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
@@ -284,7 +284,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                   style: const TextStyle(fontSize: 13),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.satoneroOrange,
+                  backgroundColor: AppTheme.colors(context).accent,
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   shape: RoundedRectangleBorder(
@@ -309,10 +309,10 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
       ),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.textSecondary.withValues(alpha: 0.3),
+          color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -324,7 +324,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               strokeWidth: 2,
             ),
           ),

@@ -19,7 +19,7 @@ class WalletBalanceWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -30,16 +30,16 @@ class WalletBalanceWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.zap,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   S.of(context)!.walletBalance,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -48,9 +48,9 @@ class WalletBalanceWidget extends StatelessWidget {
                 if (onRefresh != null)
                   IconButton(
                     onPressed: onRefresh,
-                    icon: const Icon(
+                    icon: Icon(
                       LucideIcons.refreshCw,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                       size: 20,
                     ),
                     tooltip: S.of(context)!.refreshBalance,
@@ -63,8 +63,8 @@ class WalletBalanceWidget extends StatelessWidget {
                 balanceSats != null
                     ? '⚡ ${_formatBalance(balanceSats!)} ${S.of(context)!.sats}'
                     : '⚡ -- ${S.of(context)!.sats}',
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
                 ),

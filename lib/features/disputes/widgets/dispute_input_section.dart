@@ -30,7 +30,7 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
+        color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           top: BorderSide(
             color: Colors.white.withValues(alpha: 0.05),
@@ -59,14 +59,14 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
                 child: TextField(
                   controller: _messageController,
                   maxLines: null,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
                     hintText: S.of(context)?.typeYourMessage ?? 'Type your message...',
                     hintStyle: TextStyle(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                       fontSize: 16,
                     ),
                     border: InputBorder.none,
@@ -92,13 +92,13 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: AppTheme.colors(context).textPrimary,
                           strokeWidth: 2,
                         ),
                       )
-                    : const Icon(
+                    : Icon(
                         Icons.send,
-                        color: Colors.white,
+                        color: AppTheme.colors(context).textPrimary,
                         size: 20,
                       ),
               ),

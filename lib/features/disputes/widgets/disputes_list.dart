@@ -22,13 +22,13 @@ class DisputesList extends ConsumerWidget {
             Icon(
               Icons.error_outline,
               size: 64,
-              color: AppTheme.textSecondary,
+              color: AppTheme.colors(context).textSecondary,
             ),
             const SizedBox(height: 16),
             Text(
               S.of(context)!.failedLoadDisputes,
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 16,
               ),
             ),
@@ -49,13 +49,13 @@ class DisputesList extends ConsumerWidget {
                 Icon(
                   Icons.gavel,
                   size: 64,
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.colors(context).textSecondary,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   S.of(context)!.noDisputesAvailable,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 16,
                   ),
                 ),
@@ -63,7 +63,7 @@ class DisputesList extends ConsumerWidget {
                 Text(
                   S.of(context)!.disputesWillAppear,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                   textAlign: TextAlign.center,

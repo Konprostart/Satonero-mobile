@@ -25,7 +25,7 @@ class LanguageSelector extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropdownButtonHideUnderline(
@@ -36,9 +36,9 @@ class LanguageSelector extends ConsumerWidget {
               ? currentLanguage
               : null,
           isExpanded: true,
-          dropdownColor: AppTheme.dark1,
-          style: const TextStyle(color: AppTheme.cream1),
-          icon: const Icon(Icons.arrow_drop_down, color: AppTheme.cream1),
+          dropdownColor: AppTheme.colors(context).cardBackground,
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
+          icon: Icon(Icons.arrow_drop_down, color: AppTheme.colors(context).textPrimary),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           items: _languageKeys.entries.map((entry) {
             final languageCode = entry.key;
@@ -52,14 +52,14 @@ class LanguageSelector extends ConsumerWidget {
                 children: [
                   Icon(
                     languageCode == null ? Icons.phone_android : Icons.language,
-                    color: AppTheme.satoneroOrange,
+                    color: AppTheme.colors(context).accent,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     displayName,
-                    style: const TextStyle(
-                      color: AppTheme.cream1,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 16,
                     ),
                   ),

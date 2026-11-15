@@ -83,14 +83,14 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundCard,
+        backgroundColor: AppTheme.colors(context).cardBackground,
         title: Text(
           S.of(context)!.performanceWarning,
-          style: TextStyle(color: AppTheme.textPrimary),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           S.of(context)!.performanceWarningMessage,
-          style: TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           TextButton(
@@ -130,19 +130,19 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: AppTheme.backgroundDark,
+          backgroundColor: AppTheme.colors(context).scaffoldBackground,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: Text(
               S.of(context)!.logsReport,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            iconTheme: const IconThemeData(color: AppTheme.textPrimary),
+            iconTheme: IconThemeData(color: AppTheme.colors(context).textPrimary),
             actions: [
               LogsActionsMenu(),
             ],
@@ -168,11 +168,11 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
             bottom: 100,
             child: FloatingActionButton(
               mini: true,
-              backgroundColor: AppTheme.activeColor,
+              backgroundColor: AppTheme.colors(context).accent,
               onPressed: _scrollToTop,
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_upward,
-                color: Colors.white,
+                color: AppTheme.colors(context).textPrimary,
                 size: 20,
               ),
             ),
@@ -185,7 +185,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         border: Border(
           bottom: BorderSide(
             color: Colors.white.withValues(alpha: 0.1),
@@ -206,7 +206,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
                     Text(
                       S.of(context)!.logCapture,
                       style: TextStyle(
-                        color: AppTheme.textPrimary,
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -218,8 +218,8 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
                           : S.of(context)!.captureDisabled,
                       style: TextStyle(
                         color: isLoggingEnabled
-                            ? AppTheme.activeColor
-                            : AppTheme.textInactive,
+                            ? AppTheme.colors(context).accent
+                            : AppTheme.colors(context).textInactive,
                         fontSize: 12,
                       ),
                     ),
@@ -240,16 +240,16 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
                 filteredCount == totalCount
                     ? S.of(context)!.totalLogs(totalCount)
                     : '$filteredCount / ${S.of(context)!.totalLogs(totalCount)}',
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 S.of(context)!.maxEntries(Config.logMaxEntries),
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 14,
                 ),
               ),
@@ -263,17 +263,17 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
   Widget _buildSearchBar() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: AppTheme.backgroundCard,
+      color: AppTheme.colors(context).cardBackground,
       child: TextField(
         controller: _searchController,
-        style: const TextStyle(color: AppTheme.textPrimary),
+        style: TextStyle(color: AppTheme.colors(context).textPrimary),
         decoration: InputDecoration(
           hintText: S.of(context)!.searchLogs,
-          hintStyle: const TextStyle(color: AppTheme.textSecondary),
-          prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
+          hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
+          prefixIcon: Icon(Icons.search, color: AppTheme.colors(context).textSecondary),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear, color: AppTheme.textSecondary),
+                  icon: Icon(Icons.clear, color: AppTheme.colors(context).textSecondary),
                   onPressed: () {
                     _searchController.clear();
                     setState(() {
@@ -287,7 +287,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
                 )
               : null,
           filled: true,
-          fillColor: AppTheme.backgroundInput,
+          fillColor: AppTheme.colors(context).inputBackground,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide.none,
@@ -310,7 +310,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
   Widget _buildFilterChips() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: AppTheme.backgroundCard,
+      color: AppTheme.colors(context).cardBackground,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -344,14 +344,14 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
           }
         });
       },
-      backgroundColor: AppTheme.backgroundInput,
-      selectedColor: AppTheme.statusInfo.withValues(alpha: 0.2),
+      backgroundColor: AppTheme.colors(context).inputBackground,
+      selectedColor: AppTheme.colors(context).info.withValues(alpha: 0.2),
       labelStyle: TextStyle(
-        color: isSelected ? AppTheme.statusInfo : AppTheme.textSecondary,
+        color: isSelected ? AppTheme.colors(context).info : AppTheme.colors(context).textSecondary,
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
       ),
       side: BorderSide(
-        color: isSelected ? AppTheme.statusInfo : Colors.white.withValues(alpha: 0.1),
+        color: isSelected ? AppTheme.colors(context).info : Colors.white.withValues(alpha: 0.1),
       ),
     );
   }
@@ -361,16 +361,16 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.info_outline,
             size: 64,
-            color: AppTheme.textInactive,
+            color: AppTheme.colors(context).textInactive,
           ),
           const SizedBox(height: 16),
           Text(
             S.of(context)!.noLogsAvailable,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -380,8 +380,8 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               S.of(context)!.logsWillAppearHere,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
               textAlign: TextAlign.center,
@@ -413,7 +413,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: color.withValues(alpha: 0.3),
@@ -438,16 +438,16 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
               const SizedBox(width: 8),
               Text(
                 '${log.service}:${log.line}',
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 12,
                 ),
               ),
               const Spacer(),
               Text(
                 _formatTime(log.timestamp),
-                style: const TextStyle(
-                  color: AppTheme.textInactive,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textInactive,
                   fontSize: 11,
                 ),
               ),
@@ -456,8 +456,8 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
           const SizedBox(height: 8),
           Text(
             log.message,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 13,
             ),
           ),
@@ -469,15 +469,15 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
   Color _getLogLevelColor(Level level) {
     switch (level) {
       case Level.error:
-        return AppTheme.statusError;
+        return AppTheme.colors(context).danger;
       case Level.warning:
-        return AppTheme.statusWarning;
+        return AppTheme.colors(context).warning;
       case Level.info:
-        return AppTheme.statusInfo;
+        return AppTheme.colors(context).info;
       case Level.debug:
-        return AppTheme.textSecondary;
+        return AppTheme.colors(context).textSecondary;
       default:
-        return AppTheme.textSecondary;
+        return AppTheme.colors(context).textSecondary;
     }
   }
 

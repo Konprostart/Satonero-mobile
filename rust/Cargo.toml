@@ -1,0 +1,24 @@
+[package]
+name = "satonero_cashu"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85.0"
+publish = false
+description = "Cashu escrow wallet bridge for Satonero (NUT-11 P2PK 2-of-3)."
+license = "MIT"
+
+# The CDK is `unsafe_code = forbid`; cdylib/staticlib are the standard targets
+# flutter_rust_bridge links against on Android/iOS/desktop.
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+# Cashu Development Kit — shared types + crypto (MIT OR Apache-2.0).
+# `wallet` enables the client-side mint API; NUT-11 `SpendingConditions` /
+# `P2PKConditions` / `sign_p2pk` live in the core crate and need no extra flag.
+# default-features = false keeps the mint-side code out of the client binary.
+cashu = { version = "=0.18.0", default-features = false, features = ["wallet"] }
+
+# Added at FFI-integration time (not yet, to keep this crate buildable as a
+# plain Rust library during prep):
+# flutter_rust_bridge = "2"

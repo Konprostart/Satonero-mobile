@@ -155,7 +155,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
                     Icon(
                       Icons.image,
                       size: 12,
-                      color: AppTheme.textSecondary.withValues(alpha: 0.6),
+                      color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.6),
                     ),
                     const SizedBox(width: 4),
                     Expanded(
@@ -163,7 +163,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
                         metadata.filename,
                         style: TextStyle(
                           fontSize: 11,
-                          color: AppTheme.textSecondary.withValues(alpha: 0.6),
+                          color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.6),
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -172,7 +172,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
                       _formatFileSize(metadata.originalSize),
                       style: TextStyle(
                         fontSize: 11,
-                        color: AppTheme.textSecondary.withValues(alpha: 0.6),
+                        color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -194,10 +194,10 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
         minHeight: 120,
       ),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundInput,
+        color: AppTheme.colors(context).inputBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.textSecondary.withValues(alpha: 0.3),
+          color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -209,7 +209,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               strokeWidth: 2,
             ),
           ),
@@ -220,7 +220,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
               S.of(context)!.decryptingImage,
               style: TextStyle(
                 fontSize: 12,
-                color: AppTheme.textSecondary.withValues(alpha: 153),
+                color: AppTheme.colors(context).textSecondary.withValues(alpha: 153),
               ),
               textAlign: TextAlign.center,
             ),

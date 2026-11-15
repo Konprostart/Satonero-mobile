@@ -20,10 +20,10 @@ class NotificationDetails extends StatelessWidget {
       width: double.infinity,
       padding: AppTheme.smallPadding,
       decoration: BoxDecoration(
-        color: AppTheme.backgroundInput.withValues(alpha: 0.3),
+        color: AppTheme.colors(context).inputBackground.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: AppTheme.textInactive.withValues(alpha: 0.2),
+          color: AppTheme.colors(context).textInactive.withValues(alpha: 0.2),
           width: 1,
         ),
       ),

@@ -84,7 +84,7 @@ class _AddOrderButtonState extends State<AddOrderButton>
                                 ? () => _navigateToCreateOrder(context, 'buy')
                                 : null,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.buyColor,
+                              backgroundColor: AppTheme.colors(context).accent,
                               foregroundColor: Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -117,7 +117,7 @@ class _AddOrderButtonState extends State<AddOrderButton>
                                 ? () => _navigateToCreateOrder(context, 'sell')
                                 : null,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.sellColor,
+                              backgroundColor: AppTheme.colors(context).sell,
                               foregroundColor: Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -148,7 +148,7 @@ class _AddOrderButtonState extends State<AddOrderButton>
             key: const Key('addOrderButton'),
             onPressed: _toggleMenu,
             backgroundColor:
-                _isMenuOpen ? Colors.grey.shade700 : AppTheme.activeColor,
+                _isMenuOpen ? Colors.grey.shade700 : AppTheme.colors(context).accent,
             elevation: 6,
             shape: const CircleBorder(),
             child: AnimatedBuilder(

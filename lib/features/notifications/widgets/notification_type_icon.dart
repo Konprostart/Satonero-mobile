@@ -17,7 +17,7 @@ class NotificationTypeIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconData = _getIconForType();
-    final iconColor = _getColorForType();
+    final iconColor = _getColorForType(context);
 
     return Container(
       width: 40,
@@ -86,19 +86,19 @@ class NotificationTypeIcon extends StatelessWidget {
     }
   }
 
-  Color _getColorForType() {
+  Color _getColorForType(BuildContext context) {
     switch (type) {
       case NotificationType.orderUpdate:
-        return AppTheme.satoneroOrange;
+        return AppTheme.colors(context).accent;
       
       case NotificationType.tradeUpdate:
         switch (action) {
           case actions.Action.rate:
           case actions.Action.rateUser:
           case actions.Action.rateReceived:
-            return AppTheme.statusWarning;
+            return AppTheme.colors(context).warning;
           default:
-            return AppTheme.activeColor;
+            return AppTheme.colors(context).accent;
         }
       
       case NotificationType.payment:
@@ -107,24 +107,24 @@ class NotificationTypeIcon extends StatelessWidget {
           case actions.Action.released:
           case actions.Action.purchaseCompleted:
           case actions.Action.fiatSentOk:
-            return AppTheme.statusSuccess;
+            return AppTheme.colors(context).accent;
           case actions.Action.paymentFailed:
-            return AppTheme.statusError;
+            return AppTheme.colors(context).danger;
           default:
-            return AppTheme.statusInfo;
+            return AppTheme.colors(context).info;
         }
       
       case NotificationType.dispute:
-        return AppTheme.statusError;
+        return AppTheme.colors(context).danger;
       
       case NotificationType.cancellation:
-        return AppTheme.statusError;
+        return AppTheme.colors(context).danger;
       
       case NotificationType.message:
-        return AppTheme.statusInfo;
+        return AppTheme.colors(context).info;
       
       case NotificationType.system:
-        return AppTheme.textSecondary;
+        return AppTheme.colors(context).textSecondary;
     }
   }
 }

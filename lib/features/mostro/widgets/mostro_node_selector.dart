@@ -46,8 +46,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.7,
       ),
-      decoration: const BoxDecoration(
-        color: AppTheme.backgroundDark,
+      decoration: BoxDecoration(
+        color: AppTheme.colors(context).scaffoldBackground,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -68,8 +68,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
             padding: const EdgeInsets.all(20),
             child: Text(
               S.of(context)!.selectMostroNode,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -107,8 +107,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(
                         S.of(context)!.noCustomNodesYet,
-                        style: const TextStyle(
-                          color: AppTheme.textSecondary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textSecondary,
                           fontSize: 14,
                         ),
                       ),
@@ -131,7 +131,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                             ? null
                             : () => AddCustomNodeDialog.show(context, ref),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.activeColor,
+                          backgroundColor: AppTheme.colors(context).accent,
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -166,8 +166,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-      style: const TextStyle(
-        color: AppTheme.textSecondary,
+      style: TextStyle(
+        color: AppTheme.colors(context).textSecondary,
         fontSize: 13,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
@@ -194,12 +194,12 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppTheme.activeColor.withValues(alpha: 0.1)
-                  : AppTheme.backgroundCard,
+                  ? AppTheme.colors(context).accent.withValues(alpha: 0.1)
+                  : AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
-                    ? AppTheme.activeColor.withValues(alpha: 0.4)
+                    ? AppTheme.colors(context).accent.withValues(alpha: 0.4)
                     : Colors.white.withValues(alpha: 0.1),
               ),
             ),
@@ -218,8 +218,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                           Flexible(
                             child: Text(
                               node.displayName,
-                              style: const TextStyle(
-                                color: AppTheme.textPrimary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textPrimary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -235,8 +235,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                       const SizedBox(height: 2),
                       Text(
                         node.pubkey,
-                        style: const TextStyle(
-                          color: AppTheme.textSecondary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textSecondary,
                           fontSize: 12,
                         ),
                         maxLines: 1,
@@ -248,8 +248,8 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                           node.about!.length > 128
                               ? '${node.about!.substring(0, 128)}...'
                               : node.about!,
-                          style: const TextStyle(
-                            color: AppTheme.textSecondary,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textSecondary,
                             fontSize: 12,
                           ),
                           maxLines: 3,
@@ -261,28 +261,28 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                 ),
                 // Trailing: checkmark, loading, or delete
                 if (isLoading)
-                  const SizedBox(
+                  SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       valueColor:
-                          AlwaysStoppedAnimation<Color>(AppTheme.cream1),
+                          AlwaysStoppedAnimation<Color>(AppTheme.colors(context).textPrimary),
                     ),
                   )
                 else if (isSelected)
-                  const Icon(
+                  Icon(
                     Icons.check_circle,
-                    color: AppTheme.activeColor,
+                    color: AppTheme.colors(context).accent,
                     size: 22,
                   )
                 else if (isCustom)
                   IconButton(
                     onPressed: _isSwitching ? null : () => _onDeleteNode(node),
                     tooltip: S.of(context)!.deleteCustomNodeTitle,
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete_outline,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                       size: 20,
                     ),
                     constraints: const BoxConstraints(),
@@ -381,28 +381,28 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.dark2,
+        backgroundColor: AppTheme.colors(context).inputBackground,
         title: Text(
           localizations.deleteCustomNodeTitle,
-          style: const TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           localizations.deleteCustomNodeMessage,
-          style: const TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
             child: Text(
               localizations.deleteCustomNodeCancel,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(
               localizations.deleteCustomNodeConfirm,
-              style: const TextStyle(color: AppTheme.red1),
+              style: TextStyle(color: AppTheme.colors(context).danger),
             ),
           ),
         ],

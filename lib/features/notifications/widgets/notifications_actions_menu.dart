@@ -12,13 +12,13 @@ class NotificationsActionsMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton<String>(
-      icon: const HeroIcon(
+      icon: HeroIcon(
         HeroIcons.ellipsisVertical,
         style: HeroIconStyle.outline,
-        color: AppTheme.cream1,
+        color: AppTheme.colors(context).textPrimary,
         size: 24,
       ),
-      color: AppTheme.backgroundDark,
+      color: AppTheme.colors(context).scaffoldBackground,
       onSelected: (value) => _handleMenuAction(context, ref, value),
       itemBuilder: (context) => [
         _buildMarkAllAsReadMenuItem(context),
@@ -32,16 +32,16 @@ class NotificationsActionsMenu extends ConsumerWidget {
       value: 'mark_all_read',
       child: Row(
         children: [
-          const HeroIcon(
+          HeroIcon(
             HeroIcons.checkCircle,
             style: HeroIconStyle.outline,
             size: 20,
-            color: AppTheme.statusSuccess,
+            color: AppTheme.colors(context).accent,
           ),
           const SizedBox(width: 12),
           Text(
             S.of(context)!.markAllAsRead,
-            style: const TextStyle(color: AppTheme.textPrimary),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
           ),
         ],
       ),
@@ -53,16 +53,16 @@ class NotificationsActionsMenu extends ConsumerWidget {
       value: 'clear_all',
       child: Row(
         children: [
-          const HeroIcon(
+          HeroIcon(
             HeroIcons.trash,
             style: HeroIconStyle.outline,
             size: 20,
-            color: AppTheme.statusError,
+            color: AppTheme.colors(context).danger,
           ),
           const SizedBox(width: 12),
           Text(
             S.of(context)!.clearAll,
-            style: const TextStyle(color: AppTheme.textPrimary),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
           ),
         ],
       ),
@@ -78,7 +78,7 @@ class NotificationsActionsMenu extends ConsumerWidget {
         SnackBarHelper.showTopSnackBar(
           context,
           S.of(context)!.markAllAsRead,
-          backgroundColor: AppTheme.statusSuccess,
+          backgroundColor: AppTheme.colors(context).accent,
         );
         break;
       case 'clear_all':
@@ -91,21 +91,21 @@ class NotificationsActionsMenu extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         title: Text(
           S.of(context)!.clearAll,
-          style: const TextStyle(color: AppTheme.textPrimary),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           S.of(context)!.confirmClearAll,
-          style: const TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               S.of(context)!.cancel,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
           ),
           TextButton(
@@ -115,12 +115,12 @@ class NotificationsActionsMenu extends ConsumerWidget {
               SnackBarHelper.showTopSnackBar(
                 context,
                 S.of(context)!.clearAll,
-                backgroundColor: AppTheme.statusError,
+                backgroundColor: AppTheme.colors(context).danger,
               );
             },
             child: Text(
               S.of(context)!.clearAll,
-              style: const TextStyle(color: AppTheme.statusError),
+              style: TextStyle(color: AppTheme.colors(context).danger),
             ),
           ),
         ],

@@ -34,7 +34,7 @@ class RestoreOverlay extends ConsumerWidget {
           margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
           padding: EdgeInsets.all(containerPadding),
           decoration: BoxDecoration(
-            color: AppTheme.backgroundCard,
+            color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: Colors.white.withValues(alpha: 0.1),
@@ -43,12 +43,12 @@ class RestoreOverlay extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildStatusIcon(state.step, iconSize),
+              _buildStatusIcon(context, state.step, iconSize),
               SizedBox(height: isSmallScreen ? 16 : 24),
               Text(
                 S.of(context)!.restoringOrders,
                 style: TextStyle(
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: titleFontSize,
                   fontWeight: FontWeight.w600,
                 ),
@@ -58,7 +58,7 @@ class RestoreOverlay extends ConsumerWidget {
               Text(
                 _getMessage(context, state),
                 style: TextStyle(
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: messageFontSize,
                 ),
                 textAlign: TextAlign.center,
@@ -69,7 +69,7 @@ class RestoreOverlay extends ConsumerWidget {
                 Text(
                   S.of(context)!.restoreNoPreviousData,
                   style: TextStyle(
-                    color: AppTheme.textSecondary.withValues(alpha: 0.75),
+                    color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.75),
                     fontSize: messageFontSize - 1,
                     fontStyle: FontStyle.italic,
                   ),
@@ -82,7 +82,7 @@ class RestoreOverlay extends ConsumerWidget {
                 Text(
                   S.of(context)!.restoreInvalidTradeIndex,
                   style: TextStyle(
-                    color: AppTheme.textSecondary.withValues(alpha: 0.75),
+                    color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.75),
                     fontSize: messageFontSize - 1,
                     fontStyle: FontStyle.italic,
                   ),
@@ -90,7 +90,7 @@ class RestoreOverlay extends ConsumerWidget {
                 ),
               ],
               SizedBox(height: isSmallScreen ? 16 : 24),
-              _buildProgressIndicator(state, iconSize),
+              _buildProgressIndicator(context, state, iconSize),
             ],
           ),
         ),
@@ -98,7 +98,7 @@ class RestoreOverlay extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusIcon(RestoreStep step, double size) {
+  Widget _buildStatusIcon(BuildContext context, RestoreStep step, double size) {
     IconData iconData;
     Color iconColor;
 
@@ -109,7 +109,7 @@ class RestoreOverlay extends ConsumerWidget {
         break;
       default:
         iconData = Icons.sync;
-        iconColor = AppTheme.activeColor;
+        iconColor = AppTheme.colors(context).accent;
     }
 
     return Icon(
@@ -119,7 +119,11 @@ class RestoreOverlay extends ConsumerWidget {
     );
   }
 
-  Widget _buildProgressIndicator(RestoreProgressState state, double iconSize) {
+  Widget _buildProgressIndicator(
+    BuildContext context,
+    RestoreProgressState state,
+    double iconSize,
+  ) {
     if (state.step == RestoreStep.completed) {
       return const Icon(
         Icons.check_circle,
@@ -141,19 +145,19 @@ class RestoreOverlay extends ConsumerWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 40,
             height: 40,
             child: CircularProgressIndicator(
-              color: AppTheme.activeColor,
+              color: AppTheme.colors(context).accent,
               strokeWidth: 3,
             ),
           ),
           const SizedBox(height: 12),
           Text(
             '${state.currentProgress}/${state.totalProgress}',
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -163,11 +167,11 @@ class RestoreOverlay extends ConsumerWidget {
     }
 
     // Default spinning indicator
-    return const SizedBox(
+    return SizedBox(
       width: 40,
       height: 40,
       child: CircularProgressIndicator(
-        color: AppTheme.activeColor,
+        color: AppTheme.colors(context).accent,
         strokeWidth: 3,
       ),
     );

@@ -11,6 +11,9 @@
 *.g.dart
 *.mocks.dart
 
+# Rust bridge crate build output
+rust/target/
+
 # IntelliJ related
 .idea/
 *.iml

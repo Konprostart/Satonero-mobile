@@ -81,7 +81,7 @@ class NwcConnectionStatusIndicator extends ConsumerWidget {
           Text(
             '${_formatSats(nwcState.balanceSats!)} sats',
             style: TextStyle(
-              color: AppTheme.cream1.withAlpha(153),
+              color: AppTheme.colors(context).textPrimary.withAlpha(153),
               fontSize: 12,
             ),
           ),

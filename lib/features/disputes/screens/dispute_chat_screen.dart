@@ -67,14 +67,14 @@ class _DisputeChatScreenState extends ConsumerState<DisputeChatScreen> {
     final disputeAsync = ref.watch(disputeDetailsProvider(widget.disputeId));
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         elevation: 0,
         title: Text(
           S.of(context)?.disputeDetails ?? 'Dispute Details',
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),

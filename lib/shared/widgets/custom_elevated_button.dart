@@ -30,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         foregroundColor: foregroundColor ?? Colors.black,
-        backgroundColor: backgroundColor ?? AppTheme.satoneroOrange,
+        backgroundColor: backgroundColor ?? AppTheme.colors(context).accent,
         padding:
             padding ?? const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       ),

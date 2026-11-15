@@ -28,7 +28,7 @@ class DisputeInfoCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -43,8 +43,8 @@ class DisputeInfoCard extends ConsumerWidget {
                     dispute.userIsBuyer ? S.of(context)!.seller : S.of(context)!.buyer,
                     counterpartyNym,
                   ),
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -79,7 +79,7 @@ class DisputeInfoCard extends ConsumerWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: AppTheme.textSecondary,
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
@@ -88,8 +88,8 @@ class DisputeInfoCard extends ConsumerWidget {
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 14,
               fontFamily: 'monospace',
             ),

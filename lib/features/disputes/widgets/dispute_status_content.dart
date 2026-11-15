@@ -69,10 +69,10 @@ class DisputeStatusContent extends ConsumerWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.satoneroOrange.withValues(alpha: 0.1),
+          color: AppTheme.colors(context).accent.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppTheme.satoneroOrange.withValues(alpha: 0.3),
+            color: AppTheme.colors(context).accent.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -81,7 +81,7 @@ class DisputeStatusContent extends ConsumerWidget {
           children: [
             Icon(
               Icons.check_circle_outline,
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               size: 24,
             ),
             const SizedBox(width: 12),
@@ -92,7 +92,7 @@ class DisputeStatusContent extends ConsumerWidget {
                   Text(
                     S.of(context)!.disputeResolvedTitle,
                     style: TextStyle(
-                      color: AppTheme.satoneroOrange,
+                      color: AppTheme.colors(context).accent,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -100,8 +100,8 @@ class DisputeStatusContent extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Text(
                     message,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                       height: 1.5,
                     ),
@@ -119,23 +119,23 @@ class DisputeStatusContent extends ConsumerWidget {
         children: [
           Text(
             _getDisputeStatusText(context, counterpartyNym),
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 14,
               height: 1.5,
             ),
           ),
           const SizedBox(height: 16),
-          _buildBulletPoint(S.of(context)!.disputeInstruction1),
-          _buildBulletPoint(S.of(context)!.disputeInstruction2),
-          _buildBulletPoint(S.of(context)!.disputeInstruction3),
-          _buildBulletPoint(S.of(context)!.disputeInstruction4(counterpartyNym)),
+          _buildBulletPoint(context, S.of(context)!.disputeInstruction1),
+          _buildBulletPoint(context, S.of(context)!.disputeInstruction2),
+          _buildBulletPoint(context, S.of(context)!.disputeInstruction3),
+          _buildBulletPoint(context, S.of(context)!.disputeInstruction4(counterpartyNym)),
         ],
       );
     }
   }
 
-  Widget _buildBulletPoint(String text) {
+  Widget _buildBulletPoint(BuildContext context, String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -146,7 +146,7 @@ class DisputeStatusContent extends ConsumerWidget {
             width: 4,
             height: 4,
             decoration: BoxDecoration(
-              color: AppTheme.textSecondary,
+              color: AppTheme.colors(context).textSecondary,
               shape: BoxShape.circle,
             ),
           ),
@@ -155,7 +155,7 @@ class DisputeStatusContent extends ConsumerWidget {
             child: Text(
               text,
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
                 height: 1.5,
               ),

@@ -58,8 +58,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         ),
         title: Text(
           S.of(context)!.scanQrCode,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -69,7 +69,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
             tooltip: S.of(context)!.toggleTorch,
             icon: Icon(
               _torchOn ? Icons.flash_on : Icons.flash_off,
-              color: _torchOn ? AppTheme.activeColor : Colors.white,
+              color: _torchOn ? AppTheme.colors(context).accent : Colors.white,
             ),
             onPressed: () async {
               await _controller.toggleTorch();
@@ -136,7 +136,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
               width: 280,
               height: 280,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.colors(context).textPrimary,
                 borderRadius: BorderRadius.circular(16),
               ),
             ),

@@ -46,13 +46,13 @@ class _CurrencySelectionDialogWidgetState
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppTheme.backgroundCard,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           AppBar(
-            backgroundColor: AppTheme.backgroundInput,
+            backgroundColor: AppTheme.colors(context).inputBackground,
             title: Text(
               widget.title,
               style: const TextStyle(color: Colors.white),
@@ -69,10 +69,10 @@ class _CurrencySelectionDialogWidgetState
             child: Container(
               height: 48,
               decoration: BoxDecoration(
-                color: AppTheme.backgroundInput,
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: AppTheme.satoneroOrange.withValues(alpha: 0.3),
+                  color: AppTheme.colors(context).accent.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -126,7 +126,7 @@ class _CurrencySelectionDialogWidgetState
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
                                 S.of(context)!.noCurrenciesFound,
-                                style: const TextStyle(color: Colors.white70),
+                                style: TextStyle(color: AppTheme.colors(context).textSecondary),
                               ),
                             ),
                           )
@@ -152,8 +152,8 @@ class _CurrencySelectionDialogWidgetState
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 trailing: isSelected
-                                    ? const Icon(Icons.check,
-                                        color: AppTheme.satoneroOrange)
+                                    ? Icon(Icons.check,
+                                        color: AppTheme.colors(context).accent)
                                     : null,
                                 onTap: () {
                                   Navigator.of(context).pop(code);

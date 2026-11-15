@@ -22,7 +22,7 @@ class WalletStatusCard extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -36,15 +36,15 @@ class WalletStatusCard extends ConsumerWidget {
                 Icon(
                   LucideIcons.wallet,
                   color: isConnected
-                      ? AppTheme.activeColor
-                      : AppTheme.textSecondary,
+                      ? AppTheme.colors(context).accent
+                      : AppTheme.colors(context).textSecondary,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   S.of(context)!.wallet,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -54,8 +54,8 @@ class WalletStatusCard extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               S.of(context)!.walletDescription,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -69,7 +69,7 @@ class WalletStatusCard extends ConsumerWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -80,7 +80,7 @@ class WalletStatusCard extends ConsumerWidget {
                       Icon(
                         isConnected ? LucideIcons.check : LucideIcons.plug,
                         color:
-                            isConnected ? Colors.green : AppTheme.textSecondary,
+                            isConnected ? Colors.green : AppTheme.colors(context).textSecondary,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -93,8 +93,8 @@ class WalletStatusCard extends ConsumerWidget {
                                   ? (nwcState.walletAlias ??
                                       S.of(context)!.walletConnected)
                                   : S.of(context)!.walletDisconnected,
-                              style: const TextStyle(
-                                color: AppTheme.textPrimary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textPrimary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -107,8 +107,8 @@ class WalletStatusCard extends ConsumerWidget {
                               const SizedBox(height: 4),
                               Text(
                                 '⚡ ${_formatSats(nwcState.balanceSats!)} ${S.of(context)!.sats}',
-                                style: const TextStyle(
-                                  color: AppTheme.textSecondary,
+                                style: TextStyle(
+                                  color: AppTheme.colors(context).textSecondary,
                                   fontSize: 13,
                                 ),
                               ),
@@ -116,9 +116,9 @@ class WalletStatusCard extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                         size: 20,
                       ),
                     ],

@@ -115,11 +115,11 @@ class ChatFileUploadHelper {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           title: Text(
             S.of(context)!.confirmFileUpload,
             style: TextStyle(
-              color: AppTheme.cream1,
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -130,7 +130,7 @@ class ChatFileUploadHelper {
               Text(
                 S.of(context)!.sendThisFile,
                 style: TextStyle(
-                  color: AppTheme.cream1,
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 16,
                 ),
               ),
@@ -139,13 +139,13 @@ class ChatFileUploadHelper {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundInput,
+                  color: AppTheme.colors(context).inputBackground,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   filename,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -160,7 +160,7 @@ class ChatFileUploadHelper {
               child: Text(
                 S.of(context)!.cancel,
                 style: TextStyle(
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 16,
                 ),
               ),
@@ -168,7 +168,7 @@ class ChatFileUploadHelper {
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.satoneroOrange,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.white,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

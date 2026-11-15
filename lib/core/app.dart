@@ -253,7 +253,7 @@ class _SatoneroAppState extends ConsumerState<SatoneroApp> {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         home: Scaffold(
-          backgroundColor: AppTheme.dark1,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           body: const Center(child: CircularProgressIndicator()),
         ),
       ),

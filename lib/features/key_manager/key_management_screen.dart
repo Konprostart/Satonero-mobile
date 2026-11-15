@@ -138,25 +138,25 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const HeroIcon(
+          icon: HeroIcon(
             HeroIcons.arrowLeft,
-            color: AppTheme.textPrimary,
+            color: AppTheme.colors(context).textPrimary,
           ),
           onPressed: () => context.pop(),
         ).withAutomationId(AutomationIds.appBarBack),
         title: Text(
           S.of(context)!.account,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppTheme.activeColor))
+          ? Center(
+              child: CircularProgressIndicator(color: AppTheme.colors(context).accent))
           : Column(
               children: [
                 Expanded(
@@ -223,7 +223,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
     final npub = _publicKey ?? '';
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -231,13 +231,13 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            const Icon(LucideIcons.user, color: AppTheme.activeColor, size: 20),
+            Icon(LucideIcons.user, color: AppTheme.colors(context).accent, size: 20),
             const SizedBox(width: 8),
             Expanded(
               child: SelectableText(
                 npub,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                   fontFamily: 'monospace',
                 ),
@@ -252,7 +252,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
   Widget _buildSecretWordsCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -263,16 +263,16 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.key,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.secretWords,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -285,12 +285,12 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                     S.of(context)!.secretWordsInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -299,8 +299,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.toRestoreYourAccount,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -309,7 +309,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundInput,
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
@@ -321,8 +321,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                         : _mnemonic != null
                             ? _maskSeedPhrase(_mnemonic!)
                             : '',
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                       fontFamily: 'monospace',
                     ),
@@ -348,14 +348,14 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                               ? LucideIcons.eyeOff
                               : LucideIcons.eye,
                           size: 16,
-                          color: AppTheme.activeColor,
+                          color: AppTheme.colors(context).accent,
                         ),
                         label: Text(
                           _showSecretWords
                               ? S.of(context)!.hide
                               : S.of(context)!.show,
-                          style: const TextStyle(
-                            color: AppTheme.activeColor,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).accent,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -375,7 +375,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
   Widget _buildPrivacyCard(BuildContext context, settings) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -386,16 +386,16 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.shield,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.privacy,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -408,12 +408,12 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                     S.of(context)!.privacyInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -422,8 +422,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.controlPrivacySettings,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -454,7 +454,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
   Widget _buildCurrentTradeIndexCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -465,16 +465,16 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.refreshCcw,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.currentTradeIndex,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -487,12 +487,12 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                     S.of(context)!.currentTradeIndexInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -501,8 +501,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.yourTradeCounter,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -511,7 +511,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundInput,
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
@@ -519,8 +519,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                 children: [
                   Text(
                     '${_tradeKeyIndex ?? 0}',
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
@@ -529,8 +529,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                   Expanded(
                     child: Text(
                       S.of(context)!.incrementsWithEachTrade,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 14,
                       ),
                     ),
@@ -550,7 +550,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
       child: ElevatedButton(
         onPressed: () => _showGenerateNewUserDialog(context),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.activeColor,
+          backgroundColor: AppTheme.colors(context).accent,
           foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -587,7 +587,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
     return OutlinedButton(
       onPressed: () => _showImportMnemonicDialog(context),
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: AppTheme.activeColor),
+        side: BorderSide(color: AppTheme.colors(context).accent),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -596,19 +596,19 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             LucideIcons.download,
             size: 20,
-            color: AppTheme.activeColor,
+            color: AppTheme.colors(context).accent,
           ),
           const SizedBox(width: 8),
           Flexible(
             child: Text(
               S.of(context)!.importMostroUser,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: AppTheme.activeColor,
+                color: AppTheme.colors(context).accent,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -622,16 +622,16 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
     return OutlinedButton(
       onPressed: () => _showRefreshUserDialog(context),
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: AppTheme.activeColor),
+        side: BorderSide(color: AppTheme.colors(context).accent),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
       ),
-      child: const Icon(
+      child: Icon(
         LucideIcons.refreshCw,
         size: 20,
-        color: AppTheme.activeColor,
+        color: AppTheme.colors(context).accent,
       ),
     );
   }
@@ -661,7 +661,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: isSelected
-                        ? AppTheme.activeColor
+                        ? AppTheme.colors(context).accent
                         : Colors.white.withValues(alpha: 0.3),
                     width: 2,
                   ),
@@ -671,9 +671,9 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                         child: Container(
                           width: 10,
                           height: 10,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppTheme.activeColor,
+                            color: AppTheme.colors(context).accent,
                           ),
                         ),
                       )
@@ -689,8 +689,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                       title,
                       style: TextStyle(
                         color: isSelected
-                            ? AppTheme.textPrimary
-                            : AppTheme.textInactive,
+                            ? AppTheme.colors(context).textPrimary
+                            : AppTheme.colors(context).textInactive,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -698,8 +698,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                     const SizedBox(height: 2),
                     Text(
                       description,
-                      style: const TextStyle(
-                        color: AppTheme.textInactive,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textInactive,
                         fontSize: 13,
                       ),
                     ),
@@ -718,23 +718,23 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           content: Text(
             content,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),
@@ -744,8 +744,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 S.of(context)!.ok,
-                style: const TextStyle(
-                  color: AppTheme.activeColor,
+                style: TextStyle(
+                  color: AppTheme.colors(context).accent,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -762,23 +762,23 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
           ),
           title: Text(
             S.of(context)!.generateNewUserDialogTitle,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           content: Text(
             S.of(context)!.generateNewUserDialogContent,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),
@@ -788,8 +788,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 S.of(context)!.cancel,
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -803,7 +803,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                 _generateNewMasterKey();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.activeColor,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -831,23 +831,23 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
           ),
           title: Text(
             S.of(context)!.refreshUserDialogTitle,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           content: Text(
             S.of(context)!.refreshUserDialogContent,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),
@@ -857,8 +857,8 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 S.of(context)!.cancel,
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -874,7 +874,7 @@ class _KeyManagementScreenState extends ConsumerState<KeyManagementScreen> {
                 await restoreService.initRestoreProcess();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.activeColor,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),

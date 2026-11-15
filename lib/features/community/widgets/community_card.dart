@@ -30,12 +30,12 @@ class CommunityCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppTheme.activeColor.withValues(alpha: 0.1)
-              : AppTheme.backgroundCard,
+              ? AppTheme.colors(context).accent.withValues(alpha: 0.1)
+              : AppTheme.colors(context).cardBackground,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? AppTheme.activeColor.withValues(alpha: 0.5)
+                ? AppTheme.colors(context).accent.withValues(alpha: 0.5)
                 : Colors.white.withValues(alpha: 0.1),
             width: isSelected ? 2 : 1,
           ),
@@ -54,8 +54,8 @@ class CommunityCard extends StatelessWidget {
                     children: [
                       Text(
                         community.displayName,
-                        style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -63,8 +63,8 @@ class CommunityCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         community.region,
-                        style: const TextStyle(
-                          color: AppTheme.textSecondary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textSecondary,
                           fontSize: 13,
                         ),
                       ),
@@ -72,9 +72,9 @@ class CommunityCard extends StatelessWidget {
                   ),
                 ),
                 if (isSelected)
-                  const Icon(
+                  Icon(
                     Icons.check_circle,
-                    color: AppTheme.activeColor,
+                    color: AppTheme.colors(context).accent,
                     size: 24,
                   ),
               ],
@@ -85,8 +85,8 @@ class CommunityCard extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 community.about!,
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 13,
                   height: 1.4,
                 ),
@@ -104,10 +104,11 @@ class CommunityCard extends StatelessWidget {
                 runSpacing: 4,
                 children: community.currencies.isNotEmpty
                     ? community.currencies.map((currency) {
-                        return _buildCurrencyTag(currency);
+                        return _buildCurrencyTag(context, currency);
                       }).toList()
                     : [
                         _buildCurrencyTag(
+                          context,
                           S.of(context)!.communityAllCurrencies,
                         ),
                       ],
@@ -125,13 +126,13 @@ class CommunityCard extends StatelessWidget {
                     Icon(
                       Icons.percent,
                       size: 14,
-                      color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                      color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${S.of(context)!.communityFee} ${(community.fee! * 100).toStringAsFixed(1)}%',
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -145,13 +146,13 @@ class CommunityCard extends StatelessWidget {
                     Icon(
                       Icons.bar_chart,
                       size: 14,
-                      color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                      color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 4),
                     Text(
                       _formatRange(context),
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -172,7 +173,7 @@ class CommunityCard extends StatelessWidget {
                       child: Icon(
                         _socialIcon(link.type),
                         size: 18,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                       ),
                     ),
                   );
@@ -188,17 +189,17 @@ class CommunityCard extends StatelessWidget {
         merge: false);
   }
 
-  Widget _buildCurrencyTag(String label) {
+  Widget _buildCurrencyTag(BuildContext context, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppTheme.activeColor.withValues(alpha: 0.15),
+        color: AppTheme.colors(context).accent.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: AppTheme.activeColor,
+        style: TextStyle(
+          color: AppTheme.colors(context).accent,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),

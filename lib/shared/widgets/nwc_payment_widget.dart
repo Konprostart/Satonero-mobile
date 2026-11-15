@@ -278,7 +278,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               foregroundColor: Colors.black,
               disabledBackgroundColor: Colors.grey.shade700,
               shape: RoundedRectangleBorder(
@@ -296,7 +296,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
                 '${S.of(context)!.walletBalance}: ${_formatSats(balanceSats)} sats',
                 style: TextStyle(
                   color: hasEnoughBalance
-                      ? AppTheme.cream1.withAlpha(153)
+                      ? AppTheme.colors(context).textPrimary.withAlpha(153)
                       : Colors.red.shade300,
                   fontSize: 13,
                 ),
@@ -314,25 +314,25 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(77)),
+        border: Border.all(color: AppTheme.colors(context).accent.withAlpha(77)),
       ),
       child: Column(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 32,
             height: 32,
             child: CircularProgressIndicator(
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               strokeWidth: 2.5,
             ),
           ),
           const SizedBox(height: 12),
           Text(
             S.of(context)!.nwcCheckingBalance,
-            style: const TextStyle(
-              color: AppTheme.cream1,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -346,25 +346,25 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(77)),
+        border: Border.all(color: AppTheme.colors(context).accent.withAlpha(77)),
       ),
       child: Column(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 40,
             height: 40,
             child: CircularProgressIndicator(
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               strokeWidth: 3,
             ),
           ),
           const SizedBox(height: 16),
           Text(
             S.of(context)!.nwcPaymentSending,
-            style: const TextStyle(
-              color: AppTheme.cream1,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -373,7 +373,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
           Text(
             '${_formatSats(widget.sats)} sats',
             style: TextStyle(
-              color: AppTheme.cream1.withAlpha(153),
+              color: AppTheme.colors(context).textPrimary.withAlpha(153),
               fontSize: 14,
             ),
           ),
@@ -395,7 +395,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.red.withAlpha(128)),
       ),
@@ -417,7 +417,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
             ),
             child: Text(S.of(context)!.nwcRetryPayment),
           ),
@@ -432,18 +432,18 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
       icon: const Icon(LucideIcons.qrCode, size: 16),
       label: Text(S.of(context)!.nwcShowInvoice),
       style: TextButton.styleFrom(
-        foregroundColor: AppTheme.cream1.withAlpha(179),
+        foregroundColor: AppTheme.colors(context).textPrimary.withAlpha(179),
       ),
     );
   }
 
   Widget _buildRefreshBalanceButton(bool hasEnoughBalance) {
     if (_refreshingBalance) {
-      return const SizedBox(
+      return SizedBox(
         width: 14,
         height: 14,
         child: CircularProgressIndicator(
-          color: AppTheme.satoneroOrange,
+          color: AppTheme.colors(context).accent,
           strokeWidth: 2,
         ),
       );
@@ -458,7 +458,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
           LucideIcons.refreshCw,
           size: 14,
           color: hasEnoughBalance
-              ? AppTheme.cream1.withAlpha(153)
+              ? AppTheme.colors(context).textPrimary.withAlpha(153)
               : Colors.red.shade300,
         ),
       ),

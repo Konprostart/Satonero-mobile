@@ -115,8 +115,8 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                       children: [
                         Text(
                           handle,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textPrimary,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -128,14 +128,14 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: AppTheme.backgroundInput
+                                color: AppTheme.colors(context).inputBackground
                                     .withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
                                 date,
                                 style: TextStyle(
-                                  color: AppTheme.textSecondary,
+                                  color: AppTheme.colors(context).textSecondary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -172,7 +172,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                     Text(
                       "$actionText $handle",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppTheme.colors(context).textPrimary,
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                       ),
@@ -181,7 +181,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                     Text(
                       messagePreview,
                       style: TextStyle(
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 13,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -217,7 +217,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppTheme.backgroundDark,
+                color: AppTheme.colors(context).scaffoldBackground,
                 shape: BoxShape.circle,
               ),
             ),
@@ -231,7 +231,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                     width: 100,
                     height: 16,
                     decoration: BoxDecoration(
-                      color: AppTheme.backgroundDark,
+                      color: AppTheme.colors(context).scaffoldBackground,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -241,7 +241,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                     width: 200,
                     height: 14,
                     decoration: BoxDecoration(
-                      color: AppTheme.backgroundDark,
+                      color: AppTheme.colors(context).scaffoldBackground,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),

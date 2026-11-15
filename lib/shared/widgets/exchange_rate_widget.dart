@@ -26,7 +26,7 @@ class ExchangeRateWidget extends ConsumerWidget {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppTheme.dark2,
+            color: AppTheme.colors(context).inputBackground,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -37,12 +37,12 @@ class ExchangeRateWidget extends ConsumerWidget {
                   symbol: '',
                   decimalDigits: 2,
                 ).format(exchangeRate)} $currency',
-                style: const TextStyle(color: AppTheme.cream1),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
               ),
               Row(
                 children: [
                   Text('price in $currency',
-                      style: const TextStyle(color: AppTheme.grey)),
+                      style: TextStyle(color: AppTheme.colors(context).textSecondary)),
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: () {
@@ -59,12 +59,12 @@ class ExchangeRateWidget extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: AppTheme.grey.withValues(alpha: .3),
+                        color: AppTheme.colors(context).textSecondary.withValues(alpha: .3),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.sync,
-                        color: AppTheme.cream1,
+                        color: AppTheme.colors(context).textPrimary,
                         size: 12,
                       ),
                     ),

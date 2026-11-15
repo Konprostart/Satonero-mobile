@@ -12,7 +12,7 @@ class DisputeDescription extends StatelessWidget {
     return Text(
       description,
       style: TextStyle(
-        color: AppTheme.textSecondary,
+        color: AppTheme.colors(context).textSecondary,
         fontSize: 13,
       ),
       overflow: TextOverflow.ellipsis,

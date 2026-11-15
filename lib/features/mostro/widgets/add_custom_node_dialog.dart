@@ -84,15 +84,15 @@ class _AddCustomNodeDialogContentState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppTheme.backgroundCard,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
       ),
       title: Text(
         S.of(context)!.addCustomNodeTitle,
-        style: const TextStyle(
-          color: AppTheme.textPrimary,
+        style: TextStyle(
+          color: AppTheme.colors(context).textPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
@@ -110,7 +110,7 @@ class _AddCustomNodeDialogContentState
                 vertical: 8,
               ),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundInput,
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Colors.white.withValues(alpha: 0.1),
@@ -118,17 +118,17 @@ class _AddCustomNodeDialogContentState
               ),
               child: TextField(
                 controller: pubkeyController,
-                style: const TextStyle(color: AppTheme.textPrimary),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
                 decoration: InputDecoration(
                   labelText: S.of(context)!.enterNodePubkey,
-                  labelStyle: const TextStyle(color: AppTheme.textSecondary),
+                  labelStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
                   ),
                   hintText: S.of(context)!.pubkeyHint,
-                  hintStyle: const TextStyle(color: AppTheme.textSecondary),
+                  hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                   errorText: errorMessage,
                   errorStyle: const TextStyle(color: Colors.red),
                 ),
@@ -143,7 +143,7 @@ class _AddCustomNodeDialogContentState
                 vertical: 8,
               ),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundInput,
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Colors.white.withValues(alpha: 0.1),
@@ -151,17 +151,17 @@ class _AddCustomNodeDialogContentState
               ),
               child: TextField(
                 controller: nameController,
-                style: const TextStyle(color: AppTheme.textPrimary),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
                 decoration: InputDecoration(
                   labelText: S.of(context)!.enterNodeName,
-                  labelStyle: const TextStyle(color: AppTheme.textSecondary),
+                  labelStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
                   ),
                   hintText: S.of(context)!.nodeNameHint,
-                  hintStyle: const TextStyle(color: AppTheme.textSecondary),
+                  hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                 ),
               ).withAutomationId(AutomationIds.nodeCustomName),
             ),
@@ -173,8 +173,8 @@ class _AddCustomNodeDialogContentState
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             S.of(context)!.cancel,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -258,7 +258,7 @@ class _AddCustomNodeDialogContentState
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.activeColor,
+            backgroundColor: AppTheme.colors(context).accent,
             foregroundColor: Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),

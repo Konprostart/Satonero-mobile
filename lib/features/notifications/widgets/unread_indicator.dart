@@ -9,8 +9,8 @@ class UnreadIndicator extends StatelessWidget {
     return Container(
       width: 8,
       height: 8,
-      decoration: const BoxDecoration(
-        color: AppTheme.satoneroOrange,
+      decoration: BoxDecoration(
+        color: AppTheme.colors(context).accent,
         shape: BoxShape.circle,
       ),
     );

@@ -67,7 +67,7 @@ class _PayoutInvoiceScreenState extends ConsumerState<PayoutInvoiceScreen> {
     );
 
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: OrderAppBar(title: S.of(context)!.collectYourSats),
       body: Padding(
         padding: EdgeInsets.fromLTRB(
@@ -152,7 +152,7 @@ class _PayoutHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context)!;
-    const bodyStyle = TextStyle(color: AppTheme.textPrimary, fontSize: 16);
+    final bodyStyle = TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 16);
     final boldStyle = bodyStyle.copyWith(fontWeight: FontWeight.w600);
 
     return Column(

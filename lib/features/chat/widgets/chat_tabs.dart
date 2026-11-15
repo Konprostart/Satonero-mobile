@@ -16,7 +16,7 @@ class ChatTabs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
+        color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           bottom: BorderSide(
             color: Colors.white.withValues(alpha: 0.1),
@@ -45,7 +45,7 @@ class ChatTabs extends ConsumerWidget {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isActive ? AppTheme.satoneroOrange : Colors.transparent,
+                color: isActive ? AppTheme.colors(context).accent : Colors.transparent,
                 width: 3.0,
               ),
             ),
@@ -54,7 +54,7 @@ class ChatTabs extends ConsumerWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isActive ? AppTheme.satoneroOrange : AppTheme.textInactive,
+              color: isActive ? AppTheme.colors(context).accent : AppTheme.colors(context).textInactive,
               fontWeight: FontWeight.w600,
               fontSize: 15,
               letterSpacing: 0.5,

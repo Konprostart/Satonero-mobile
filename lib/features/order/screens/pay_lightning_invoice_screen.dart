@@ -64,7 +64,7 @@ class _PayLightningInvoiceScreenState
     );
 
     return Scaffold(
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       appBar: OrderAppBar(title: S.of(context)!.payLightningInvoice),
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(

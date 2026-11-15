@@ -53,18 +53,18 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
                   widget.fiatAmount,
                   widget.orderId,
                 ),
-            style: const TextStyle(color: AppTheme.cream1, fontSize: 18),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 18),
             textAlign: TextAlign.center,
           ),
         const SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.all(8.0),
-          color: AppTheme.cream1,
+          color: AppTheme.colors(context).textPrimary,
           child: QrImageView(
             data: widget.lnInvoice,
             version: QrVersions.auto,
             size: 250.0,
-            backgroundColor: AppTheme.cream1,
+            backgroundColor: AppTheme.colors(context).textPrimary,
             errorStateBuilder: (cxt, err) {
               return Center(
                 child: Text(
@@ -92,7 +92,7 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
               icon: const Icon(Icons.copy),
               label: Text(S.of(context)!.copy),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.satoneroOrange,
+                backgroundColor: AppTheme.colors(context).accent,
               ),
             ),
             ElevatedButton.icon(
@@ -134,7 +134,7 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
               icon: const Icon(Icons.share),
               label: Text(S.of(context)!.share),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.satoneroOrange,
+                backgroundColor: AppTheme.colors(context).accent,
               ),
             ),
           ],

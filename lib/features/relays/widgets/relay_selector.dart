@@ -24,7 +24,7 @@ class RelaySelector extends ConsumerWidget {
         Text(
           S.of(context)!.relaysDescription,
           style: TextStyle(
-            color: AppTheme.textSecondary,
+            color: AppTheme.colors(context).textSecondary,
             fontSize: 16,
           ),
         ),
@@ -35,7 +35,7 @@ class RelaySelector extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.dark1.withValues(alpha: 0.5),
+              color: AppTheme.colors(context).cardBackground.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             ),
@@ -43,14 +43,14 @@ class RelaySelector extends ConsumerWidget {
               children: [
                 Icon(
                   Icons.info_outline,
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.colors(context).textSecondary,
                   size: 24,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   S.of(context)!.noMostroRelaysAvailable,
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                   textAlign: TextAlign.center,
@@ -74,7 +74,7 @@ class RelaySelector extends ConsumerWidget {
                 await showAddDialog(context, ref);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.activeColor,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -104,7 +104,7 @@ class RelaySelector extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -115,7 +115,7 @@ class RelaySelector extends ConsumerWidget {
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: relayInfo.isActive ? AppTheme.activeColor : Colors.grey,
+              color: relayInfo.isActive ? AppTheme.colors(context).accent : Colors.grey,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -125,8 +125,8 @@ class RelaySelector extends ConsumerWidget {
           Expanded(
             child: Text(
               relayInfo.url,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -157,9 +157,9 @@ class RelaySelector extends ConsumerWidget {
             onTap: () async {
               await _showDeleteUserRelayDialog(context, ref, relayInfo);
             },
-            child: const Icon(
+            child: Icon(
               Icons.delete,
-              color: Colors.white,
+              color: AppTheme.colors(context).textPrimary,
               size: 24,
             ),
           ).withAutomationId(AutomationIds.settingsRelayDelete(relayInfo.url)),
@@ -188,21 +188,21 @@ class RelaySelector extends ConsumerWidget {
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: AppTheme.dark2,
+          backgroundColor: AppTheme.colors(context).inputBackground,
           title: Text(
             S.of(ctx)!.cannotBlacklistLastRelayTitle,
-            style: const TextStyle(color: AppTheme.cream1),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
           ),
           content: Text(
             S.of(ctx)!.cannotBlacklistLastRelayMessage,
-            style: const TextStyle(color: AppTheme.textSecondary),
+            style: TextStyle(color: AppTheme.colors(context).textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
               child: Text(
                 S.of(ctx)!.cannotBlacklistLastRelayOk,
-                style: const TextStyle(color: AppTheme.cream1),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
               ),
             ),
           ],
@@ -216,28 +216,28 @@ class RelaySelector extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppTheme.dark2,
+          backgroundColor: AppTheme.colors(context).inputBackground,
           title: Text(
             S.of(context)!.deleteUserRelayTitle,
-            style: const TextStyle(color: AppTheme.cream1),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
           ),
           content: Text(
             S.of(context)!.deleteUserRelayMessage,
-            style: const TextStyle(color: AppTheme.textSecondary),
+            style: TextStyle(color: AppTheme.colors(context).textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: Text(
                 S.of(context)!.deleteUserRelayCancel,
-                style: const TextStyle(color: AppTheme.textSecondary),
+                style: TextStyle(color: AppTheme.colors(context).textSecondary),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(
                 S.of(context)!.deleteUserRelayConfirm,
-                style: const TextStyle(color: AppTheme.activeColor),
+                style: TextStyle(color: AppTheme.colors(context).accent),
               ),
             ),
           ],
@@ -278,21 +278,21 @@ class RelaySelector extends ConsumerWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: AppTheme.dark2,
+            backgroundColor: AppTheme.colors(context).inputBackground,
             title: Text(
               S.of(context)!.cannotBlacklistLastRelayTitle,
-              style: const TextStyle(color: AppTheme.cream1),
+              style: TextStyle(color: AppTheme.colors(context).textPrimary),
             ),
             content: Text(
               S.of(context)!.cannotBlacklistLastRelayMessage,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   S.of(context)!.cannotBlacklistLastRelayOk,
-                  style: const TextStyle(color: AppTheme.cream1),
+                  style: TextStyle(color: AppTheme.colors(context).textPrimary),
                 ),
               ),
             ],
@@ -326,15 +326,15 @@ class RelaySelector extends ConsumerWidget {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: AppTheme.backgroundCard,
+              backgroundColor: AppTheme.colors(context).cardBackground,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
               ),
               title: Text(
                 S.of(context)!.addRelayDialogTitle,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -349,7 +349,7 @@ class RelaySelector extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundInput,
+                        color: AppTheme.colors(context).inputBackground,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                             color: Colors.white.withValues(alpha: 0.1)),
@@ -357,18 +357,18 @@ class RelaySelector extends ConsumerWidget {
                       child: TextField(
                         controller: textController,
                         enabled: !isLoading,
-                        style: const TextStyle(color: AppTheme.textPrimary),
+                        style: TextStyle(color: AppTheme.colors(context).textPrimary),
                         decoration: InputDecoration(
                           labelText: S.of(context)!.addRelayDialogPlaceholder,
                           labelStyle:
-                              const TextStyle(color: AppTheme.textSecondary),
+                              TextStyle(color: AppTheme.colors(context).textSecondary),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 8),
                           hintText:
                               'relay.example.com or wss://relay.example.com',
                           hintStyle:
-                              const TextStyle(color: AppTheme.textSecondary),
+                              TextStyle(color: AppTheme.colors(context).textSecondary),
                           errorText: errorMessage,
                           errorStyle: const TextStyle(color: Colors.red),
                         ),
@@ -379,20 +379,20 @@ class RelaySelector extends ConsumerWidget {
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppTheme.cream1),
+                                  AppTheme.colors(context).textPrimary),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Text(
                             S.of(context)!.addRelayDialogTesting,
                             style:
-                                const TextStyle(color: AppTheme.textSecondary),
+                                TextStyle(color: AppTheme.colors(context).textSecondary),
                           ),
                         ],
                       ),
@@ -406,8 +406,8 @@ class RelaySelector extends ConsumerWidget {
                     onPressed: () => Navigator.of(dialogContext).pop(),
                     child: Text(
                       S.of(context)!.addRelayDialogCancel,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -471,7 +471,7 @@ class RelaySelector extends ConsumerWidget {
                           }
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.activeColor,
+                    backgroundColor: AppTheme.colors(context).accent,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

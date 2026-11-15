@@ -42,7 +42,7 @@ class _FixedSwitchState extends State<FixedSwitch> {
         const SizedBox(width: 8),
         Text(
           marketRate ? 'Market' : 'Fixed',
-          style: const TextStyle(color: AppTheme.cream1),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
       ],
     );

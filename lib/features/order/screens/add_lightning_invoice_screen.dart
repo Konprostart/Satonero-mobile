@@ -101,7 +101,7 @@ class _AddLightningInvoiceScreenState
             (amount ?? 0) > 0;
 
         return Scaffold(
-          backgroundColor: AppTheme.dark1,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           appBar: OrderAppBar(title: S.of(context)!.addLightningInvoice),
           body: Padding(
             padding: EdgeInsets.fromLTRB(

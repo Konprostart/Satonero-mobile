@@ -159,7 +159,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Row(
               children: [
                 Icon(LucideIcons.sunMoon,
-                    color: AppTheme.lightningBlue, size: 20),
+                    color: AppTheme.colors(context).lightningBlue, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.appearance,
@@ -221,7 +221,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -232,26 +232,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(LucideIcons.shield,
-                    color: AppTheme.activeColor, size: 24),
+                Icon(LucideIcons.shield,
+                    color: AppTheme.colors(context).accent, size: 24),
                 const SizedBox(width: 12),
                 Text(S.of(context)!.privateModeTitle,
-                    style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                    style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600)),
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () => _showPrivateModeInfo(context),
-                  child: const Icon(Icons.help_outline,
-                      color: AppTheme.textSecondary, size: 20),
+                  child: Icon(Icons.help_outline,
+                      color: AppTheme.colors(context).textSecondary, size: 20),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             Text(S.of(context)!.privateModeDescription,
-                style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                style: TextStyle(
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 13,
                     fontWeight: FontWeight.w500)),
             const SizedBox(height: 16),
@@ -262,8 +262,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     settings.privateMode
                         ? S.of(context)!.privateModeOn
                         : S.of(context)!.privateModeOff,
-                    style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                    style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 15,
                         fontWeight: FontWeight.w500)),
                 Switch(
@@ -305,7 +305,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ? S.of(context)!.privateModeStatusOn
                   : S.of(context)!.privateModeStatusOff,
               style:
-                  const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                  TextStyle(color: AppTheme.colors(context).textSecondary, fontSize: 12),
             ),
           ],
         ),
@@ -339,7 +339,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildNotificationSettingsCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -350,16 +350,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.bell,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   S.of(context)!.notificationSettings,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -369,8 +369,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 8),
             Text(
               S.of(context)!.notificationSettingsDescription,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -384,16 +384,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border:
                         Border.all(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         LucideIcons.settings,
-                        color: AppTheme.activeColor,
+                        color: AppTheme.colors(context).accent,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -403,8 +403,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           children: [
                             Text(
                               S.of(context)!.pushNotifications,
-                              style: const TextStyle(
-                                color: AppTheme.textPrimary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textPrimary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -412,8 +412,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             const SizedBox(height: 4),
                             Text(
                               S.of(context)!.pushNotificationsDescription,
-                              style: const TextStyle(
-                                color: AppTheme.textSecondary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textSecondary,
                                 fontSize: 13,
                               ),
                               maxLines: 2,
@@ -422,9 +422,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                         size: 20,
                       ),
                     ],
@@ -441,7 +441,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildTradeHistoryCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -452,16 +452,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.history,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.tradeHistory,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -471,8 +471,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.tradeHistoryDescription,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -487,7 +487,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildDevToolsCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -498,16 +498,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.bug,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   S.of(context)!.devTools,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -517,8 +517,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 8),
             Text(
               S.of(context)!.devToolsWarning,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -532,16 +532,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border:
                         Border.all(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         LucideIcons.fileText,
-                        color: AppTheme.activeColor,
+                        color: AppTheme.colors(context).accent,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -551,8 +551,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           children: [
                             Text(
                               S.of(context)!.logsReport,
-                              style: const TextStyle(
-                                color: AppTheme.textPrimary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textPrimary,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -560,17 +560,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             const SizedBox(height: 4),
                             Text(
                               S.of(context)!.viewAndExportLogs,
-                              style: const TextStyle(
-                                color: AppTheme.textSecondary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textSecondary,
                                 fontSize: 13,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                         size: 20,
                       ),
                     ],
@@ -587,7 +587,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildLanguageCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -598,16 +598,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.globe,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.language,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -620,12 +620,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     S.of(context)!.languageInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -634,8 +634,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.chooseLanguageDescription,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -650,7 +650,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildCurrencyCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -661,16 +661,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.coins,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.currency,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -683,12 +683,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     S.of(context)!.currencyInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -697,8 +697,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.setDefaultFiatCurrency,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -713,7 +713,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildLightningAddressCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -724,16 +724,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.zap,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.defaultLightningAddress,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -746,12 +746,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     S.of(context)!.lightningAddressInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -760,8 +760,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 20),
             Text(
               S.of(context)!.setDefaultLightningAddress,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -772,13 +772,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 vertical: 8,
               ),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundInput,
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: TextFormField(
                 controller: _lightningAddressController,
-                style: const TextStyle(color: AppTheme.textPrimary),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
                 onChanged: (value) {
                   final cleanValue = value.trim().isEmpty ? null : value.trim();
                   ref
@@ -793,9 +793,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   labelText: S.of(context)!.lightningAddressOptional,
-                  labelStyle: const TextStyle(color: AppTheme.textSecondary),
+                  labelStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                   hintText: S.of(context)!.enterLightningAddress,
-                  hintStyle: const TextStyle(color: AppTheme.textSecondary),
+                  hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 8,
@@ -812,7 +812,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildRelaysCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -823,16 +823,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.radio,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.relays,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -845,12 +845,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     S.of(context)!.relaysInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -872,7 +872,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -883,16 +883,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.zap,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   S.of(context)!.mostro,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -905,12 +905,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     S.of(context)!.mostroInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(
                       Icons.info_outline,
                       size: 20,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                   ),
                 ),
@@ -919,8 +919,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 8),
             Text(
               S.of(context)!.mostroNodeDescription,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -934,7 +934,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -954,8 +954,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   Flexible(
                                     child: Text(
                                       selectedNode.displayName,
-                                      style: const TextStyle(
-                                        color: AppTheme.textPrimary,
+                                      style: TextStyle(
+                                        color: AppTheme.colors(context).textPrimary,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -971,8 +971,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 selectedNode.pubkey,
-                                style: const TextStyle(
-                                  color: AppTheme.textSecondary,
+                                style: TextStyle(
+                                  color: AppTheme.colors(context).textSecondary,
                                   fontSize: 12,
                                 ),
                                 maxLines: 1,
@@ -982,8 +982,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 S.of(context)!.tapToSelectNode,
-                                style: const TextStyle(
-                                  color: AppTheme.textSecondary,
+                                style: TextStyle(
+                                  color: AppTheme.colors(context).textSecondary,
                                   fontSize: 11,
                                 ),
                               ),
@@ -994,15 +994,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         Expanded(
                           child: Text(
                             S.of(context)!.selectMostroNode,
-                            style: const TextStyle(
-                              color: AppTheme.textSecondary,
+                            style: TextStyle(
+                              color: AppTheme.colors(context).textSecondary,
                               fontSize: 15,
                             ),
                           ),
                         ),
-                      const Icon(
+                      Icon(
                         Icons.arrow_drop_down,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.colors(context).textSecondary,
                       ),
                     ],
                   ),
@@ -1040,7 +1040,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: currenciesAsync.when(
@@ -1095,25 +1095,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       children: [
                         Text(
                           S.of(context)!.defaultFiatCurrency,
-                          style: const TextStyle(
-                            color: AppTheme.grey2,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textInactive,
                             fontSize: 12,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           displayText,
-                          style: const TextStyle(
-                            color: AppTheme.cream1,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textPrimary,
                             fontSize: 16,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.arrow_drop_down,
-                    color: AppTheme.grey2,
+                    color: AppTheme.colors(context).textInactive,
                   ),
                 ],
               ),
@@ -1129,23 +1129,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           content: Text(
             content,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),
@@ -1155,8 +1155,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 S.of(context)!.ok,
-                style: const TextStyle(
-                  color: AppTheme.activeColor,
+                style: TextStyle(
+                  color: AppTheme.colors(context).accent,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

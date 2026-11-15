@@ -82,7 +82,7 @@ class _MessageInputState extends ConsumerState<MessageInput> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
+        color: AppTheme.colors(context).scaffoldBackground,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -108,10 +108,10 @@ class _MessageInputState extends ConsumerState<MessageInput> {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundDark,
+                    color: AppTheme.colors(context).scaffoldBackground,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: AppTheme.textSecondary.withValues(alpha: 0.3),
+                      color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -121,13 +121,13 @@ class _MessageInputState extends ConsumerState<MessageInput> {
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
-                              color: AppTheme.cream1,
+                              color: AppTheme.colors(context).textPrimary,
                               strokeWidth: 2,
                             ),
                           )
                         : Icon(
                             Icons.attach_file,
-                            color: AppTheme.cream1,
+                            color: AppTheme.colors(context).textPrimary,
                             size: 20,
                           ),
                     onPressed: _isUploadingFile ? null : _selectAndUploadFile,
@@ -139,7 +139,7 @@ class _MessageInputState extends ConsumerState<MessageInput> {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppTheme.backgroundInput,
+                      color: AppTheme.colors(context).inputBackground,
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: TextField(
@@ -147,13 +147,13 @@ class _MessageInputState extends ConsumerState<MessageInput> {
                       focusNode: _focusNode,
                       enabled: true,
                       style: TextStyle(
-                        color: AppTheme.cream1,
+                        color: AppTheme.colors(context).textPrimary,
                         fontSize: 15,
                       ),
                       decoration: InputDecoration(
                         hintText: S.of(context)!.typeAMessage,
                         hintStyle: TextStyle(
-                            color: AppTheme.textSecondary.withValues(alpha: 0.6),
+                            color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.6),
                             fontSize: 15),
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -176,13 +176,13 @@ class _MessageInputState extends ConsumerState<MessageInput> {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppTheme.satoneroOrange,
+                    color: AppTheme.colors(context).accent,
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
                     icon: Icon(
                       Icons.send,
-                      color: Colors.white,
+                      color: AppTheme.colors(context).textPrimary,
                       size: 20,
                     ),
                     onPressed: _sendMessage,

@@ -29,7 +29,7 @@ class ActionButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onCancel,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.backgroundCard,
+                backgroundColor: AppTheme.colors(context).cardBackground,
                 foregroundColor: Colors.white,
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
@@ -53,10 +53,10 @@ class ActionButtons extends StatelessWidget {
               showSuccessIndicator:
                   onSubmit != null, // Only show success indicator when enabled
               backgroundColor: onSubmit != null
-                  ? AppTheme.purpleButton
-                  : AppTheme.backgroundInactive,
+                  ? AppTheme.colors(context).purple
+                  : AppTheme.colors(context).divider,
               foregroundColor:
-                  onSubmit != null ? Colors.white : AppTheme.textInactive,
+                  onSubmit != null ? Colors.white : AppTheme.colors(context).textInactive,
             ).withAutomationId(AutomationIds.orderCreateSubmit),
           ),
         ),

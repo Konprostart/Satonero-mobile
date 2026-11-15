@@ -77,8 +77,8 @@ class BottomNavBar extends ConsumerWidget {
     bool isActive = _isActive(context, index);
     final colors = AppTheme.colors(context);
 
-    Color iconColor = isActive ? AppTheme.activeColor : colors.textPrimary;
-    Color textColor = isActive ? AppTheme.activeColor : colors.textPrimary;
+    Color iconColor = isActive ? AppTheme.colors(context).accent : colors.textPrimary;
+    Color textColor = isActive ? AppTheme.colors(context).accent : colors.textPrimary;
 
     return Expanded(
       child: Semantics(
@@ -91,8 +91,8 @@ class BottomNavBar extends ConsumerWidget {
           child: InkWell(
             onTap: () => _onItemTapped(context, index),
             borderRadius: BorderRadius.circular(8),
-            splashColor: AppTheme.activeColor.withValues(alpha: 0.1),
-            highlightColor: AppTheme.activeColor.withValues(alpha: 0.05),
+            splashColor: AppTheme.colors(context).accent.withValues(alpha: 0.1),
+            highlightColor: AppTheme.colors(context).accent.withValues(alpha: 0.05),
             child: SizedBox(
               height: double.infinity,
               width: double.infinity,

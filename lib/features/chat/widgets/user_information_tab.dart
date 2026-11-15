@@ -28,7 +28,7 @@ class UserInformationTab extends ConsumerWidget {
     final chatKeys = sharedKey != null ? ChatKeys.fromSharedKey(sharedKey) : null;
 
     return Container(
-      color: AppTheme.backgroundDark,
+      color: AppTheme.colors(context).scaffoldBackground,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class UserInformationTab extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard,
+              color: AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -54,8 +54,8 @@ class UserInformationTab extends ConsumerWidget {
                         children: [
                           Text(
                             handle,
-                            style: const TextStyle(
-                              color: AppTheme.cream1,
+                            style: TextStyle(
+                              color: AppTheme.colors(context).textPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -64,7 +64,7 @@ class UserInformationTab extends ConsumerWidget {
                           Text(
                             S.of(context)!.peerPublicKey,
                             style: TextStyle(
-                              color: AppTheme.textSecondary,
+                              color: AppTheme.colors(context).textSecondary,
                               fontSize: 14,
                             ),
                           ),
@@ -88,7 +88,7 @@ class UserInformationTab extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard,
+              color: AppTheme.colors(context).cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -96,8 +96,8 @@ class UserInformationTab extends ConsumerWidget {
               children: [
                 Text(
                   S.of(context)!.yourInformation,
-                  style: const TextStyle(
-                    color: AppTheme.cream1,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -106,14 +106,14 @@ class UserInformationTab extends ConsumerWidget {
                 Text(
                   S.of(context)!.yourHandle,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),
                 Text(
                   you,
-                  style: const TextStyle(
-                      color: AppTheme.cream1,
+                  style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                     ),
                   ),
@@ -121,7 +121,7 @@ class UserInformationTab extends ConsumerWidget {
                 Text(
                   S.of(context)!.yourSharedKey,
                   style: TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     fontSize: 14,
                   ),
                 ),

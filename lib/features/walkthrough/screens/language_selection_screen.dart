@@ -14,7 +14,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -24,8 +24,8 @@ class LanguageSelectionScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               Text(
                 S.of(context)!.chooseLanguageTitle,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                 ),
@@ -33,8 +33,8 @@ class LanguageSelectionScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 S.of(context)!.chooseLanguageSubtitle,
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 14,
                 ),
               ),
@@ -46,7 +46,7 @@ class LanguageSelectionScreen extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: Material(
-                          color: AppTheme.backgroundCard,
+                          color: AppTheme.colors(context).cardBackground,
                           borderRadius: BorderRadius.circular(12),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
@@ -58,15 +58,15 @@ class LanguageSelectionScreen extends ConsumerWidget {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.language,
-                                    color: AppTheme.satoneroOrange,
+                                    color: AppTheme.colors(context).accent,
                                   ),
                                   const SizedBox(width: 12),
                                   Text(
                                     language.name,
-                                    style: const TextStyle(
-                                      color: AppTheme.textPrimary,
+                                    style: TextStyle(
+                                      color: AppTheme.colors(context).textPrimary,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),

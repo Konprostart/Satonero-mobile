@@ -77,10 +77,10 @@ class _LogsRecordingIndicatorState
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundCard.withValues(alpha: 0.95),
+              color: AppTheme.colors(context).cardBackground.withValues(alpha: 0.95),
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppTheme.statusError.withValues(alpha: 0.3),
+                color: AppTheme.colors(context).danger.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: [
@@ -98,12 +98,12 @@ class _LogsRecordingIndicatorState
                   width: 10,
                   height: 10,
                   decoration: BoxDecoration(
-                    color: AppTheme.statusError
+                    color: AppTheme.colors(context).danger
                         .withValues(alpha: _pulseAnimation.value),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.statusError
+                        color: AppTheme.colors(context).danger
                             .withValues(alpha: _pulseAnimation.value * 0.5),
                         blurRadius: 6,
                         spreadRadius: 2,

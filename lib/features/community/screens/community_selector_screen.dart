@@ -87,7 +87,7 @@ class _CommunitySelectorScreenState
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Scaffold(
-          backgroundColor: AppTheme.backgroundDark,
+          backgroundColor: AppTheme.colors(context).scaffoldBackground,
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -99,16 +99,16 @@ class _CommunitySelectorScreenState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.bolt,
-                        color: AppTheme.activeColor,
+                        color: AppTheme.colors(context).accent,
                         size: 28,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         S.of(context)!.chooseYourCommunity,
-                        style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -120,23 +120,23 @@ class _CommunitySelectorScreenState
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: AppTheme.backgroundInput,
+                      color: AppTheme.colors(context).inputBackground,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.1),
                       ),
                     ),
                     child: TextField(
-                      style: const TextStyle(color: AppTheme.textPrimary),
+                      style: TextStyle(color: AppTheme.colors(context).textPrimary),
                       decoration: InputDecoration(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.search,
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.colors(context).textSecondary,
                           size: 20,
                         ),
                         hintText: S.of(context)!.communitySearchHint,
                         hintStyle:
-                            const TextStyle(color: AppTheme.textSecondary),
+                            TextStyle(color: AppTheme.colors(context).textSecondary),
                         border: InputBorder.none,
                       ),
                       onChanged: (value) =>
@@ -155,8 +155,8 @@ class _CommunitySelectorScreenState
                           return Center(
                             child: Text(
                               S.of(context)!.noCommunityResults,
-                              style: const TextStyle(
-                                color: AppTheme.textSecondary,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textSecondary,
                                 fontSize: 15,
                               ),
                             ),
@@ -186,16 +186,16 @@ class _CommunitySelectorScreenState
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.settings,
                           size: 18,
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.colors(context).textSecondary,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           S.of(context)!.useCustomNode,
-                          style: const TextStyle(
-                            color: AppTheme.textSecondary,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textSecondary,
                             fontSize: 14,
                           ),
                         ),
@@ -209,7 +209,7 @@ class _CommunitySelectorScreenState
                       onPressed:
                           _isSelecting ? null : () => _onConfirm(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.activeColor,
+                        backgroundColor: AppTheme.colors(context).accent,
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -238,8 +238,8 @@ class _CommunitySelectorScreenState
                     onPressed: _isSelecting ? null : () => _onSkip(context),
                     child: Text(
                       S.of(context)!.skipForNow,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 14,
                       ),
                     ),
@@ -273,7 +273,7 @@ class _CommunitySelectorScreenState
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppTheme.backgroundCard,
+            color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
@@ -324,16 +324,16 @@ class _CommunitySelectorScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.cloud_off,
-            color: AppTheme.textSecondary,
+            color: AppTheme.colors(context).textSecondary,
             size: 48,
           ),
           const SizedBox(height: 16),
           Text(
             S.of(context)!.communityLoadingError,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 15,
             ),
           ),
@@ -341,7 +341,7 @@ class _CommunitySelectorScreenState
           ElevatedButton(
             onPressed: () => ref.invalidate(communityListProvider),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.activeColor,
+              backgroundColor: AppTheme.colors(context).accent,
               foregroundColor: Colors.black,
             ),
             child: Text(S.of(context)!.communityRetry),

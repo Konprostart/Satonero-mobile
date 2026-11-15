@@ -174,7 +174,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
               foregroundColor: Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -186,7 +186,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
         Text(
           '${_formatSats(widget.sats)} sats',
           style: TextStyle(
-            color: AppTheme.cream1.withAlpha(153),
+            color: AppTheme.colors(context).textPrimary.withAlpha(153),
             fontSize: 13,
           ),
         ),
@@ -198,25 +198,25 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(77)),
+        border: Border.all(color: AppTheme.colors(context).accent.withAlpha(77)),
       ),
       child: Column(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 40,
             height: 40,
             child: CircularProgressIndicator(
-              color: AppTheme.satoneroOrange,
+              color: AppTheme.colors(context).accent,
               strokeWidth: 3,
             ),
           ),
           const SizedBox(height: 16),
           Text(
             S.of(context)!.nwcInvoiceGenerating,
-            style: const TextStyle(
-              color: AppTheme.cream1,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -225,7 +225,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
           Text(
             '${_formatSats(widget.sats)} sats',
             style: TextStyle(
-              color: AppTheme.cream1.withAlpha(153),
+              color: AppTheme.colors(context).textPrimary.withAlpha(153),
               fontSize: 14,
             ),
           ),
@@ -238,22 +238,22 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(128)),
+        border: Border.all(color: AppTheme.colors(context).accent.withAlpha(128)),
       ),
       child: Column(
         children: [
-          const Icon(
+          Icon(
             LucideIcons.checkCircle,
-            color: AppTheme.satoneroOrange,
+            color: AppTheme.colors(context).accent,
             size: 40,
           ),
           const SizedBox(height: 12),
           Text(
             S.of(context)!.nwcInvoiceGenerated,
-            style: const TextStyle(
-              color: AppTheme.satoneroOrange,
+            style: TextStyle(
+              color: AppTheme.colors(context).accent,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -261,8 +261,8 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
           const SizedBox(height: 8),
           Text(
             '${_formatSats(widget.sats)} sats',
-            style: const TextStyle(
-              color: AppTheme.cream1,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 14,
             ),
           ),
@@ -270,7 +270,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
           Text(
             _truncateInvoice(_generatedInvoice),
             style: TextStyle(
-              color: AppTheme.cream1.withAlpha(102),
+              color: AppTheme.colors(context).textPrimary.withAlpha(102),
               fontSize: 11,
               fontFamily: 'monospace',
             ),
@@ -286,7 +286,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
                   ? () => widget.onInvoiceConfirmed(_generatedInvoice!)
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.satoneroOrange,
+                backgroundColor: AppTheme.colors(context).accent,
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -310,7 +310,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.red.withAlpha(128)),
       ),
@@ -332,7 +332,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
             ),
             child: Text(S.of(context)!.nwcRetryInvoice),
           ),
@@ -347,7 +347,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
       icon: const Icon(LucideIcons.edit, size: 16),
       label: Text(S.of(context)!.nwcEnterManually),
       style: TextButton.styleFrom(
-        foregroundColor: AppTheme.cream1.withAlpha(179),
+        foregroundColor: AppTheme.colors(context).textPrimary.withAlpha(179),
       ),
     );
   }

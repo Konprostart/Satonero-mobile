@@ -25,9 +25,9 @@ class CurrencySection extends ConsumerWidget {
       title: orderType == OrderType.buy
           ? S.of(context)!.selectFiatCurrencyPay
           : S.of(context)!.selectFiatCurrencyReceive,
-      icon: const Text('\$',
-          style: TextStyle(color: AppTheme.satoneroOrange, fontSize: 18)),
-      iconBackgroundColor: AppTheme.purpleButton.withValues(alpha: 0.3),
+      icon: Text('\$',
+          style: TextStyle(color: AppTheme.colors(context).accent, fontSize: 18)),
+      iconBackgroundColor: AppTheme.colors(context).purple.withValues(alpha: 0.3),
       child: currenciesAsync.when(
         loading: () => Text(S.of(context)!.loadingCurrencies,
             style: const TextStyle(color: Colors.white)),

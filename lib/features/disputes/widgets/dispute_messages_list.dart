@@ -97,7 +97,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
       return Center(
         child: Text(
           S.of(context)!.errorLoadingChat,
-          style: TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
       );
     }
@@ -115,7 +115,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
     _previousMessageCount = messages.length;
 
     return Container(
-      color: AppTheme.backgroundDark,
+      color: AppTheme.colors(context).scaffoldBackground,
       child: messages.isEmpty
         ? _buildEmptyMessagesLayout(context, messages)
         : CustomScrollView(
@@ -219,7 +219,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
           Text(
             S.of(context)!.waitingAdminAssignment,
             style: TextStyle(
-              color: AppTheme.textSecondary,
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
@@ -229,7 +229,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
           Text(
             S.of(context)!.waitingAdminDescription,
             style: TextStyle(
-              color: AppTheme.textInactive,
+              color: AppTheme.colors(context).textInactive,
               fontSize: 14,
             ),
             textAlign: TextAlign.center,
@@ -246,7 +246,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
       child: Text(
         S.of(context)!.noMessagesYet,
         style: TextStyle(
-          color: AppTheme.textInactive,
+          color: AppTheme.colors(context).textInactive,
           fontSize: 16,
         ),
         textAlign: TextAlign.center,
@@ -353,7 +353,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
           Text(
             S.of(context)!.noMessagesYet,
             style: TextStyle(
-              color: AppTheme.textInactive,
+              color: AppTheme.colors(context).textInactive,
               fontSize: 16,
             ),
             textAlign: TextAlign.center,
@@ -371,7 +371,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Colors.grey[700]!,

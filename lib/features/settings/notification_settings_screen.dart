@@ -30,19 +30,19 @@ class NotificationSettingsScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const HeroIcon(HeroIcons.arrowLeft, color: AppTheme.textPrimary),
+          icon: HeroIcon(HeroIcons.arrowLeft, color: AppTheme.colors(context).textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(
           S.of(context)!.notifications,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
           left: 16,
@@ -73,7 +73,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -84,17 +84,17 @@ class NotificationSettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.bell,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     S.of(context)!.pushNotifications,
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
@@ -115,8 +115,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(
               S.of(context)!.pushNotificationsDescription,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -169,7 +169,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -180,16 +180,16 @@ class NotificationSettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.settings,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   S.of(context)!.notificationPreferences,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -244,7 +244,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.backgroundInput,
+          color: AppTheme.colors(context).inputBackground,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         ),
@@ -252,7 +252,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           children: [
             Icon(
               icon,
-              color: AppTheme.activeColor,
+              color: AppTheme.colors(context).accent,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -262,8 +262,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -271,8 +271,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(
-                      color: AppTheme.textSecondary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textSecondary,
                       fontSize: 13,
                     ),
                   ),
@@ -292,7 +292,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
   Widget _buildPrivacyInfoCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
@@ -303,16 +303,16 @@ class NotificationSettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   LucideIcons.shield,
-                  color: AppTheme.activeColor,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   S.of(context)!.privacyInfo,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -322,8 +322,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               S.of(context)!.pushNotificationsPrivacyInfo,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
                 fontSize: 14,
                 height: 1.5,
               ),
@@ -369,8 +369,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 13,
               height: 1.4,
             ),

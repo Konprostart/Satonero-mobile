@@ -20,7 +20,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: const SatoneroAppBar(),
       body: CustomDrawerOverlay(
         child: Stack(
@@ -77,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundDark,
+        color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           bottom: BorderSide(
             color: Colors.white.withValues(alpha: 0.1),
@@ -93,7 +93,7 @@ class HomeScreen extends ConsumerWidget {
             S.of(context)!.buyBtc,
             orderType == OrderType.sell,
             OrderType.sell,
-            AppTheme.buyColor,
+            AppTheme.colors(context).accent,
             AutomationIds.orderBookTabBuy,
           ),
           _buildTabButton(
@@ -102,7 +102,7 @@ class HomeScreen extends ConsumerWidget {
             S.of(context)!.sellBtc,
             orderType == OrderType.buy,
             OrderType.buy,
-            AppTheme.sellColor,
+            AppTheme.colors(context).sell,
             AutomationIds.orderBookTabSell,
           ),
         ],
@@ -138,7 +138,7 @@ class HomeScreen extends ConsumerWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isActive ? activeColor : AppTheme.textInactive,
+              color: isActive ? activeColor : AppTheme.colors(context).textInactive,
               fontWeight: FontWeight.w600, // Semi-bold
               fontSize: 15,
               letterSpacing: 0.5, // Letter spacing
@@ -161,25 +161,25 @@ class HomeScreen extends ConsumerWidget {
     // When filters are active the pill is highlighted so the user can tell at a
     // glance that the offers list is being narrowed down.
     final foregroundColor =
-        hasFilters ? AppTheme.satoneroOrange : Colors.white70;
+        hasFilters ? AppTheme.colors(context).accent : AppTheme.colors(context).textSecondary;
     final dividerColor = hasFilters
-        ? AppTheme.satoneroOrange.withValues(alpha: 0.4)
+        ? AppTheme.colors(context).accent.withValues(alpha: 0.4)
         : Colors.white.withValues(alpha: 0.2);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      color: AppTheme.dark1,
+      color: AppTheme.colors(context).cardBackground,
       child: Align(
         alignment: Alignment.centerLeft,
         child: Container(
           decoration: BoxDecoration(
             color: hasFilters
-                ? AppTheme.satoneroOrange.withValues(alpha: 0.12)
-                : AppTheme.backgroundInput,
+                ? AppTheme.colors(context).accent.withValues(alpha: 0.12)
+                : AppTheme.colors(context).inputBackground,
             borderRadius: BorderRadius.circular(30),
             border: Border.all(
               color: hasFilters
-                  ? AppTheme.satoneroOrange.withValues(alpha: 0.6)
+                  ? AppTheme.colors(context).accent.withValues(alpha: 0.6)
                   : Colors.white.withValues(alpha: 0.05),
             ),
             boxShadow: [
@@ -208,8 +208,8 @@ class HomeScreen extends ConsumerWidget {
                     );
                   },
                   borderRadius: BorderRadius.circular(30),
-                  splashColor: AppTheme.activeColor.withValues(alpha: 0.3),
-                  highlightColor: AppTheme.activeColor.withValues(alpha: 0.15),
+                  splashColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
+                  highlightColor: AppTheme.colors(context).accent.withValues(alpha: 0.15),
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: 16,
@@ -300,16 +300,16 @@ class HomeScreen extends ConsumerWidget {
             child: InkWell(
               onTap: () => clearAllOrderFilters(ref.read),
               borderRadius: BorderRadius.circular(30),
-              splashColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
-              highlightColor: AppTheme.satoneroOrange.withValues(alpha: 0.15),
-              child: const SizedBox(
+              splashColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
+              highlightColor: AppTheme.colors(context).accent.withValues(alpha: 0.15),
+              child: SizedBox(
                 width: 40,
                 height: 40,
                 child: Center(
                   child: HeroIcon(
                     HeroIcons.xMark,
                     style: HeroIconStyle.outline,
-                    color: AppTheme.satoneroOrange,
+                    color: AppTheme.colors(context).accent,
                     size: 16,
                   ),
                 ),
@@ -334,29 +334,29 @@ class _OrderBookList extends ConsumerWidget {
     final filteredOrders = ref.watch(filteredOrdersProvider);
 
     return Container(
-      color: AppTheme.dark1,
+      color: AppTheme.colors(context).cardBackground,
       child: filteredOrders.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.search_off,
-                    color: Colors.white30,
+                    color: AppTheme.colors(context).textInactive,
                     size: 48,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     S.of(context)!.noOrdersAvailable,
-                    style: const TextStyle(
-                      color: Colors.white60,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textSubtle,
                       fontSize: 16,
                     ),
                   ),
                   Text(
                     S.of(context)!.tryChangingFilters,
-                    style: const TextStyle(
-                      color: Colors.white38,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textInactive,
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,

@@ -15,17 +15,17 @@ class RelaysScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const HeroIcon(HeroIcons.arrowLeft, color: AppTheme.cream1),
+          icon: HeroIcon(HeroIcons.arrowLeft, color: AppTheme.colors(context).textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(
           'Configuración',
           style: TextStyle(
-            color: AppTheme.cream1,
+            color: AppTheme.colors(context).textPrimary,
           ),
         ),
       ),
-      backgroundColor: AppTheme.dark1,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       body: const SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: RelaySelector(),

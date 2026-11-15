@@ -51,7 +51,7 @@ class _ClickableTextState extends State<ClickableText> {
       text: TextSpan(
         style: DefaultTextStyle.of(context)
             .style
-            .copyWith(fontSize: 16, color: AppTheme.cream1),
+            .copyWith(fontSize: 16, color: AppTheme.colors(context).textPrimary),
         children: [
           TextSpan(text: '${widget.leftText} '),
           TextSpan(

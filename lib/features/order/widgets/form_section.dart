@@ -28,7 +28,7 @@ class FormSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -59,7 +59,7 @@ class FormSection extends StatelessWidget {
                       child: Icon(
                         Icons.info_outline,
                         size: 14,
-                        color: AppTheme.textSubtle,
+                        color: AppTheme.colors(context).textSubtle,
                       ),
                     ),
                   ),
@@ -108,23 +108,23 @@ class FormSection extends StatelessWidget {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: AppTheme.backgroundCard,
+          backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           content: Text(
             content,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),
@@ -134,8 +134,8 @@ class FormSection extends StatelessWidget {
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
                 S.of(context)!.ok,
-                style: const TextStyle(
-                  color: AppTheme.activeColor,
+                style: TextStyle(
+                  color: AppTheme.colors(context).accent,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

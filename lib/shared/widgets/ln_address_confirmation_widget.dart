@@ -33,22 +33,22 @@ class LnAddressConfirmationWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           decoration: BoxDecoration(
-            color: AppTheme.dark1,
+            color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppTheme.satoneroOrange.withAlpha(128)),
+            border: Border.all(color: AppTheme.colors(context).accent.withAlpha(128)),
           ),
           child: Column(
             children: [
-              const Icon(
+              Icon(
                 LucideIcons.zap,
-                color: AppTheme.satoneroOrange,
+                color: AppTheme.colors(context).accent,
                 size: 40,
               ),
               const SizedBox(height: 16),
               Text(
                 S.of(context)!.lnAddressConfirmTitle,
-                style: const TextStyle(
-                  color: AppTheme.satoneroOrange,
+                style: TextStyle(
+                  color: AppTheme.colors(context).accent,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -60,15 +60,15 @@ class LnAddressConfirmationWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundDark,
+                  color: AppTheme.colors(context).scaffoldBackground,
                   borderRadius: BorderRadius.circular(8),
                   border:
                       Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
                 child: Text(
                   lightningAddress,
-                  style: const TextStyle(
-                    color: AppTheme.cream1,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     fontFamily: 'monospace',
@@ -80,7 +80,7 @@ class LnAddressConfirmationWidget extends StatelessWidget {
               Text(
                 S.of(context)!.lnAddressConfirmDescription,
                 style: TextStyle(
-                  color: AppTheme.cream1.withAlpha(153),
+                  color: AppTheme.colors(context).textPrimary.withAlpha(153),
                   fontSize: 13,
                 ),
                 textAlign: TextAlign.center,
@@ -100,7 +100,7 @@ class LnAddressConfirmationWidget extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.satoneroOrange,
+                    backgroundColor: AppTheme.colors(context).accent,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -117,7 +117,7 @@ class LnAddressConfirmationWidget extends StatelessWidget {
           icon: const Icon(LucideIcons.edit, size: 16),
           label: Text(S.of(context)!.lnAddressEnterManually),
           style: TextButton.styleFrom(
-            foregroundColor: AppTheme.cream1.withAlpha(179),
+            foregroundColor: AppTheme.colors(context).textPrimary.withAlpha(179),
           ),
         ),
       ],

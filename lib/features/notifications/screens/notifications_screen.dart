@@ -20,13 +20,13 @@ class NotificationsScreen extends ConsumerWidget {
     final shouldShowBackupReminder = ref.watch(backupReminderProvider);
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: SatoneroAppBar(
         title: Text(
           S.of(context)!.notifications,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            color: AppTheme.colors(context).textPrimary,
           ),
         ),
         showBackButton: true,
@@ -50,13 +50,13 @@ class NotificationsScreen extends ConsumerWidget {
                     HeroIcons.bellSlash,
                     style: HeroIconStyle.outline,
                     size: 64,
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     S.of(context)!.noNotifications,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -64,7 +64,7 @@ class NotificationsScreen extends ConsumerWidget {
                   Text(
                     S.of(context)!.noNotificationsDescription,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.colors(context).textSecondary,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -106,26 +106,26 @@ class NotificationsScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(
+        loading: () => Center(
           child: CircularProgressIndicator(
-            color: AppTheme.satoneroOrange,
+            color: AppTheme.colors(context).accent,
           ),
         ),
         error: (error, stackTrace) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const HeroIcon(
+              HeroIcon(
                 HeroIcons.exclamationTriangle,
                 style: HeroIconStyle.outline,
                 size: 64,
-                color: AppTheme.statusError,
+                color: AppTheme.colors(context).danger,
               ),
               const SizedBox(height: 16),
               Text(
                 S.of(context)!.errorLoadingNotifications,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppTheme.statusError,
+                  color: AppTheme.colors(context).danger,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -133,7 +133,7 @@ class NotificationsScreen extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () => ref.refresh(notificationsHistoryProvider),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.satoneroOrange,
+                  backgroundColor: AppTheme.colors(context).accent,
                 ),
                 child: Text(S.of(context)!.retry),
               ),

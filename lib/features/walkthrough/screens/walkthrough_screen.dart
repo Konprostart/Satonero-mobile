@@ -26,10 +26,10 @@ class _WalkthroughScreenState extends ConsumerState<WalkthroughScreen> {
     bool isOrderBookStep = false,
     bool isCreateOfferStep = false,
   }) {
-    const defaultStyle = TextStyle(fontSize: 16, color: Colors.white70);
-    const highlightStyle = TextStyle(
+    final defaultStyle = TextStyle(fontSize: 16, color: AppTheme.colors(context).textSecondary);
+    final highlightStyle = TextStyle(
       fontSize: 16,
-      color: AppTheme.satoneroOrange,
+      color: AppTheme.colors(context).accent,
       fontWeight: FontWeight.w600,
     );
 
@@ -98,9 +98,9 @@ class _WalkthroughScreenState extends ConsumerState<WalkthroughScreen> {
   }
 
   List<PageViewModel> _getPages(BuildContext context) {
-    const pageDecoration = PageDecoration(
+    final pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-      bodyTextStyle: TextStyle(fontSize: 16, color: Colors.white70),
+      bodyTextStyle: TextStyle(fontSize: 16, color: AppTheme.colors(context).textSecondary),
       bodyPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       imagePadding: EdgeInsets.zero,
     );

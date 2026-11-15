@@ -120,8 +120,8 @@ class _PremiumSectionState extends State<PremiumSection> {
                   controller: _controller,
                   focusNode: _focusNode,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -130,13 +130,13 @@ class _PremiumSectionState extends State<PremiumSection> {
                         horizontal: 4, vertical: 6),
                     filled: true,
                     fillColor: _isEditing
-                        ? AppTheme.purpleButton.withValues(alpha: 0.8)
-                        : AppTheme.purpleButton,
+                        ? AppTheme.colors(context).purple.withValues(alpha: 0.8)
+                        : AppTheme.colors(context).purple,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
                       borderSide: _isEditing
-                          ? const BorderSide(
-                              color: AppTheme.textPrimary, width: 1.5)
+                          ? BorderSide(
+                              color: AppTheme.colors(context).textPrimary, width: 1.5)
                           : BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
@@ -145,8 +145,8 @@ class _PremiumSectionState extends State<PremiumSection> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(
-                          color: AppTheme.textPrimary, width: 1.5),
+                      borderSide: BorderSide(
+                          color: AppTheme.colors(context).textPrimary, width: 1.5),
                     ),
                   ),
                   keyboardType:
@@ -174,14 +174,14 @@ class _PremiumSectionState extends State<PremiumSection> {
                   child: Container(
                     width: 16,
                     height: 16,
-                    decoration: const BoxDecoration(
-                      color: AppTheme.textPrimary,
+                    decoration: BoxDecoration(
+                      color: AppTheme.colors(context).textPrimary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.edit,
                       size: 9,
-                      color: AppTheme.purpleButton,
+                      color: AppTheme.colors(context).purple,
                     ),
                   ),
                 ),
@@ -192,7 +192,7 @@ class _PremiumSectionState extends State<PremiumSection> {
         Text(
           S.of(context)!.premiumEditHint,
           style: TextStyle(
-            color: AppTheme.textSubtle,
+            color: AppTheme.colors(context).textSubtle,
             fontSize: 10,
           ),
         ),
@@ -213,10 +213,10 @@ class _PremiumSectionState extends State<PremiumSection> {
         children: [
           SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: AppTheme.purpleButton,
-              inactiveTrackColor: AppTheme.backgroundInactive,
-              thumbColor: AppTheme.textPrimary,
-              overlayColor: AppTheme.purpleButton.withValues(alpha: 0.2),
+              activeTrackColor: AppTheme.colors(context).purple,
+              inactiveTrackColor: AppTheme.colors(context).divider,
+              thumbColor: AppTheme.colors(context).textPrimary,
+              overlayColor: AppTheme.colors(context).purple.withValues(alpha: 0.2),
               trackHeight: 4,
             ),
             child: Slider(
@@ -238,13 +238,13 @@ class _PremiumSectionState extends State<PremiumSection> {
               children: [
                 Text(
                   minLabel,
-                  style: const TextStyle(
-                      color: AppTheme.statusError, fontSize: 12),
+                  style: TextStyle(
+                      color: AppTheme.colors(context).danger, fontSize: 12),
                 ),
                 Text(
                   maxLabel,
-                  style: const TextStyle(
-                      color: AppTheme.statusSuccess, fontSize: 12),
+                  style: TextStyle(
+                      color: AppTheme.colors(context).accent, fontSize: 12),
                 ),
               ],
             ),

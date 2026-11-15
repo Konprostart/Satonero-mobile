@@ -16,13 +16,13 @@ class DisputeStatusBadge extends StatelessWidget {
         vertical: 2
       ),
       decoration: BoxDecoration(
-        color: _getStatusBackgroundColor(status),
+        color: _getStatusBackgroundColor(context, status),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         _getStatusText(context, status),
         style: TextStyle(
-          color: _getStatusTextColor(status),
+          color: _getStatusTextColor(context, status),
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
@@ -37,39 +37,39 @@ class DisputeStatusBadge extends StatelessWidget {
     return status.trim().toLowerCase().replaceAll(RegExp(r'[\s_]+'), '-');
   }
 
-  Color _getStatusBackgroundColor(String status) {
+  Color _getStatusBackgroundColor(BuildContext context, String status) {
     final s = _normalizeStatus(status);
     switch (s) {
       case 'initiated':
-        return AppTheme.statusPendingBackground.withValues(alpha: 0.3);
+        return AppTheme.colors(context).statusPendingBackground.withValues(alpha: 0.3);
       case 'in-progress':
-        return AppTheme.statusSuccessBackground.withValues(alpha: 0.3);
+        return AppTheme.colors(context).statusSuccessBackground.withValues(alpha: 0.3);
       case 'resolved':
       case 'solved':
       case 'seller-refunded':
         return Colors.blue.withValues(alpha: 0.3);
       case 'closed':
-        return AppTheme.statusInactiveBackground.withValues(alpha: 0.3);
+        return AppTheme.colors(context).statusInactiveBackground.withValues(alpha: 0.3);
       default:
-        return AppTheme.statusPendingBackground.withValues(alpha: 0.3);
+        return AppTheme.colors(context).statusPendingBackground.withValues(alpha: 0.3);
     }
   }
 
-  Color _getStatusTextColor(String status) {
+  Color _getStatusTextColor(BuildContext context, String status) {
     final s = _normalizeStatus(status);
     switch (s) {
       case 'initiated':
-        return AppTheme.statusPendingText;
+        return AppTheme.colors(context).statusPendingText;
       case 'in-progress':
-        return AppTheme.statusSuccessText;
+        return AppTheme.colors(context).statusSuccessText;
       case 'resolved':
       case 'solved':
       case 'seller-refunded':
         return Colors.blue;
       case 'closed':
-        return AppTheme.statusInactiveText;
+        return AppTheme.colors(context).statusInactiveText;
       default:
-        return AppTheme.statusPendingText;
+        return AppTheme.colors(context).statusPendingText;
     }
   }
 

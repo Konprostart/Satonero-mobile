@@ -56,9 +56,9 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const HeroIcon(
+          icon: HeroIcon(
             HeroIcons.arrowLeft,
-            color: AppTheme.textPrimary,
+            color: AppTheme.colors(context).textPrimary,
           ),
           onPressed: () {
             if (context.canPop()) {
@@ -70,14 +70,14 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
         ),
         title: Text(
           S.of(context)!.connectWallet,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
           left: 16,
@@ -90,7 +90,7 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: AppTheme.backgroundCard,
+                color: AppTheme.colors(context).cardBackground,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
@@ -101,16 +101,16 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           LucideIcons.link,
-                          color: AppTheme.activeColor,
+                          color: AppTheme.colors(context).accent,
                           size: 24,
                         ),
                         const SizedBox(width: 12),
                         Text(
                           S.of(context)!.pasteNwcUri,
-                          style: const TextStyle(
-                            color: AppTheme.textPrimary,
+                          style: TextStyle(
+                            color: AppTheme.colors(context).textPrimary,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -126,7 +126,7 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundInput,
+                        color: AppTheme.colors(context).inputBackground,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _validationError != null
@@ -136,8 +136,8 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                       ),
                       child: TextFormField(
                         controller: _uriController,
-                        style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary,
                           fontSize: 14,
                         ),
                         maxLines: 3,
@@ -149,17 +149,17 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'nostr+walletconnect://...',
-                          hintStyle: const TextStyle(
-                            color: AppTheme.textSecondary,
+                          hintStyle: TextStyle(
+                            color: AppTheme.colors(context).textSecondary,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 8,
                           ),
                           suffixIcon: IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               LucideIcons.scanLine,
-                              color: AppTheme.activeColor,
+                              color: AppTheme.colors(context).accent,
                             ),
                             onPressed: () => _openQrScanner(context),
                             tooltip: S.of(context)!.scanQrCode,
@@ -188,12 +188,12 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                       child: ElevatedButton.icon(
                         onPressed: _isConnecting ? null : _onConnect,
                         icon: _isConnecting
-                            ? const SizedBox(
+                            ? SizedBox(
                                 width: 18,
                                 height: 18,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: AppTheme.colors(context).textPrimary,
                                 ),
                               )
                             : const Icon(LucideIcons.plug, size: 18),
@@ -203,7 +203,7 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                               : S.of(context)!.connectWallet,
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.activeColor,
+                          backgroundColor: AppTheme.colors(context).accent,
                           foregroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -259,7 +259,7 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
           messenger.showSnackBar(
             SnackBar(
               content: Text(permDeniedMsg),
-              backgroundColor: AppTheme.backgroundCard,
+              backgroundColor: AppTheme.colors(context).cardBackground,
               behavior: SnackBarBehavior.floating,
             ),
           );

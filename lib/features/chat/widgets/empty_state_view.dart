@@ -14,7 +14,7 @@ class EmptyStateView extends StatelessWidget {
     return Center(
       child: Text(
         message,
-        style: TextStyle(color: AppTheme.textSecondary),
+        style: TextStyle(color: AppTheme.colors(context).textSecondary),
       ),
     );
   }

@@ -54,7 +54,7 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppTheme.backgroundCard,
+      backgroundColor: AppTheme.colors(context).cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
@@ -68,8 +68,8 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
             children: [
               Text(
                 S.of(context)!.importMostroUserDialogTitle,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
@@ -83,8 +83,8 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
               const SizedBox(height: 24),
               Text(
                 S.of(context)!.secretWordsLabel,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
@@ -94,18 +94,18 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                 controller: _mnemonicController,
                 minLines: 4,
                 maxLines: 6,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                 ),
                 decoration: InputDecoration(
                   hintText: S.of(context)!.secretWordsPlaceholder,
                   hintStyle: TextStyle(
-                    color: AppTheme.textSecondary.withValues(alpha: 0.5),
+                    color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.5),
                     fontSize: 14,
                   ),
                   filled: true,
-                  fillColor: AppTheme.backgroundInput,
+                  fillColor: AppTheme.colors(context).inputBackground,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(
@@ -120,8 +120,8 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: AppTheme.activeColor,
+                    borderSide: BorderSide(
+                      color: AppTheme.colors(context).accent,
                       width: 2,
                     ),
                   ),
@@ -161,8 +161,8 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text(
                       S.of(context)!.cancel,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -172,7 +172,7 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                   ElevatedButton(
                     onPressed: _handleImport,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.activeColor,
+                      backgroundColor: AppTheme.colors(context).accent,
                       foregroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -203,12 +203,12 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 6),
           child: Text(
             '• ',
             style: TextStyle(
-              color: AppTheme.textSecondary,
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
             ),
           ),
@@ -216,8 +216,8 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.colors(context).textSecondary,
               fontSize: 14,
               height: 1.5,
             ),

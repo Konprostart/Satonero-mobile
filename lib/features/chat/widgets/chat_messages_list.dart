@@ -103,7 +103,7 @@ class _ChatMessagesListState extends State<ChatMessagesList> {
     final sortedMessages = widget.chatRoom.messages;
 
     return Container(
-      color: AppTheme.backgroundDark,
+      color: AppTheme.colors(context).scaffoldBackground,
       child: ListView.builder(
         controller: _scrollController,
         itemCount: sortedMessages.length,

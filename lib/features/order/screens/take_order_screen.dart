@@ -11,6 +11,7 @@ import 'package:satonero_mobile/data/models/enums/action.dart' as mostro_action;
 import 'package:satonero_mobile/data/models/enums/status.dart';
 import 'package:satonero_mobile/data/models/enums/order_type.dart';
 import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/cashu/cashu_mint_info_card.dart';
 import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
 import 'package:satonero_mobile/features/order/widgets/order_app_bar.dart';
 import 'package:satonero_mobile/shared/providers.dart';
@@ -67,7 +68,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.colors(context).scaffoldBackground,
       appBar: OrderAppBar(
         title: widget.orderType == OrderType.buy
             ? S.of(context)!.buyOrderDetailsTitle
@@ -84,10 +85,10 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
               // before showing the empty-state icon.
               child: !orderEventsAsync.hasValue
                   ? const CircularProgressIndicator()
-                  : const Icon(
+                  : Icon(
                       Icons.search_off,
                       size: 48,
-                      color: Colors.white38,
+                      color: AppTheme.colors(context).textInactive,
                     ),
             )
           : SingleChildScrollView(
@@ -103,6 +104,11 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                   _buildSellerAmount(ref, order),
                   const SizedBox(height: 16),
                   _buildPaymentMethod(context, order),
+                  const SizedBox(height: 16),
+                  // Escrow summary: shows the backend (Cashu/Lightning) and —
+                  // for a Cashu order — the exact mint being trusted, so the
+                  // taker sees it before committing to the trade.
+                  CashuMintInfoCard(mintUrl: order.cashuMintUrl),
                   const SizedBox(height: 16),
                   _buildCreatedOn(order),
                   const SizedBox(height: 16),
@@ -162,8 +168,8 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                     : (widget.orderType == OrderType.sell
                         ? S.of(context)!.someoneIsSellingTitle
                         : S.of(context)!.someoneIsBuyingTitle),
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -178,16 +184,16 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                               amountString,
                               order.currency ?? '',
                             ),
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).textSecondary,
                           fontSize: 16,
                         ),
                         children: [
                           if (priceText.isNotEmpty)
                             TextSpan(
                               text: ' $priceText',
-                              style: const TextStyle(
-                                color: Colors.white60,
+                              style: TextStyle(
+                                color: AppTheme.colors(context).textSubtle,
                                 fontSize: 15,
                               ),
                             ),
@@ -282,7 +288,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                           return StatefulBuilder(
                             builder: (context, setState) {
                               return AlertDialog(
-                                backgroundColor: AppTheme.backgroundCard,
+                                backgroundColor: AppTheme.colors(context).cardBackground,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   side: BorderSide(
@@ -291,8 +297,8 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                 ),
                                 title: Text(
                                   S.of(context)!.enterAmount,
-                                  style: const TextStyle(
-                                    color: AppTheme.textPrimary,
+                                  style: TextStyle(
+                                    color: AppTheme.colors(context).textPrimary,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -303,7 +309,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                     vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.backgroundInput,
+                                    color: AppTheme.colors(context).inputBackground,
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
                                       color: Colors.white.withValues(
@@ -314,8 +320,8 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                   child: TextField(
                                     controller: widget._fiatAmountController,
                                     keyboardType: TextInputType.number,
-                                    style: const TextStyle(
-                                      color: AppTheme.textPrimary,
+                                    style: TextStyle(
+                                      color: AppTheme.colors(context).textPrimary,
                                     ),
                                     decoration: InputDecoration(
                                       hintText: S
@@ -325,12 +331,12 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                             order.fiatAmount.maximum.toString(),
                                             order.currency ?? '',
                                           ),
-                                      hintStyle: const TextStyle(
-                                        color: AppTheme.textSecondary,
+                                      hintStyle: TextStyle(
+                                        color: AppTheme.colors(context).textSecondary,
                                       ),
                                       errorText: errorText,
-                                      errorStyle: const TextStyle(
-                                        color: AppTheme.statusError,
+                                      errorStyle: TextStyle(
+                                        color: AppTheme.colors(context).danger,
                                       ),
                                       border: InputBorder.none,
                                       contentPadding:
@@ -347,8 +353,8 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                     onPressed: () => context.pop(),
                                     child: Text(
                                       S.of(context)!.cancel,
-                                      style: const TextStyle(
-                                        color: AppTheme.textSecondary,
+                                      style: TextStyle(
+                                        color: AppTheme.colors(context).textSecondary,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -389,7 +395,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppTheme.activeColor,
+                                      backgroundColor: AppTheme.colors(context).accent,
                                       foregroundColor: Colors.black,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -483,7 +489,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.satoneroOrange,
+              backgroundColor: AppTheme.colors(context).accent,
             ),
             child: _isSubmitting
                 ? const SizedBox(

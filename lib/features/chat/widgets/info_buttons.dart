@@ -46,14 +46,14 @@ class InfoButtons extends StatelessWidget {
         onPressed: () => onInfoTypeChanged(isSelected ? null : type),
         style: ElevatedButton.styleFrom(
           backgroundColor: isSelected
-              ? AppTheme.satoneroOrange
-              : AppTheme.backgroundCard,
-          foregroundColor: isSelected ? Colors.black : AppTheme.textSecondary,
+              ? AppTheme.colors(context).accent
+              : AppTheme.colors(context).cardBackground,
+          foregroundColor: isSelected ? Colors.black : AppTheme.colors(context).textSecondary,
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
             side: BorderSide(
-              color: isSelected ? AppTheme.satoneroOrange : Colors.transparent,
+              color: isSelected ? AppTheme.colors(context).accent : Colors.transparent,
               width: 1,
             ),
           ),

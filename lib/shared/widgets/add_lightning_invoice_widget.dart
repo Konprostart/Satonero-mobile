@@ -50,8 +50,8 @@ class _AddLightningInvoiceWidgetState extends State<AddLightningInvoiceWidget> {
                       widget.fiatAmount,
                       widget.orderId,
                     ),
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -60,19 +60,19 @@ class _AddLightningInvoiceWidgetState extends State<AddLightningInvoiceWidget> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundInput,
+              color: AppTheme.colors(context).inputBackground,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
             ),
             child: TextFormField(
               key: const Key('invoiceTextField'),
               controller: widget.controller,
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: TextStyle(color: AppTheme.colors(context).textPrimary),
               decoration: InputDecoration(
                 labelText: S.of(context)!.lightningInvoice,
-                labelStyle: const TextStyle(color: AppTheme.textSecondary),
+                labelStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                 hintText: S.of(context)!.enterInvoiceHere,
-                hintStyle: const TextStyle(color: AppTheme.textSecondary),
+                hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                 border: InputBorder.none,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -91,8 +91,8 @@ class _AddLightningInvoiceWidgetState extends State<AddLightningInvoiceWidget> {
                     onPressed: widget.onCancel,
                     child: Text(
                       S.of(context)!.cancel,
-                      style: const TextStyle(
-                        color: AppTheme.textSecondary,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textSecondary,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -107,7 +107,7 @@ class _AddLightningInvoiceWidgetState extends State<AddLightningInvoiceWidget> {
                   key: const Key('submitInvoiceButton'),
                   onPressed: widget.onSubmit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.activeColor,
+                    backgroundColor: AppTheme.colors(context).accent,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

@@ -17,34 +17,37 @@ class LogsActionsMenu extends ConsumerWidget {
     final hasLogs = logs.isNotEmpty;
 
     return PopupMenuButton<String>(
-      icon: const HeroIcon(
+      icon: HeroIcon(
         HeroIcons.ellipsisVertical,
         style: HeroIconStyle.outline,
-        color: AppTheme.cream1,
+        color: AppTheme.colors(context).textPrimary,
         size: 24,
       ),
-      color: AppTheme.backgroundDark,
+      color: AppTheme.colors(context).scaffoldBackground,
       onSelected: (value) => _handleMenuAction(context, ref, value, logs),
       itemBuilder: (context) => [
         _buildMenuItem(
+          context,
           'save',
           HeroIcons.arrowDownTray,
           S.of(context)!.saveLogs,
-          hasLogs ? AppTheme.cream1 : AppTheme.textSecondary,
+          hasLogs ? AppTheme.colors(context).textPrimary : AppTheme.colors(context).textSecondary,
           enabled: hasLogs,
         ),
         _buildMenuItem(
+          context,
           'share',
           HeroIcons.share,
           S.of(context)!.shareLogs,
-          hasLogs ? AppTheme.cream1 : AppTheme.textSecondary,
+          hasLogs ? AppTheme.colors(context).textPrimary : AppTheme.colors(context).textSecondary,
           enabled: hasLogs,
         ),
         _buildMenuItem(
+          context,
           'clear',
           HeroIcons.trash,
           S.of(context)!.clearLogs,
-          hasLogs ? AppTheme.statusError : AppTheme.textSecondary,
+          hasLogs ? AppTheme.colors(context).danger : AppTheme.colors(context).textSecondary,
           enabled: hasLogs,
         ),
       ],
@@ -52,6 +55,7 @@ class LogsActionsMenu extends ConsumerWidget {
   }
 
   PopupMenuItem<String> _buildMenuItem(
+    BuildContext context,
     String value,
     HeroIcons icon,
     String label,
@@ -73,7 +77,7 @@ class LogsActionsMenu extends ConsumerWidget {
           Text(
             label,
             style: TextStyle(
-              color: enabled ? AppTheme.textPrimary : AppTheme.textSecondary,
+              color: enabled ? AppTheme.colors(context).textPrimary : AppTheme.colors(context).textSecondary,
             ),
           ),
         ],
@@ -120,7 +124,7 @@ class LogsActionsMenu extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(localizations.logsExportSuccess),
-            backgroundColor: AppTheme.statusSuccess,
+            backgroundColor: AppTheme.colors(context).accent,
           ),
         );
       }
@@ -130,7 +134,7 @@ class LogsActionsMenu extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(localizations.logsExportError),
-            backgroundColor: AppTheme.statusError,
+            backgroundColor: AppTheme.colors(context).danger,
           ),
         );
       }
@@ -159,7 +163,7 @@ class LogsActionsMenu extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(localizations.shareLogsError),
-            backgroundColor: AppTheme.statusError,
+            backgroundColor: AppTheme.colors(context).danger,
           ),
         );
       }
@@ -170,28 +174,28 @@ class LogsActionsMenu extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.colors(context).scaffoldBackground,
         title: Text(
           S.of(context)!.clearLogs,
-          style: const TextStyle(color: AppTheme.textPrimary),
+          style: TextStyle(color: AppTheme.colors(context).textPrimary),
         ),
         content: Text(
           S.of(context)!.clearLogsConfirmation,
-          style: const TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.colors(context).textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
               S.of(context)!.cancel,
-              style: const TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: AppTheme.colors(context).textSecondary),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               S.of(context)!.clear,
-              style: const TextStyle(color: AppTheme.statusError),
+              style: TextStyle(color: AppTheme.colors(context).danger),
             ),
           ),
         ],

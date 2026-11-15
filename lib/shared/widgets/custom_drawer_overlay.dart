@@ -59,7 +59,7 @@ class CustomDrawerOverlay extends ConsumerWidget {
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.7,
                 decoration: BoxDecoration(
-                  color: AppTheme.dark1,
+                  color: AppTheme.colors(context).cardBackground,
                   border: Border(
                     right: BorderSide(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -147,13 +147,13 @@ class CustomDrawerOverlay extends ConsumerWidget {
       dense: true,
       leading: Icon(
         icon,
-        color: AppTheme.cream1,
+        color: AppTheme.colors(context).textPrimary,
         size: 22,
       ),
       title: Text(
         title,
         style: AppTheme.theme.textTheme.bodyLarge?.copyWith(
-          color: AppTheme.cream1,
+          color: AppTheme.colors(context).textPrimary,
           fontWeight: FontWeight.w500,
         ),
       ),

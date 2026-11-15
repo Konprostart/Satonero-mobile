@@ -163,7 +163,10 @@ void main() {
         host(const CustomCard(child: SizedBox.shrink())),
       );
 
-      expect(tester.widget<Card>(find.byType(Card)).color, AppTheme.dark1);
+      expect(
+        tester.widget<Card>(find.byType(Card)).color,
+        AppColors.dark.cardBackground,
+      );
     });
 
     testWidgets('honours explicit colour, margin, padding and border',
@@ -221,7 +224,7 @@ void main() {
       final widget = tester.widget<Switch>(find.byType(Switch));
 
       expect(widget.thumbColor!.resolve({WidgetState.selected}),
-          AppTheme.textPrimary);
+          AppColors.dark.textPrimary);
       expect(
           widget.thumbColor!.resolve(<WidgetState>{}), AppTheme.textSecondary);
       expect(widget.trackColor!.resolve({WidgetState.selected}),
@@ -272,7 +275,7 @@ void main() {
       expect(tester.widget<Icon>(find.byIcon(Icons.star)).color,
           AppTheme.satoneroOrange);
       expect(tester.widget<Icon>(find.byIcon(Icons.star_border).first).color,
-          AppTheme.grey2);
+          AppColors.dark.textInactive);
     });
   });
 

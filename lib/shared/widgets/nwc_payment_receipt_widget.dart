@@ -40,24 +40,24 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.dark1,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.satoneroOrange.withAlpha(128)),
+        border: Border.all(color: AppTheme.colors(context).accent.withAlpha(128)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Success icon
-          const Icon(
+          Icon(
             LucideIcons.checkCircle2,
-            color: AppTheme.satoneroOrange,
+            color: AppTheme.colors(context).accent,
             size: 56,
           ),
           const SizedBox(height: 12),
           Text(
             S.of(context)!.nwcPaymentSuccess,
-            style: const TextStyle(
-              color: AppTheme.satoneroOrange,
+            style: TextStyle(
+              color: AppTheme.colors(context).accent,
               fontSize: 20,
               fontWeight: FontWeight.w700,
             ),
@@ -94,7 +94,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
           // Preimage
           if (preimage != null && preimage!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            const Divider(color: AppTheme.grey2, height: 1),
+            Divider(color: AppTheme.colors(context).textInactive, height: 1),
             const SizedBox(height: 12),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,7 +106,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
                       Text(
                         S.of(context)!.nwcPreimageLabel,
                         style: TextStyle(
-                          color: AppTheme.cream1.withAlpha(153),
+                          color: AppTheme.colors(context).textPrimary.withAlpha(153),
                           fontSize: 12,
                         ),
                       ),
@@ -114,7 +114,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
                       Text(
                         _truncate(preimage!, 32),
                         style: TextStyle(
-                          color: AppTheme.cream1.withAlpha(179),
+                          color: AppTheme.colors(context).textPrimary.withAlpha(179),
                           fontSize: 11,
                           fontFamily: 'monospace',
                         ),
@@ -126,7 +126,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
                   icon: Icon(
                     LucideIcons.copy,
                     size: 16,
-                    color: AppTheme.cream1.withAlpha(153),
+                    color: AppTheme.colors(context).textPrimary.withAlpha(153),
                   ),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: preimage!));
@@ -151,7 +151,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: onDismiss,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.satoneroOrange,
+                  backgroundColor: AppTheme.colors(context).accent,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -181,14 +181,14 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.cream1.withAlpha(153),
+              color: AppTheme.colors(context).textPrimary.withAlpha(153),
               fontSize: 14,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              color: AppTheme.cream1,
+              color: AppTheme.colors(context).textPrimary,
               fontSize: 14,
               fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
             ),

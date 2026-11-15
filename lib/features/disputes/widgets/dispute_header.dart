@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:satonero_mobile/features/disputes/widgets/dispute_status_badge.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
 import 'package:satonero_mobile/data/models/dispute.dart';
@@ -16,8 +17,8 @@ class DisputeHeader extends StatelessWidget {
       children: [
         Text(
           S.of(context)?.disputeForOrder ?? 'Dispute for order',
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),

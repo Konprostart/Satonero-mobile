@@ -128,7 +128,7 @@ class _AmountSectionState extends State<AmountSection> {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: AppTheme.satoneroOrange,
+          color: AppTheme.colors(context).accent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
@@ -166,10 +166,10 @@ class _AmountSectionState extends State<AmountSection> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppTheme.statusError.withValues(alpha: 0.1),
+        color: AppTheme.colors(context).danger.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: AppTheme.statusError.withValues(alpha: 0.3),
+          color: AppTheme.colors(context).danger.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -177,15 +177,15 @@ class _AmountSectionState extends State<AmountSection> {
         children: [
           Icon(
             Icons.warning_amber_rounded,
-            color: AppTheme.statusError,
+            color: AppTheme.colors(context).danger,
             size: 18,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               widget.validationError!,
-              style: const TextStyle(
-                color: AppTheme.statusError,
+              style: TextStyle(
+                color: AppTheme.colors(context).danger,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -201,8 +201,8 @@ class _AmountSectionState extends State<AmountSection> {
     return FormSection(
       title: _getTitle(),
       topRightWidget: _getTopRightWidget(),
-      icon: const Icon(Icons.money, color: AppTheme.satoneroOrange, size: 18),
-      iconBackgroundColor: AppTheme.satoneroOrange.withValues(alpha: 0.3),
+      icon: Icon(Icons.money, color: AppTheme.colors(context).accent, size: 18),
+      iconBackgroundColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -263,8 +263,8 @@ class _AmountSectionState extends State<AmountSection> {
             const SizedBox(height: 8),
             Text(
               S.of(context)!.tapSecondFieldForRange,
-              style: const TextStyle(
-                color: AppTheme.satoneroOrange,
+              style: TextStyle(
+                color: AppTheme.colors(context).accent,
                 fontSize: 12,
               ),
             ),

@@ -66,7 +66,7 @@ class DisputeMessageBubble extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: _bubbleDecoration(),
+      decoration: _bubbleDecoration(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -99,15 +99,15 @@ class DisputeMessageBubble extends ConsumerWidget {
       onLongPress: () => _copyToClipboard(context, message.content),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: _bubbleDecoration(),
+        decoration: _bubbleDecoration(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               message.content,
-              style: const TextStyle(
-                color: AppTheme.cream1,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 16,
                 height: 1.4,
               ),
@@ -119,9 +119,9 @@ class DisputeMessageBubble extends ConsumerWidget {
     );
   }
 
-  BoxDecoration _bubbleDecoration() {
+  BoxDecoration _bubbleDecoration(BuildContext context) {
     return BoxDecoration(
-      color: isFromUser ? AppTheme.purpleButton : _getAdminMessageColor(),
+      color: isFromUser ? AppTheme.colors(context).purple : _getAdminMessageColor(context),
       borderRadius: BorderRadius.only(
         topLeft: const Radius.circular(16),
         topRight: const Radius.circular(16),
@@ -138,15 +138,15 @@ class DisputeMessageBubble extends ConsumerWidget {
       child: Text(
         DateFormat(use24h ? 'HH:mm' : 'h:mm a').format(message.timestamp.toLocal()),
         style: TextStyle(
-          color: AppTheme.cream1.withValues(alpha: 0.6),
+          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.6),
           fontSize: 11,
         ),
       ),
     );
   }
 
-  Color _getAdminMessageColor() {
-    const Color adminBlue = AppTheme.createdByYouChip;
+  Color _getAdminMessageColor(BuildContext context) {
+    final adminBlue = AppTheme.colors(context).createdByYouChip;
     final HSVColor hsvColor = HSVColor.fromColor(adminBlue);
     return hsvColor.withSaturation(0.3).withValue(0.25).toColor();
   }

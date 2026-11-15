@@ -47,26 +47,26 @@ class StatusFilterWidget extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         decoration: BoxDecoration(
-          color: AppTheme.backgroundDark,
+          color: AppTheme.colors(context).scaffoldBackground,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: Colors.white24),
+          border: Border.all(color: AppTheme.colors(context).divider),
         ),
         child: PopupMenuButton<String>(
-          color: AppTheme.backgroundDark,
+          color: AppTheme.colors(context).scaffoldBackground,
           offset: const Offset(0, 40),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 LucideIcons.filter,
-                color: Colors.white70,
+                color: AppTheme.colors(context).textSecondary,
                 size: 14,
               ),
               const SizedBox(width: 4),
               Text(
                 getDisplayText(),
-                style: const TextStyle(
-                  color: Colors.white70,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -77,8 +77,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: 'ALL',
               child: Text(
                 S.of(context)!.allStatuses,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -87,8 +87,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.pending.value,
               child: Text(
                 S.of(context)!.statusPending,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -97,8 +97,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.waitingPayment.value,
               child: Text(
                 S.of(context)!.statusWaitingPayment,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -107,8 +107,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.waitingBuyerInvoice.value,
               child: Text(
                 S.of(context)!.statusWaitingBuyerInvoice,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -117,8 +117,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.active.value,
               child: Text(
                 S.of(context)!.statusActive,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -127,8 +127,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.fiatSent.value,
               child: Text(
                 S.of(context)!.statusFiatSent,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -137,8 +137,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.success.value,
               child: Text(
                 S.of(context)!.statusSuccess,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -147,8 +147,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.canceled.value,
               child: Text(
                 S.of(context)!.statusCanceled,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -157,8 +157,8 @@ class StatusFilterWidget extends ConsumerWidget {
               value: Status.settledHoldInvoice.value,
               child: Text(
                 S.of(context)!.statusSettledHoldInvoice,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 12,
                 ),
               ),

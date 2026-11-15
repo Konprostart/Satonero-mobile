@@ -50,8 +50,8 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
-            color: AppTheme.textPrimary,
+          style: TextStyle(
+            color: AppTheme.colors(context).textPrimary,
             fontSize: 14,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.3,
@@ -73,7 +73,7 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
             return Align(
               alignment: Alignment.topLeft,
               child: Material(
-                color: AppTheme.backgroundCard,
+                color: AppTheme.colors(context).cardBackground,
                 elevation: 8,
                 borderRadius: BorderRadius.circular(8),
                 child: ConstrainedBox(
@@ -95,8 +95,8 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                           margin: const EdgeInsets.symmetric(vertical: 1),
                           child: Text(
                             option,
-                            style: const TextStyle(
-                              color: AppTheme.textPrimary,
+                            style: TextStyle(
+                              color: AppTheme.colors(context).textPrimary,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                             ),
@@ -121,13 +121,13 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
             return TextFormField(
               controller: textEditingController,
               focusNode: focusNode,
-              style: const TextStyle(
-                color: AppTheme.textPrimary,
+              style: TextStyle(
+                color: AppTheme.colors(context).textPrimary,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: AppTheme.backgroundInput,
+                fillColor: AppTheme.colors(context).inputBackground,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
@@ -145,13 +145,13 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.colors(context).textSecondary,
                     width: 1.5,
                   ),
                 ),
                 hintText: S.of(context)!.typeToAdd,
                 hintStyle: TextStyle(
-                  color: AppTheme.textInactive,
+                  color: AppTheme.colors(context).textInactive,
                   fontSize: 14,
                 ),
                 contentPadding: const EdgeInsets.symmetric(
@@ -170,7 +170,7 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                   Text(
                     S.of(context)!.noneSelected,
                     style: TextStyle(
-                      color: AppTheme.textInactive,
+                      color: AppTheme.colors(context).textInactive,
                       fontSize: 13,
                       fontStyle: FontStyle.italic,
                     ),
@@ -180,7 +180,7 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                   .map((value) => Container(
                         margin: const EdgeInsets.only(right: 6, bottom: 4),
                         child: Material(
-                          color: AppTheme.backgroundInput,
+                          color: AppTheme.colors(context).inputBackground,
                           borderRadius: BorderRadius.circular(20),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -188,10 +188,10 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: AppTheme.backgroundInput,
+                              color: AppTheme.colors(context).inputBackground,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: AppTheme.textSecondary.withValues(alpha: 0.6),
+                                color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.6),
                                 width: 1,
                               ),
                             ),
@@ -200,8 +200,8 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                               children: [
                                 Text(
                                   value,
-                                  style: const TextStyle(
-                                    color: AppTheme.textPrimary,
+                                  style: TextStyle(
+                                    color: AppTheme.colors(context).textPrimary,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -216,13 +216,13 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                                   child: Container(
                                     padding: const EdgeInsets.all(2),
                                     decoration: BoxDecoration(
-                                      color: AppTheme.textSecondary.withValues(alpha: 0.2),
+                                      color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.2),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.close,
                                       size: 14,
-                                      color: AppTheme.textSecondary,
+                                      color: AppTheme.colors(context).textSecondary,
                                     ),
                                   ),
                                 ),
@@ -320,7 +320,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
       height: MediaQuery.of(context).size.height * 0.8, // 80% of screen height
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.backgroundCard,
+        color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.1),
@@ -337,13 +337,13 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
             children: [
               Row(
                 children: [
-                  const HeroIcon(HeroIcons.funnel,
-                      style: HeroIconStyle.outline, color: AppTheme.satoneroOrange),
+                  HeroIcon(HeroIcons.funnel,
+                      style: HeroIconStyle.outline, color: AppTheme.colors(context).accent),
                   const SizedBox(width: 8),
                   Text(
                     S.of(context)!.filter.toUpperCase(),
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 0.5,
@@ -352,7 +352,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                 ],
               ),
               IconButton(
-                icon: const Icon(Icons.close, color: AppTheme.textSecondary, size: 22),
+                icon: Icon(Icons.close, color: AppTheme.colors(context).textSecondary, size: 22),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -390,8 +390,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               children: [
                 Text(
                   S.of(context)!.fiatCurrencies,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -402,7 +402,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                   width: double.infinity,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.2),
@@ -412,8 +412,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                   child: Center(
                     child: Text(
                       S.of(context)!.loadingCurrencies,
-                      style: const TextStyle(
-                        color: AppTheme.textInactive,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textInactive,
                         fontSize: 14,
                       ),
                     ),
@@ -427,8 +427,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               children: [
                 Text(
                   S.of(context)!.fiatCurrencies,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -466,8 +466,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               children: [
                 Text(
                   S.of(context)!.paymentMethods,
-                  style: const TextStyle(
-                    color: AppTheme.textPrimary,
+                  style: TextStyle(
+                    color: AppTheme.colors(context).textPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.3,
@@ -478,7 +478,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                   width: double.infinity,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundInput,
+                    color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.2),
@@ -488,8 +488,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                   child: Center(
                     child: Text(
                       S.of(context)!.loadingPaymentMethods,
-                      style: const TextStyle(
-                        color: AppTheme.textInactive,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).textInactive,
                         fontSize: 14,
                       ),
                     ),
@@ -516,8 +516,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
             children: [
               Text(
                 S.of(context)!.premiumRange,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,
@@ -531,8 +531,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                     child: Text(
                       "${S.of(context)!.discount}: ${premiumMin.toInt()}%",
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppTheme.sellColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).sell,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -544,8 +544,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       "${S.of(context)!.premium}: ${premiumMax.toInt()}%",
                       textAlign: TextAlign.end,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppTheme.buyColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).accent,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -555,13 +555,13 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: AppTheme.textSecondary,
-                  inactiveTrackColor: AppTheme.backgroundInput,
-                  thumbColor: AppTheme.textSecondary,
-                  overlayColor: AppTheme.textSecondary.withValues(alpha: 0.2),
-                  valueIndicatorColor: AppTheme.textSecondary,
-                  valueIndicatorTextStyle: const TextStyle(
-                    color: AppTheme.backgroundDark,
+                  activeTrackColor: AppTheme.colors(context).textSecondary,
+                  inactiveTrackColor: AppTheme.colors(context).inputBackground,
+                  thumbColor: AppTheme.colors(context).textSecondary,
+                  overlayColor: AppTheme.colors(context).textSecondary.withValues(alpha: 0.2),
+                  valueIndicatorColor: AppTheme.colors(context).textSecondary,
+                  valueIndicatorTextStyle: TextStyle(
+                    color: AppTheme.colors(context).scaffoldBackground,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -596,8 +596,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
             children: [
               Text(
                 S.of(context)!.reputation,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,
@@ -611,8 +611,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                     child: Text(
                       "${S.of(context)!.min}: ${ratingMin.toInt()}",
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppTheme.sellColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).sell,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -624,8 +624,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       "${S.of(context)!.max}: ${ratingMax.toInt()}",
                       textAlign: TextAlign.end,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppTheme.buyColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).accent,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -635,13 +635,13 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: AppTheme.textSecondary,
-                  inactiveTrackColor: AppTheme.backgroundInput,
-                  thumbColor: AppTheme.textSecondary,
-                  overlayColor: AppTheme.textSecondary.withValues(alpha: 0.2),
-                  valueIndicatorColor: AppTheme.textSecondary,
-                  valueIndicatorTextStyle: const TextStyle(
-                    color: AppTheme.backgroundDark,
+                  activeTrackColor: AppTheme.colors(context).textSecondary,
+                  inactiveTrackColor: AppTheme.colors(context).inputBackground,
+                  thumbColor: AppTheme.colors(context).textSecondary,
+                  overlayColor: AppTheme.colors(context).textSecondary.withValues(alpha: 0.2),
+                  valueIndicatorColor: AppTheme.colors(context).textSecondary,
+                  valueIndicatorTextStyle: TextStyle(
+                    color: AppTheme.colors(context).scaffoldBackground,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -676,8 +676,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
             children: [
               Text(
                 S.of(context)!.daysOfUse,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,
@@ -691,8 +691,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                     child: Text(
                       "${S.of(context)!.days}: 0",
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppTheme.sellColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).sell,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -709,8 +709,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       textAlign: TextAlign.end,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppTheme.buyColor,
+                      style: TextStyle(
+                        color: AppTheme.colors(context).accent,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -720,13 +720,13 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: AppTheme.textSecondary,
-                  inactiveTrackColor: AppTheme.backgroundInput,
-                  thumbColor: AppTheme.textSecondary,
-                  overlayColor: AppTheme.textSecondary.withValues(alpha: 0.2),
-                  valueIndicatorColor: AppTheme.textSecondary,
-                  valueIndicatorTextStyle: const TextStyle(
-                    color: AppTheme.backgroundDark,
+                  activeTrackColor: AppTheme.colors(context).textSecondary,
+                  inactiveTrackColor: AppTheme.colors(context).inputBackground,
+                  thumbColor: AppTheme.colors(context).textSecondary,
+                  overlayColor: AppTheme.colors(context).textSecondary.withValues(alpha: 0.2),
+                  valueIndicatorColor: AppTheme.colors(context).textSecondary,
+                  valueIndicatorTextStyle: TextStyle(
+                    color: AppTheme.colors(context).scaffoldBackground,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -767,14 +767,14 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       FilteringTextInputFormatter.allow(RegExp(r'^\d{0,4}$')),
                     ],
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: AppTheme.textPrimary,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: AppTheme.backgroundInput,
+                      fillColor: AppTheme.colors(context).inputBackground,
                       contentPadding: EdgeInsets.zero,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -792,8 +792,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: AppTheme.textSecondary,
+                        borderSide: BorderSide(
+                          color: AppTheme.colors(context).textSecondary,
                           width: 1.5,
                         ),
                       ),
@@ -844,9 +844,9 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       Navigator.of(context).pop();
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppTheme.textSecondary,
+                      foregroundColor: AppTheme.colors(context).textSecondary,
                       side: BorderSide(
-                        color: AppTheme.textSecondary.withValues(alpha: 0.3),
+                        color: AppTheme.colors(context).textSecondary.withValues(alpha: 0.3),
                         width: 1,
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -883,8 +883,8 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.satoneroOrange,
-                      foregroundColor: AppTheme.backgroundDark,
+                      backgroundColor: AppTheme.colors(context).accent,
+                      foregroundColor: AppTheme.colors(context).scaffoldBackground,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

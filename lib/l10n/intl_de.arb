@@ -1804,5 +1804,17 @@
     "cashuEscrowMode": "Escrow-Modus",
     "escrowLightning": "Lightning",
     "escrowCashu": "Cashu",
-    "cashuMintNotSelected": "Bitte wähle ein Cashu-Mint"
+    "cashuMintNotSelected": "Bitte wähle ein Cashu-Mint",
+    "cashuMintTrustNotice": "Du vertraust darauf, dass dieser Mint das Escrow bis zum Abschluss des Handels verwahrt.",
+    "@cashuMintTrustNotice": {},
+    "escrowLocktimeLabel": "Escrow-Locktime",
+    "@escrowLocktimeLabel": {},
+    "escrowLocktimeDays": "{count, plural, =1{1 Tag} other{{count} Tage}}",
+    "@escrowLocktimeDays": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    }
 }

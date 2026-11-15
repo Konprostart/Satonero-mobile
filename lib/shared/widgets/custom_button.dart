@@ -26,8 +26,8 @@ class CustomButton extends StatelessWidget {
         onPressed: isEnabled ? onPressed : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: isEnabled
-              ? AppTheme.satoneroOrange
-              : AppTheme.satoneroOrange.withValues(alpha: .5),
+              ? AppTheme.colors(context).accent
+              : AppTheme.colors(context).accent.withValues(alpha: .5),
           foregroundColor: Colors.black,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
