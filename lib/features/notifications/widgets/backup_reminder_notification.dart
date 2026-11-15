@@ -27,10 +27,10 @@ class BackupReminderNotification extends ConsumerWidget {
                   color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const HeroIcon(
+                child:  HeroIcon(
                   HeroIcons.exclamationTriangle,
                   style: HeroIconStyle.solid,
-                  color: Colors.red,
+                  color: AppTheme.colors(context).danger,
                   size: 20,
                 ),
               ),

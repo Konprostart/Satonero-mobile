@@ -56,8 +56,8 @@ class _ClickableTextState extends State<ClickableText> {
           TextSpan(text: '${widget.leftText} '),
           TextSpan(
             text: widget.clickableText,
-            style: const TextStyle(
-              color: Colors.blue,
+            style:  TextStyle(
+              color: AppTheme.colors(context).info,
               decoration: TextDecoration.underline,
             ),
             recognizer: _tapRecognizer,

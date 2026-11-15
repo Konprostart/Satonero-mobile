@@ -30,6 +30,11 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.info,
     required this.purple,
     required this.warning,
+    required this.onAccent,
+    required this.onDanger,
+    required this.success,
+    required this.qrBackground,
+    required this.qrForeground,
     required this.statusPendingBackground,
     required this.statusPendingText,
     required this.statusWaitingBackground,
@@ -96,6 +101,24 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Warning amber (darkened in light mode for contrast).
   final Color warning;
 
+  /// Foreground (text/icon) on the Bitcoin-orange accent. Fixed black in both
+  /// modes so it always contrasts against the brand orange.
+  final Color onAccent;
+
+  /// Foreground on danger/sell/error fills. Fixed white in both modes.
+  final Color onDanger;
+
+  /// Success green for positive indicators. Brighter in dark mode and deeper
+  /// in light mode for contrast on each surface.
+  final Color success;
+
+  /// QR-code quiet zone. Always white regardless of theme so scanners can read
+  /// the code (drawn with [qrForeground] modules).
+  final Color qrBackground;
+
+  /// QR-code modules. Always near-black regardless of theme for scannability.
+  final Color qrForeground;
+
   // Order status chip pairs (background + foreground).
   final Color statusPendingBackground;
   final Color statusPendingText;
@@ -137,6 +160,11 @@ class AppColors extends ThemeExtension<AppColors> {
     info: Color(0xFF1565C0),
     purple: Color(0xFF5E35B1),
     warning: Color(0xFFB8860B),
+    onAccent: Color(0xFF000000),
+    onDanger: Color(0xFFFFFFFF),
+    success: Color(0xFF2E7D32),
+    qrBackground: Color(0xFFFFFFFF),
+    qrForeground: Color(0xFF000000),
     statusPendingBackground: Color(0xFFFEF3C7),
     statusPendingText: Color(0xFF92400E),
     statusWaitingBackground: Color(0xFFFFEDD5),
@@ -176,6 +204,11 @@ class AppColors extends ThemeExtension<AppColors> {
     info: Color(0xFF2A7BD6),
     purple: Color(0xFF7856AF),
     warning: Color(0xFFF3CA29),
+    onAccent: Color(0xFF000000),
+    onDanger: Color(0xFFFFFFFF),
+    success: Color(0xFF4CAF50),
+    qrBackground: Color(0xFFFFFFFF),
+    qrForeground: Color(0xFF000000),
     statusPendingBackground: Color(0xFF854D0E),
     statusPendingText: Color(0xFFFCD34D),
     statusWaitingBackground: Color(0xFF7C2D12),
@@ -215,6 +248,11 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? info,
     Color? purple,
     Color? warning,
+    Color? onAccent,
+    Color? onDanger,
+    Color? success,
+    Color? qrBackground,
+    Color? qrForeground,
     Color? statusPendingBackground,
     Color? statusPendingText,
     Color? statusWaitingBackground,
@@ -252,6 +290,11 @@ class AppColors extends ThemeExtension<AppColors> {
       info: info ?? this.info,
       purple: purple ?? this.purple,
       warning: warning ?? this.warning,
+      onAccent: onAccent ?? this.onAccent,
+      onDanger: onDanger ?? this.onDanger,
+      success: success ?? this.success,
+      qrBackground: qrBackground ?? this.qrBackground,
+      qrForeground: qrForeground ?? this.qrForeground,
       statusPendingBackground:
           statusPendingBackground ?? this.statusPendingBackground,
       statusPendingText: statusPendingText ?? this.statusPendingText,
@@ -303,6 +346,11 @@ class AppColors extends ThemeExtension<AppColors> {
       info: Color.lerp(info, other.info, t)!,
       purple: Color.lerp(purple, other.purple, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
+      onAccent: Color.lerp(onAccent, other.onAccent, t)!,
+      onDanger: Color.lerp(onDanger, other.onDanger, t)!,
+      success: Color.lerp(success, other.success, t)!,
+      qrBackground: Color.lerp(qrBackground, other.qrBackground, t)!,
+      qrForeground: Color.lerp(qrForeground, other.qrForeground, t)!,
       statusPendingBackground: Color.lerp(
           statusPendingBackground, other.statusPendingBackground, t)!,
       statusPendingText:
@@ -522,7 +570,7 @@ class AppTheme {
       textTheme: _buildTextTheme(colors.textPrimary),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.black,
+          foregroundColor: colors.onAccent,
           backgroundColor: satoneroOrange,
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,

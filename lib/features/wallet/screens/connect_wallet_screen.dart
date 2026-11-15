@@ -92,7 +92,7 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
               decoration: BoxDecoration(
                 color: AppTheme.colors(context).cardBackground,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -130,8 +130,8 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: _validationError != null
-                              ? Colors.redAccent
-                              : Colors.white.withValues(alpha: 0.1),
+                              ? AppTheme.colors(context).danger
+                              : AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                         ),
                       ),
                       child: TextFormField(
@@ -173,8 +173,8 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                       const SizedBox(height: 8),
                       Text(
                         _validationError!,
-                        style: const TextStyle(
-                          color: Colors.redAccent,
+                        style:  TextStyle(
+                          color: AppTheme.colors(context).danger,
                           fontSize: 13,
                         ),
                       ),
@@ -204,7 +204,7 @@ class _ConnectWalletScreenState extends ConsumerState<ConnectWalletScreen> {
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.colors(context).accent,
-                          foregroundColor: Colors.black,
+                          foregroundColor: AppTheme.colors(context).onAccent,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

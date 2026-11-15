@@ -63,7 +63,7 @@ class LnAddressConfirmationWidget extends StatelessWidget {
                   color: AppTheme.colors(context).scaffoldBackground,
                   borderRadius: BorderRadius.circular(8),
                   border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                      Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
                 ),
                 child: Text(
                   lightningAddress,
@@ -101,7 +101,7 @@ class LnAddressConfirmationWidget extends StatelessWidget {
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.colors(context).accent,
-                    foregroundColor: Colors.black,
+                    foregroundColor: AppTheme.colors(context).onAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

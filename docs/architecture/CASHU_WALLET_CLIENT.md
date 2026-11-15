@@ -102,6 +102,17 @@ boundary the take-order screen's mint display makes visible to the user.
 
 - [x] Design + license matrix (this doc).
 - [x] Rust crate skeleton (`rust/`), bridge config, Dart API interface.
-- [ ] `flutter_rust_bridge` codegen wired into `pubspec.yaml` + CI.
-- [ ] `CashuWalletFfi` implementation and unit tests with a fake `CashuWalletApi`.
-- [ ] Lock / release / cancel / refund flows consumed by the order screens.
+- [x] Real NUT-11 P2PK primitives in `rust/src/escrow.rs`
+      (`build_escrow_spending_conditions`, `sign_proof`, `verify_proof_p2pk`)
+      delegating to the CDK, with Rust unit tests.
+- [x] `flutter_rust_bridge` codegen wired in (`flutter_rust_bridge` 2.12.0 in
+      `pubspec.yaml`/`Cargo.toml`, generated glue under
+      `lib/features/cashu/wallet/bridge/` + `rust/src/frb_generated.rs`).
+- [x] `CashuWalletFfi` (`lib/features/cashu/wallet/cashu_wallet_ffi.dart`)
+      implementing `CashuWalletApi` and exposing the three primitives.
+- [ ] Android/iOS `.so` cross-compilation (needs the NDK; the bridge falls back
+      to `CashuWalletException('wallet_unavailable')` until the native library
+      is built for the target).
+- [ ] Mint session + proof selection orchestrator, so `lockEscrow` /
+      `releaseEscrow` / `cancelEscrow` / `refundAfterLocktime` can run end to
+      end and be consumed by the order screens.

@@ -87,9 +87,9 @@ class TradesScreen extends ConsumerWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(
+                                       Icon(
                                         Icons.error_outline,
-                                        color: Colors.red,
+                                        color: AppTheme.colors(context).danger,
                                         size: 48,
                                       ),
                                       const SizedBox(height: 16),

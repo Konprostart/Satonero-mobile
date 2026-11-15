@@ -62,7 +62,7 @@ class CustomDrawerOverlay extends ConsumerWidget {
                   color: AppTheme.colors(context).cardBackground,
                   border: Border(
                     right: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                       width: 1.0,
                     ),
                   ),
@@ -91,7 +91,7 @@ class CustomDrawerOverlay extends ConsumerWidget {
                       Divider(
                         height: 1,
                         thickness: 1,
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                       ),
 
                       SizedBox(height: 16),

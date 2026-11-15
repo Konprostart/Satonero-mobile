@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:satonero_mobile/features/order/widgets/form_section.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
 
@@ -14,7 +15,7 @@ class LightningAddressSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormSection(
       title: S.of(context)!.lightningAddressOptional,
-      icon: const Icon(Icons.bolt, color: Colors.amber, size: 18),
+      icon:  Icon(Icons.bolt, color: AppTheme.colors(context).warning, size: 18),
       iconBackgroundColor: Colors.amber.withValues(alpha: 0.3),
       child: TextField(
         controller: controller,

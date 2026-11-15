@@ -130,7 +130,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
             height: 1.0,
-            color: Colors.white.withValues(alpha: 0.1),
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
           ),
         ),
       ),

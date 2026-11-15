@@ -432,7 +432,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                           decoration: BoxDecoration(
                             border: Border(
                               top: BorderSide(
-                                color: Colors.white.withValues(alpha: 0.1),
+                                color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),

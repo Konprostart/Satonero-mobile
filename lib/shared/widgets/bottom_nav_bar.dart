@@ -119,8 +119,8 @@ class BottomNavBar extends ConsumerWidget {
                             child: Container(
                               width: 6,
                               height: 6,
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                              decoration:  BoxDecoration(
+                                color: AppTheme.colors(context).danger,
                                 shape: BoxShape.circle,
                               ),
                             ),

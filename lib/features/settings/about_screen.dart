@@ -94,7 +94,7 @@ class AboutScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -160,7 +160,7 @@ class AboutScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -228,7 +228,7 @@ class AboutScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -477,7 +477,7 @@ class AboutScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -790,7 +790,7 @@ class AboutScreen extends ConsumerWidget {
           backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+            side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,
@@ -1019,7 +1019,7 @@ class AboutScreen extends ConsumerWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.colors(context).accent,
-                    foregroundColor: Colors.black,
+                    foregroundColor: AppTheme.colors(context).onAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

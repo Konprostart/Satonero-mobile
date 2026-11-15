@@ -188,7 +188,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
         color: AppTheme.colors(context).cardBackground,
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -351,7 +351,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> with WidgetsBindingObse
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
       ),
       side: BorderSide(
-        color: isSelected ? AppTheme.colors(context).info : Colors.white.withValues(alpha: 0.1),
+        color: isSelected ? AppTheme.colors(context).info : AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
       ),
     );
   }

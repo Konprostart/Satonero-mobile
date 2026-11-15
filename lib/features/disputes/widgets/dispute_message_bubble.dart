@@ -157,7 +157,7 @@ class DisputeMessageBubble extends ConsumerWidget {
       context,
       S.of(context)!.messageCopiedToClipboard,
       duration: const Duration(seconds: 1),
-      backgroundColor: Colors.green,
+      backgroundColor: AppTheme.colors(context).success,
     );
   }
 

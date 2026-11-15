@@ -252,7 +252,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
         children: [
           Icon(
             Icons.error_outline,
-            color: Colors.red,
+            color: AppTheme.colors(context).danger,
             size: 24,
           ),
           const SizedBox(height: 4),
@@ -262,7 +262,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
               S.of(context)!.failedToLoadImage,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.red,
+                color: AppTheme.colors(context).danger,
               ),
               textAlign: TextAlign.center,
             ),
@@ -381,7 +381,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
             context,
             '$couldNotOpenMsg: ${result.message}',
             duration: const Duration(seconds: 3),
-            backgroundColor: Colors.orange,
+            backgroundColor: AppTheme.colors(context).accent,
           );
         }
       }
@@ -390,7 +390,7 @@ class _EncryptedImageMessageState extends State<EncryptedImageMessage> {
         SnackBarHelper.showTopSnackBar(
           context,
           '$errorOpeningMsg: $e',
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.colors(context).danger,
         );
       }
     }

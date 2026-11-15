@@ -158,7 +158,7 @@ class _BondPayoutInvoiceScreenState
             decoration: BoxDecoration(
               color: AppTheme.colors(context).inputBackground,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
             ),
             child: TextFormField(
               key: const Key('bondPayoutInvoiceTextField'),
@@ -185,7 +185,7 @@ class _BondPayoutInvoiceScreenState
               onPressed: _submitting ? null : _onSubmit,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors(context).accent,
-                foregroundColor: Colors.black,
+                foregroundColor: AppTheme.colors(context).onAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -241,7 +241,7 @@ class _BondPayoutInvoiceScreenState
               onPressed: () => context.go('/'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors(context).accent,
-                foregroundColor: Colors.black,
+                foregroundColor: AppTheme.colors(context).onAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

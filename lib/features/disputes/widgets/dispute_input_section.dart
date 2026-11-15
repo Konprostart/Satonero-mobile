@@ -33,7 +33,7 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
         color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           top: BorderSide(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.05),
             width: 1.0,
           ),
         ),
@@ -52,7 +52,7 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
                   color: Colors.grey[850],
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                     width: 1,
                   ),
                 ),
@@ -85,7 +85,7 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: _canSend() ? Colors.blue : Colors.grey[600],
+                  color: _canSend() ? AppTheme.colors(context).info : Colors.grey[600],
                   shape: BoxShape.circle,
                 ),
                 child: _isLoading
@@ -131,7 +131,7 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
         SnackBarHelper.showTopSnackBar(
           context,
           S.of(context)!.messageSent(message),
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.colors(context).success,
         );
       }
     } catch (error) {
@@ -139,7 +139,7 @@ class _DisputeInputSectionState extends State<DisputeInputSection> {
         SnackBarHelper.showTopSnackBar(
           context,
           S.of(context)!.failedSendMessage(error.toString()),
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.colors(context).danger,
         );
       }
     } finally {

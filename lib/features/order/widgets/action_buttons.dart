@@ -30,7 +30,7 @@ class ActionButtons extends StatelessWidget {
               onPressed: onCancel,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors(context).cardBackground,
-                foregroundColor: Colors.white,
+                foregroundColor: AppTheme.colors(context).textPrimary,
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
               ),

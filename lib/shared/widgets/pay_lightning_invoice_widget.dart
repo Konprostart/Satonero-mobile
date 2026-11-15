@@ -59,12 +59,12 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
         const SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.all(8.0),
-          color: AppTheme.colors(context).textPrimary,
+          color: AppTheme.colors(context).qrBackground,
           child: QrImageView(
             data: widget.lnInvoice,
             version: QrVersions.auto,
             size: 250.0,
-            backgroundColor: AppTheme.colors(context).textPrimary,
+            backgroundColor: AppTheme.colors(context).qrBackground,
             errorStateBuilder: (cxt, err) {
               return Center(
                 child: Text(
@@ -146,8 +146,8 @@ class _PayLightningInvoiceWidgetState extends State<PayLightningInvoiceWidget> {
             ElevatedButton(
               onPressed: widget.onCancel,
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.red,
+                foregroundColor: AppTheme.colors(context).onDanger,
+                backgroundColor: AppTheme.colors(context).danger,
               ),
               child: Text(S.of(context)!.cancel),
             ),

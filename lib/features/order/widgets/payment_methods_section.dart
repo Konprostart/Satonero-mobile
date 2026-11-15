@@ -63,7 +63,7 @@ class PaymentMethodsSection extends ConsumerWidget {
             style: const TextStyle(color: Colors.white)),
         error: (error, _) => Text(
             S.of(context)!.errorLoadingPaymentMethods(error.toString()),
-            style: const TextStyle(color: Colors.red)),
+            style:  TextStyle(color: AppTheme.colors(context).danger)),
         data: (data) {
           final displayText = selectedMethods.isEmpty
               ? S.of(context)!.selectPaymentMethods
@@ -153,7 +153,7 @@ class PaymentMethodsSection extends ConsumerWidget {
                                   style: const TextStyle(color: Colors.white)),
                               value: dialogSelectedMethods.contains(method),
                               activeColor: AppTheme.colors(context).accent,
-                              checkColor: Colors.black,
+                              checkColor: AppTheme.colors(context).onAccent,
                               contentPadding: EdgeInsets.zero,
                               onChanged: (selected) {
                                 setDialogState(() {
@@ -188,7 +188,7 @@ class PaymentMethodsSection extends ConsumerWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.colors(context).accent,
-                    foregroundColor: Colors.black,
+                    foregroundColor: AppTheme.colors(context).onAccent,
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 24),
                     minimumSize: const Size(0, 52),

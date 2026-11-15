@@ -59,7 +59,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.3),
+              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -132,7 +132,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
                             : () => AddCustomNodeDialog.show(context, ref),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.colors(context).accent,
-                          foregroundColor: Colors.black,
+                          foregroundColor: AppTheme.colors(context).onAccent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -200,7 +200,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
               border: Border.all(
                 color: isSelected
                     ? AppTheme.colors(context).accent.withValues(alpha: 0.4)
-                    : Colors.white.withValues(alpha: 0.1),
+                    : AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
               ),
             ),
             child: Row(
@@ -308,6 +308,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
     final overlay = Overlay.of(context, rootOverlay: true);
     final localizations = S.of(context)!;
     final navigator = Navigator.of(context);
+    final colors = AppTheme.colors(context);
 
     try {
       final notifier = ref.read(mostroNodesProvider.notifier);
@@ -346,7 +347,7 @@ class _MostroNodeSelectorState extends ConsumerState<MostroNodeSelector> {
         statusBarHeight: mediaQuery.padding.top,
         overlay: overlay,
         message: localizations.nodeSwitchedSuccess(node.displayName),
-        backgroundColor: Colors.green,
+        backgroundColor: colors.success,
       );
     } catch (e) {
       if (mounted) {

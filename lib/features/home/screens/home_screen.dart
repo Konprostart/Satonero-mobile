@@ -80,7 +80,7 @@ class HomeScreen extends ConsumerWidget {
         color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
             width: 1.0,
           ),
         ),
@@ -164,7 +164,7 @@ class HomeScreen extends ConsumerWidget {
         hasFilters ? AppTheme.colors(context).accent : AppTheme.colors(context).textSecondary;
     final dividerColor = hasFilters
         ? AppTheme.colors(context).accent.withValues(alpha: 0.4)
-        : Colors.white.withValues(alpha: 0.2);
+        : AppTheme.colors(context).textPrimary.withValues(alpha: 0.2);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -180,7 +180,7 @@ class HomeScreen extends ConsumerWidget {
             border: Border.all(
               color: hasFilters
                   ? AppTheme.colors(context).accent.withValues(alpha: 0.6)
-                  : Colors.white.withValues(alpha: 0.05),
+                  : AppTheme.colors(context).textPrimary.withValues(alpha: 0.05),
             ),
             boxShadow: [
               BoxShadow(

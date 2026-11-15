@@ -42,7 +42,7 @@ class FormSection extends StatelessWidget {
                   child: Text(
                     title,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                     softWrap: true,
@@ -95,7 +95,7 @@ class FormSection extends StatelessWidget {
           if (extraContent != null) extraContent!,
           Container(
             height: 1,
-            color: Colors.white.withValues(alpha: 0.1),
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
             margin: const EdgeInsets.symmetric(horizontal: 16),
           ),
         ],
@@ -111,7 +111,7 @@ class FormSection extends StatelessWidget {
           backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+            side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,

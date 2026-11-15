@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:satonero_mobile/features/disputes/widgets/dispute_header.dart';
 import 'package:satonero_mobile/features/disputes/widgets/dispute_order_id.dart';
@@ -63,8 +64,8 @@ class _DisputeContentState extends ConsumerState<DisputeContent> {
               Container(
                 width: 8,
                 height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.red,
+                decoration:  BoxDecoration(
+                  color: AppTheme.colors(context).danger,
                   shape: BoxShape.circle,
                 ),
               ),

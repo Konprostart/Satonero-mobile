@@ -29,7 +29,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
         backgroundColor: AppTheme.colors(context).cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
         ),
         title: Text(
           s.cancelTradeDialogTitle,
@@ -65,7 +65,7 @@ class PayBondInvoiceScreen extends ConsumerWidget {
             onPressed: () => Navigator.of(dialogContext).pop(true),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.colors(context).accent,
-              foregroundColor: Colors.black,
+              foregroundColor: AppTheme.colors(context).onAccent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -173,12 +173,12 @@ class PayBondInvoiceScreen extends ConsumerWidget {
             Center(
               child: Container(
                 padding: const EdgeInsets.all(8.0),
-                color: AppTheme.colors(context).textPrimary,
+                color: AppTheme.colors(context).qrBackground,
                 child: QrImageView(
                   data: lnInvoice,
                   version: QrVersions.auto,
                   size: 250.0,
-                  backgroundColor: AppTheme.colors(context).textPrimary,
+                  backgroundColor: AppTheme.colors(context).qrBackground,
                   errorStateBuilder: (cxt, err) {
                     return Center(
                       child: Text(
@@ -231,8 +231,8 @@ class PayBondInvoiceScreen extends ConsumerWidget {
                 ElevatedButton(
                   onPressed: () => _confirmAndCancel(context, ref),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red,
+                    foregroundColor: AppTheme.colors(context).onDanger,
+                    backgroundColor: AppTheme.colors(context).danger,
                   ),
                   child: Text(s.cancel),
                 ),

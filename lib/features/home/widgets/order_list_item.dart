@@ -58,7 +58,7 @@ class OrderListItem extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: AppTheme.cardShadow,
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.05),
           width: 1,
         ),
       ),
@@ -79,8 +79,8 @@ class OrderListItem extends ConsumerWidget {
                 ? context.push('/take_buy/${order.orderId}')
                 : context.push('/take_sell/${order.orderId}');
           },
-          highlightColor: Colors.white.withValues(alpha: 0.05),
-          splashColor: Colors.white.withValues(alpha: 0.03),
+          highlightColor: AppTheme.colors(context).textPrimary.withValues(alpha: 0.05),
+          splashColor: AppTheme.colors(context).textPrimary.withValues(alpha: 0.03),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

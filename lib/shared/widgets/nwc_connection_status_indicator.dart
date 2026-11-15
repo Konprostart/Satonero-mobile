@@ -41,20 +41,20 @@ class NwcConnectionStatusIndicator extends ConsumerWidget {
     switch (nwcState.status) {
       case NwcStatus.connected:
         if (nwcState.connectionHealthy) {
-          dotColor = Colors.green;
+          dotColor = AppTheme.colors(context).success;
           statusText = S.of(context)!.walletConnected;
           icon = LucideIcons.wallet;
         } else {
-          dotColor = Colors.orange;
+          dotColor = AppTheme.colors(context).accent;
           statusText = S.of(context)!.nwcConnectionUnstable;
           icon = LucideIcons.wifiOff;
         }
       case NwcStatus.connecting:
-        dotColor = Colors.orange;
+        dotColor = AppTheme.colors(context).accent;
         statusText = S.of(context)!.nwcReconnecting;
         icon = LucideIcons.refreshCw;
       case NwcStatus.error:
-        dotColor = Colors.red;
+        dotColor = AppTheme.colors(context).danger;
         statusText = S.of(context)!.nwcConnectionError;
         icon = LucideIcons.alertTriangle;
       case NwcStatus.disconnected:

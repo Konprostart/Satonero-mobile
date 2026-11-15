@@ -32,7 +32,7 @@ class CurrencySection extends ConsumerWidget {
         loading: () => Text(S.of(context)!.loadingCurrencies,
             style: const TextStyle(color: Colors.white)),
         error: (_, __) => Text(S.of(context)!.errorLoadingCurrencies,
-            style: const TextStyle(color: Colors.red)),
+            style:  TextStyle(color: AppTheme.colors(context).danger)),
         data: (currencies) {
           String flag = '🏳️';
           String name = S.of(context)!.selectCurrency;

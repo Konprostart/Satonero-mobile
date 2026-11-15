@@ -212,8 +212,8 @@ class _AddLightningInvoiceScreenState
             await _cancelOrder();
           },
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.red,
+            foregroundColor: AppTheme.colors(context).onDanger,
+            backgroundColor: AppTheme.colors(context).danger,
           ),
           child: Text(S.of(context)!.cancel),
         ),

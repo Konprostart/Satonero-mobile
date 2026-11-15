@@ -175,7 +175,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.colors(context).accent,
-              foregroundColor: Colors.black,
+              foregroundColor: AppTheme.colors(context).onAccent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -287,7 +287,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors(context).accent,
-                foregroundColor: Colors.black,
+                foregroundColor: AppTheme.colors(context).onAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -316,11 +316,11 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
       ),
       child: Column(
         children: [
-          const Icon(LucideIcons.alertCircle, color: Colors.red, size: 40),
+           Icon(LucideIcons.alertCircle, color: AppTheme.colors(context).danger, size: 40),
           const SizedBox(height: 8),
           Text(
             _errorMessage ?? S.of(context)!.nwcInvoiceFailed,
-            style: const TextStyle(color: Colors.red, fontSize: 14),
+            style:  TextStyle(color: AppTheme.colors(context).danger, fontSize: 14),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),

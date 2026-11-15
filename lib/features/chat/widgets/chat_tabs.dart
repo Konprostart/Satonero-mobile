@@ -19,7 +19,7 @@ class ChatTabs extends ConsumerWidget {
         color: AppTheme.colors(context).scaffoldBackground,
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
             width: 1.0,
           ),
         ),

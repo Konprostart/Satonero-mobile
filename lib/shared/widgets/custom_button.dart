@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
           backgroundColor: isEnabled
               ? AppTheme.colors(context).accent
               : AppTheme.colors(context).accent.withValues(alpha: .5),
-          foregroundColor: Colors.black,
+          foregroundColor: AppTheme.colors(context).onAccent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),

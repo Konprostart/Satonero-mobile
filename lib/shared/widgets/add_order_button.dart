@@ -85,7 +85,7 @@ class _AddOrderButtonState extends State<AddOrderButton>
                                 : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.colors(context).accent,
-                              foregroundColor: Colors.black,
+                              foregroundColor: AppTheme.colors(context).onAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -118,7 +118,7 @@ class _AddOrderButtonState extends State<AddOrderButton>
                                 : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.colors(context).sell,
-                              foregroundColor: Colors.black,
+                              foregroundColor: AppTheme.colors(context).onAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),

@@ -93,7 +93,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.05),
               width: 1.0,
             ),
           ),
@@ -151,14 +151,14 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                                             widget.orderId))
                                         .valueOrNull ??
                                     false))
-                              const Padding(
+                               Padding(
                                 padding: EdgeInsets.only(top: 4),
                                 child: SizedBox(
                                   width: 8,
                                   height: 8,
                                   child: DecoratedBox(
                                     decoration: BoxDecoration(
-                                      color: Colors.red,
+                                      color: AppTheme.colors(context).danger,
                                       shape: BoxShape.circle,
                                     ),
                                   ),
@@ -203,7 +203,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.05), // 0.05 opacity
+            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.05), // 0.05 opacity
             width: 1.0,
           ),
         ),

@@ -71,7 +71,7 @@ class _NwcNotificationListenerState
       case 'payment_sent':
         message = S.of(context)!.nwcNotificationPaymentSent(formattedAmount);
         icon = LucideIcons.arrowUpCircle;
-        color = Colors.orange;
+        color = AppTheme.colors(context).accent;
       default:
         return; // Ignore unknown notification types
     }

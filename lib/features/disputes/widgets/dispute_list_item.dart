@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:satonero_mobile/features/disputes/widgets/dispute_icon.dart';
 import 'package:satonero_mobile/features/disputes/widgets/dispute_content.dart';
 import 'package:satonero_mobile/services/dispute_read_status_service.dart';
@@ -31,7 +32,7 @@ class DisputeListItem extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.05),
               width: 1.0,
             ),
           ),

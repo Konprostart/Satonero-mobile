@@ -87,7 +87,7 @@ class _AddCustomNodeDialogContentState
       backgroundColor: AppTheme.colors(context).cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       title: Text(
         S.of(context)!.addCustomNodeTitle,
@@ -113,7 +113,7 @@ class _AddCustomNodeDialogContentState
                 color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                 ),
               ),
               child: TextField(
@@ -130,7 +130,7 @@ class _AddCustomNodeDialogContentState
                   hintText: S.of(context)!.pubkeyHint,
                   hintStyle: TextStyle(color: AppTheme.colors(context).textSecondary),
                   errorText: errorMessage,
-                  errorStyle: const TextStyle(color: Colors.red),
+                  errorStyle:  TextStyle(color: AppTheme.colors(context).danger),
                 ),
                 autofocus: true,
               ).withAutomationId(AutomationIds.nodeCustomPubkey),
@@ -146,7 +146,7 @@ class _AddCustomNodeDialogContentState
                 color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                 ),
               ),
               child: TextField(
@@ -187,6 +187,7 @@ class _AddCustomNodeDialogContentState
             final name = nameController.text.trim();
             final localizations = S.of(context)!;
             final navigator = Navigator.of(context);
+            final colors = AppTheme.colors(context);
 
             if (input.isEmpty) {
               setState(() {
@@ -249,7 +250,7 @@ class _AddCustomNodeDialogContentState
                 statusBarHeight: widget.statusBarPadding,
                 overlay: widget.overlay,
                 message: localizations.nodeAddedSuccess,
-                backgroundColor: Colors.green,
+                backgroundColor: colors.success,
               );
             } else {
               setState(() {
@@ -259,7 +260,7 @@ class _AddCustomNodeDialogContentState
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.colors(context).accent,
-            foregroundColor: Colors.black,
+            foregroundColor: AppTheme.colors(context).onAccent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

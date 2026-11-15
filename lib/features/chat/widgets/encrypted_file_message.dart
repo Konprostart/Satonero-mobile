@@ -167,7 +167,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                           Text(
                             _formatFileSize(metadata.originalSize),
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
                               fontSize: 10,
                             ),
                           ),
@@ -178,7 +178,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                       onPressed: () => _openFile(),
                       icon: Icon(
                         Icons.open_in_new,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
                         size: 16,
                       ),
                       padding: EdgeInsets.zero,
@@ -246,20 +246,20 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                             _formatFileSize(metadata.originalSize),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Icon(
                             Icons.lock,
                             size: 12,
-                            color: Colors.white.withValues(alpha: 0.7),
+                            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
                           ),
                           Text(
                             ' ${S.of(context)!.encrypted}',
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -285,7 +285,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.colors(context).accent,
-                  foregroundColor: Colors.black,
+                  foregroundColor: AppTheme.colors(context).onAccent,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -333,7 +333,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
             S.of(context)!.downloadingFile,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withValues(alpha: 0.7),
+              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -365,7 +365,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
         children: [
           Icon(
             Icons.error_outline,
-            color: Colors.red,
+            color: AppTheme.colors(context).danger,
             size: 24,
           ),
           const SizedBox(height: 4),
@@ -373,7 +373,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
             'Failed to load file',
             style: TextStyle(
               fontSize: 12,
-              color: Colors.red,
+              color: AppTheme.colors(context).danger,
             ),
             textAlign: TextAlign.center,
           ),
@@ -499,7 +499,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
             context,
             S.of(context)!.couldNotOpenFileWithMessage(result.message),
             duration: const Duration(seconds: 3),
-            backgroundColor: Colors.orange,
+            backgroundColor: AppTheme.colors(context).accent,
           );
         }
       }
@@ -508,7 +508,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
         SnackBarHelper.showTopSnackBar(
           context,
           S.of(context)!.errorOpeningFileWithMessage(e.toString()),
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.colors(context).danger,
         );
       }
     }

@@ -115,9 +115,9 @@ class _DisputeChatScreenState extends ConsumerState<DisputeChatScreen> {
             ],
           );
         },
-        loading: () => const Center(
+        loading: () =>  Center(
           child: CircularProgressIndicator(
-            color: Colors.green,
+            color: AppTheme.colors(context).success,
           ),
         ),
         error: (error, stack) => Center(

@@ -131,14 +131,14 @@ class MultiSelectAutocompleteState extends State<MultiSelectAutocomplete> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -323,7 +323,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: AppTheme.cardShadow,
@@ -357,7 +357,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                   Navigator.of(context).pop();
                 },
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
+                  backgroundColor: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -405,7 +405,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -481,7 +481,7 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -779,14 +779,14 @@ class OrderFilterState extends ConsumerState<OrderFilter> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.2),
+                          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.2),
+                          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),

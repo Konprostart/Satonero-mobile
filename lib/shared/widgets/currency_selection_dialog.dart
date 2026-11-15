@@ -106,7 +106,7 @@ class _CurrencySelectionDialogWidgetState
                   error: (_, __) => Center(
                     child: Text(
                       S.of(context)!.errorLoadingCurrencies,
-                      style: TextStyle(color: Colors.red.shade300),
+                      style: TextStyle(color: AppTheme.colors(context).danger),
                     ),
                   ),
                   data: (currencies) {

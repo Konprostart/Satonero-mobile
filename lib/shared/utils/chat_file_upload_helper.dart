@@ -30,6 +30,7 @@ class ChatFileUploadHelper {
   }) async {
     // Cache localized strings before async operations
     final l10n = S.of(context)!;
+    final colors = AppTheme.colors(context);
     final maxMb =
         (FileValidationService.maxFileSize ~/ (1024 * 1024)).toString();
 
@@ -61,7 +62,7 @@ class ChatFileUploadHelper {
           // ignore: use_build_context_synchronously
           context,
           l10n.fileTooLarge(currentMb, maxMb),
-          backgroundColor: Colors.red,
+          backgroundColor: colors.danger,
         );
         return false;
       }
@@ -102,7 +103,7 @@ class ChatFileUploadHelper {
           // ignore: use_build_context_synchronously
           context,
           l10n.errorUploadingFile(e.toString()),
-          backgroundColor: Colors.red,
+          backgroundColor: colors.danger,
         );
       }
       return false;
@@ -169,7 +170,7 @@ class ChatFileUploadHelper {
               onPressed: () => Navigator.of(context).pop(true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors(context).accent,
-                foregroundColor: Colors.white,
+                foregroundColor: AppTheme.colors(context).onAccent,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),

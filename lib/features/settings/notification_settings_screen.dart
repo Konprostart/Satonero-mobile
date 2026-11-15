@@ -75,7 +75,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -131,9 +131,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(
+                     Icon(
                       LucideIcons.alertTriangle,
-                      color: Colors.orange,
+                      color: AppTheme.colors(context).accent,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -142,8 +142,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
                         _isPlatformSupported
                             ? S.of(context)!.pushNotificationsNotConfigured
                             : S.of(context)!.pushNotificationsNotSupported,
-                        style: const TextStyle(
-                          color: Colors.orange,
+                        style:  TextStyle(
+                          color: AppTheme.colors(context).accent,
                           fontSize: 13,
                         ),
                       ),
@@ -171,7 +171,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -246,7 +246,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           color: AppTheme.colors(context).inputBackground,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+          border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
         ),
         child: Row(
           children: [
@@ -294,7 +294,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -333,21 +333,21 @@ class NotificationSettingsScreen extends ConsumerWidget {
               context,
               LucideIcons.check,
               S.of(context)!.privacyBulletSilentPush,
-              Colors.green,
+              AppTheme.colors(context).success,
             ),
             const SizedBox(height: 8),
             _buildPrivacyBullet(
               context,
               LucideIcons.check,
               S.of(context)!.privacyBulletEncryptedTokens,
-              Colors.green,
+              AppTheme.colors(context).success,
             ),
             const SizedBox(height: 8),
             _buildPrivacyBullet(
               context,
               LucideIcons.check,
               S.of(context)!.privacyBulletLocalDecryption,
-              Colors.green,
+              AppTheme.colors(context).success,
             ),
           ],
         ),

@@ -152,7 +152,7 @@ class NwcPaymentReceiptWidget extends StatelessWidget {
                 onPressed: onDismiss,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.colors(context).accent,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.colors(context).onAccent,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

@@ -223,7 +223,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -341,7 +341,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -387,7 +387,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border:
-                        Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                        Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
@@ -443,7 +443,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -489,7 +489,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -535,7 +535,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border:
-                        Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                        Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
                   ),
                   child: Row(
                     children: [
@@ -589,7 +589,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -652,7 +652,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -715,7 +715,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -774,7 +774,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               decoration: BoxDecoration(
                 color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
               ),
               child: TextFormField(
                 controller: _lightningAddressController,
@@ -814,7 +814,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -874,7 +874,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -937,7 +937,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                     ),
                   ),
                   child: Row(
@@ -1022,7 +1022,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 S.of(context)!.communityDisclaimerBody,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.amber.shade900,
+                  color: AppTheme.colors(context).warning,
                 ),
               ),
             ),
@@ -1132,7 +1132,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           backgroundColor: AppTheme.colors(context).cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+            side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
           ),
           title: Text(
             title,

@@ -292,7 +292,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   side: BorderSide(
-                                    color: Colors.white.withValues(alpha: 0.1),
+                                    color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                                   ),
                                 ),
                                 title: Text(
@@ -396,7 +396,7 @@ class _TakeOrderScreenState extends ConsumerState<TakeOrderScreen> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppTheme.colors(context).accent,
-                                      foregroundColor: Colors.black,
+                                      foregroundColor: AppTheme.colors(context).onAccent,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),

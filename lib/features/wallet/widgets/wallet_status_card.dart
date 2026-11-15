@@ -24,7 +24,7 @@ class WalletStatusCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -72,7 +72,7 @@ class WalletStatusCard extends ConsumerWidget {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                     ),
                   ),
                   child: Row(
@@ -80,7 +80,7 @@ class WalletStatusCard extends ConsumerWidget {
                       Icon(
                         isConnected ? LucideIcons.check : LucideIcons.plug,
                         color:
-                            isConnected ? Colors.green : AppTheme.colors(context).textSecondary,
+                            isConnected ? AppTheme.colors(context).success : AppTheme.colors(context).textSecondary,
                         size: 20,
                       ),
                       const SizedBox(width: 12),

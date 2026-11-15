@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
@@ -204,7 +205,7 @@ class DeepLinkHandler {
         builder: (dialogContext) => AlertDialog(
           title: Row(
             children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+               Icon(Icons.warning_amber_rounded, color: AppTheme.colors(context).accent),
               const SizedBox(width: 8),
               Expanded(child: Text(s.deepLinkDifferentMostroTitle)),
             ],
@@ -300,7 +301,7 @@ class DeepLinkHandler {
       context,
       message,
       duration: const Duration(seconds: 3),
-      backgroundColor: Colors.red,
+      backgroundColor: AppTheme.colors(context).danger,
     );
   }
 

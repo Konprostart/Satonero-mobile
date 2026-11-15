@@ -57,7 +57,7 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
       backgroundColor: AppTheme.colors(context).cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: SingleChildScrollView(
         child: Padding(
@@ -109,13 +109,13 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -127,21 +127,21 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
+                    borderSide:  BorderSide(
+                      color: AppTheme.colors(context).danger,
                       width: 2,
                     ),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.red,
+                    borderSide:  BorderSide(
+                      color: AppTheme.colors(context).danger,
                       width: 2,
                     ),
                   ),
                   errorText: _errorMessage,
-                  errorStyle: const TextStyle(
-                    color: Colors.red,
+                  errorStyle:  TextStyle(
+                    color: AppTheme.colors(context).danger,
                     fontSize: 12,
                   ),
                 ),
@@ -173,7 +173,7 @@ class _ImportMnemonicDialogState extends State<ImportMnemonicDialog> {
                     onPressed: _handleImport,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.colors(context).accent,
-                      foregroundColor: Colors.black,
+                      foregroundColor: AppTheme.colors(context).onAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

@@ -74,11 +74,19 @@ the semantic palette and renders correctly in both light and dark mode:
 - **Migrated** — all `AppTheme.*` colour constants, plus the muted text colours
   (`Colors.white` / `Colors.white70` / `Colors.white60` / `Colors.white38` /
   `Colors.white30` / `Colors.white24`) are resolved through `AppColors`.
-- **Remaining** — a handful of raw `Colors.*` values (`Colors.black`,
-  `Colors.red`, `Colors.green`, `Colors.orange`, `Colors.grey`, …) still appear
-  where the colour is intentionally fixed (button foregrounds, error/success
-  indicators, QR backgrounds) and should be moved to a semantic token only on a
-  case-by-case basis.
+- **Migrated (case-by-case)** — the button foregrounds, status indicators and
+  QR backgrounds moved onto dedicated semantic tokens:
+  `onAccent` (black on the orange accent), `onDanger` (white on danger fills),
+  `success` (green indicator), and `qrBackground`/`qrForeground` (fixed white/
+  black so QR codes stay scannable in every mode). Raw `Colors.red`/`green`/
+  `amber`/`blue`/`orange` indicators map to `danger`/`success`/`warning`/
+  `info`/`accent`, and `Colors.white.withValues(...)` hairlines/fills resolve
+  through `textPrimary` so they read correctly on light surfaces.
+- **Remaining** — intentionally fixed raw values only: `Colors.transparent`,
+  `Colors.black`/`Colors.white` scrims and overlays (`.withValues(alpha: …)`)
+  on images, hoisted static `BoxShadow` lists (no `context` at top level), and
+  the fixed amber `StarRatingRow` default. These are theme-neutral or are the
+  documented "dark-only detail" cases and need no further migration.
 
 Migration rule: replace `AppTheme.<token>` with the matching `AppColors` token
 and drop `const` where the expression is no longer compile-time constant.

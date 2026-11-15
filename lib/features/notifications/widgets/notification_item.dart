@@ -224,7 +224,7 @@ class NotificationItem extends ConsumerWidget {
             onPressed: () => Navigator.of(context).pop(),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.colors(context).accent,
-              foregroundColor: Colors.black,
+              foregroundColor: AppTheme.colors(context).onAccent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

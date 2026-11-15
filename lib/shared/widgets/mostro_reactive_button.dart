@@ -148,7 +148,7 @@ class _MostroReactiveButtonState extends ConsumerState<MostroReactiveButton> {
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     } else if (_showSuccess) {
-      childWidget = const Icon(Icons.check_circle, color: Colors.green);
+      childWidget =  Icon(Icons.check_circle, color: AppTheme.colors(context).success);
     } else {
       childWidget = Text(widget.label);
     }

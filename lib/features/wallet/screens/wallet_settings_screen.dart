@@ -84,7 +84,7 @@ class WalletSettingsScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -118,7 +118,7 @@ class WalletSettingsScreen extends ConsumerWidget {
                     color: AppTheme.colors(context).inputBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                     ),
                   ),
                   child: Column(
@@ -140,8 +140,8 @@ class WalletSettingsScreen extends ConsumerWidget {
                             height: 8,
                             decoration: BoxDecoration(
                               color: nwcState.connectionHealthy
-                                  ? Colors.green
-                                  : Colors.orange,
+                                  ? AppTheme.colors(context).success
+                                  : AppTheme.colors(context).accent,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -181,8 +181,8 @@ class WalletSettingsScreen extends ConsumerWidget {
             icon: const Icon(LucideIcons.unplug, size: 18),
             label: Text(S.of(context)!.disconnectWallet),
             style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.redAccent,
-              side: const BorderSide(color: Colors.redAccent),
+              foregroundColor: AppTheme.colors(context).danger,
+              side:  BorderSide(color: AppTheme.colors(context).danger),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -224,7 +224,7 @@ class WalletSettingsScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -264,22 +264,22 @@ class WalletSettingsScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.redAccent.withValues(alpha: 0.1),
+                      color: AppTheme.colors(context).danger.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                         Icon(
                           LucideIcons.alertCircle,
-                          color: Colors.redAccent,
+                          color: AppTheme.colors(context).danger,
                           size: 18,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             nwcState.errorMessage!,
-                            style: const TextStyle(
-                              color: Colors.redAccent,
+                            style:  TextStyle(
+                              color: AppTheme.colors(context).danger,
                               fontSize: 13,
                             ),
                           ),
@@ -297,7 +297,7 @@ class WalletSettingsScreen extends ConsumerWidget {
                     label: Text(S.of(context)!.connectWallet),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.colors(context).accent,
-                      foregroundColor: Colors.black,
+                      foregroundColor: AppTheme.colors(context).onAccent,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -320,7 +320,7 @@ class WalletSettingsScreen extends ConsumerWidget {
         backgroundColor: AppTheme.colors(context).cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
         ),
         title: Text(
           S.of(context)!.disconnectWallet,
@@ -352,7 +352,7 @@ class WalletSettingsScreen extends ConsumerWidget {
             },
             child: Text(
               S.of(context)!.disconnectWallet,
-              style: const TextStyle(color: Colors.redAccent),
+              style:  TextStyle(color: AppTheme.colors(context).danger),
             ),
           ),
         ],

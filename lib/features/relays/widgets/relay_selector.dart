@@ -37,7 +37,7 @@ class RelaySelector extends ConsumerWidget {
             decoration: BoxDecoration(
               color: AppTheme.colors(context).cardBackground.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
             ),
             child: Column(
               children: [
@@ -75,7 +75,7 @@ class RelaySelector extends ConsumerWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.colors(context).accent,
-                foregroundColor: Colors.black,
+                foregroundColor: AppTheme.colors(context).onAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -106,7 +106,7 @@ class RelaySelector extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -329,7 +329,7 @@ class RelaySelector extends ConsumerWidget {
               backgroundColor: AppTheme.colors(context).cardBackground,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
-                side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+                side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
               ),
               title: Text(
                 S.of(context)!.addRelayDialogTitle,
@@ -352,7 +352,7 @@ class RelaySelector extends ConsumerWidget {
                         color: AppTheme.colors(context).inputBackground,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1)),
+                            color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
                       ),
                       child: TextField(
                         controller: textController,
@@ -370,7 +370,7 @@ class RelaySelector extends ConsumerWidget {
                           hintStyle:
                               TextStyle(color: AppTheme.colors(context).textSecondary),
                           errorText: errorMessage,
-                          errorStyle: const TextStyle(color: Colors.red),
+                          errorStyle:  TextStyle(color: AppTheme.colors(context).danger),
                         ),
                         autofocus: true,
                       ).withAutomationId(AutomationIds.settingsRelaysAddUrl),
@@ -454,7 +454,7 @@ class RelaySelector extends ConsumerWidget {
                                   context,
                                   localizations.addRelaySuccessMessage(
                                       result.normalizedUrl!),
-                                  backgroundColor: Colors.green,
+                                  backgroundColor: AppTheme.colors(context).success,
                                 );
                               }
                             } else {
@@ -472,7 +472,7 @@ class RelaySelector extends ConsumerWidget {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.colors(context).accent,
-                    foregroundColor: Colors.black,
+                    foregroundColor: AppTheme.colors(context).onAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

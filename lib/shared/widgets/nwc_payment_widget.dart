@@ -227,13 +227,13 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             ),
             child: Row(
               children: [
-                const Icon(LucideIcons.wifiOff, size: 16, color: Colors.orange),
+                 Icon(LucideIcons.wifiOff, size: 16, color: AppTheme.colors(context).accent),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     S.of(context)!.nwcConnectionUnstable,
-                    style: const TextStyle(
-                      color: Colors.orange,
+                    style:  TextStyle(
+                      color: AppTheme.colors(context).accent,
                       fontSize: 12,
                     ),
                   ),
@@ -254,13 +254,13 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             ),
             child: Row(
               children: [
-                const Icon(LucideIcons.alertTriangle,
-                    size: 16, color: Colors.red),
+                 Icon(LucideIcons.alertTriangle,
+                    size: 16, color: AppTheme.colors(context).danger),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     S.of(context)!.nwcBalanceTooLow,
-                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                    style:  TextStyle(color: AppTheme.colors(context).danger, fontSize: 12),
                   ),
                 ),
               ],
@@ -279,7 +279,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.colors(context).accent,
-              foregroundColor: Colors.black,
+              foregroundColor: AppTheme.colors(context).onAccent,
               disabledBackgroundColor: Colors.grey.shade700,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -297,7 +297,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
                 style: TextStyle(
                   color: hasEnoughBalance
                       ? AppTheme.colors(context).textPrimary.withAlpha(153)
-                      : Colors.red.shade300,
+                      : AppTheme.colors(context).danger,
                   fontSize: 13,
                 ),
               ),
@@ -401,11 +401,11 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
       ),
       child: Column(
         children: [
-          const Icon(LucideIcons.alertCircle, color: Colors.red, size: 40),
+           Icon(LucideIcons.alertCircle, color: AppTheme.colors(context).danger, size: 40),
           const SizedBox(height: 8),
           Text(
             _errorMessage ?? S.of(context)!.nwcPaymentFailed,
-            style: const TextStyle(color: Colors.red, fontSize: 14),
+            style:  TextStyle(color: AppTheme.colors(context).danger, fontSize: 14),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
@@ -459,7 +459,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
           size: 14,
           color: hasEnoughBalance
               ? AppTheme.colors(context).textPrimary.withAlpha(153)
-              : Colors.red.shade300,
+              : AppTheme.colors(context).danger,
         ),
       ),
     );

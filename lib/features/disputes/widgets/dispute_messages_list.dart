@@ -272,14 +272,14 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue[900],
+        color: AppTheme.colors(context).info,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
           Icon(
             Icons.admin_panel_settings,
-            color: Colors.blue[300],
+            color: AppTheme.colors(context).info,
             size: 16,
           ),
           const SizedBox(width: 8),
@@ -287,7 +287,7 @@ class _DisputeMessagesListState extends ConsumerState<DisputeMessagesList> {
             child: Text(
               S.of(context)!.adminAssigned,
               style: TextStyle(
-                color: Colors.blue[300],
+                color: AppTheme.colors(context).info,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),

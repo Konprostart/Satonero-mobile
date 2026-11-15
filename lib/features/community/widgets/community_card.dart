@@ -36,7 +36,7 @@ class CommunityCard extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? AppTheme.colors(context).accent.withValues(alpha: 0.5)
-                : Colors.white.withValues(alpha: 0.1),
+                : AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
             width: isSelected ? 2 : 1,
           ),
         ),

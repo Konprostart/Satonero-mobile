@@ -37,7 +37,7 @@ class RestoreOverlay extends ConsumerWidget {
             color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
             ),
           ),
           child: Column(
@@ -105,7 +105,7 @@ class RestoreOverlay extends ConsumerWidget {
     switch (step) {
       case RestoreStep.error:
         iconData = Icons.error;
-        iconColor = Colors.red;
+        iconColor = AppTheme.colors(context).danger;
         break;
       default:
         iconData = Icons.sync;
@@ -125,17 +125,17 @@ class RestoreOverlay extends ConsumerWidget {
     double iconSize,
   ) {
     if (state.step == RestoreStep.completed) {
-      return const Icon(
+      return  Icon(
         Icons.check_circle,
-        color: Colors.green,
+        color: AppTheme.colors(context).success,
         size: 48,
       );
     }
 
     if (state.step == RestoreStep.error) {
-      return const Icon(
+      return  Icon(
         Icons.error,
-        color: Colors.red,
+        color: AppTheme.colors(context).danger,
         size: 48,
       );
     }

@@ -108,8 +108,8 @@ class _BackupReminderDot extends StatelessWidget {
       child: Container(
         width: 10,
         height: 10,
-        decoration: const BoxDecoration(
-          color: Colors.red,
+        decoration:  BoxDecoration(
+          color: AppTheme.colors(context).danger,
           shape: BoxShape.circle,
         ),
       ),

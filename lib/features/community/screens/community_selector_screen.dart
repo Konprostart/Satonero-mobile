@@ -123,7 +123,7 @@ class _CommunitySelectorScreenState
                       color: AppTheme.colors(context).inputBackground,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                       ),
                     ),
                     child: TextField(
@@ -210,7 +210,7 @@ class _CommunitySelectorScreenState
                           _isSelecting ? null : () => _onConfirm(context),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.colors(context).accent,
-                        foregroundColor: Colors.black,
+                        foregroundColor: AppTheme.colors(context).onAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -275,7 +275,7 @@ class _CommunitySelectorScreenState
           decoration: BoxDecoration(
             color: AppTheme.colors(context).cardBackground,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
           ),
           child: Row(
             children: [
@@ -283,7 +283,7 @@ class _CommunitySelectorScreenState
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -296,7 +296,7 @@ class _CommunitySelectorScreenState
                       height: 14,
                       width: 120,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -305,7 +305,7 @@ class _CommunitySelectorScreenState
                       height: 10,
                       width: 80,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.07),
+                        color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.07),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -342,7 +342,7 @@ class _CommunitySelectorScreenState
             onPressed: () => ref.invalidate(communityListProvider),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.colors(context).accent,
-              foregroundColor: Colors.black,
+              foregroundColor: AppTheme.colors(context).onAccent,
             ),
             child: Text(S.of(context)!.communityRetry),
           ),

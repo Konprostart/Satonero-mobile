@@ -13,6 +13,7 @@ import 'package:satonero_mobile/data/models/enums/order_type.dart';
 import 'package:satonero_mobile/data/models/enums/role.dart';
 import 'package:satonero_mobile/data/models/enums/status.dart';
 import 'package:satonero_mobile/data/models/nostr_event.dart';
+import 'package:satonero_mobile/features/cashu/cashu_mint_info_card.dart';
 import 'package:satonero_mobile/features/order/models/order_state.dart';
 import 'package:satonero_mobile/features/order/providers/order_notifier_provider.dart';
 import 'package:satonero_mobile/features/order/widgets/order_app_bar.dart';
@@ -78,6 +79,11 @@ class TradeDetailScreen extends ConsumerWidget {
                 _buildSellerAmount(context, ref, tradeState),
                 const SizedBox(height: 16),
                 _buildOrderId(context),
+                const SizedBox(height: 16),
+                // Escrow summary: shows the backend (Cashu/Lightning) and — for
+                // a Cashu order — the exact mint being trusted, so both parties
+                // can verify the settlement path from the trade detail screen.
+                CashuMintInfoCard(mintUrl: orderPayload.cashuMintUrl),
                 const SizedBox(height: 16),
                 // For pending orders created by the user, show creator's reputation
                 if (isPending && isCreator && originalOrder != null) ...[
@@ -454,7 +460,7 @@ class TradeDetailScreen extends ConsumerWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                       side: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.1)),
+                          color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
                     ),
                     title: Text(
                       S.of(context)!.releaseTradeDialogTitle,
@@ -493,7 +499,7 @@ class TradeDetailScreen extends ConsumerWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.colors(context).accent,
-                          foregroundColor: Colors.black,
+                          foregroundColor: AppTheme.colors(context).onAccent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -658,7 +664,7 @@ class TradeDetailScreen extends ConsumerWidget {
             backgroundColor: AppTheme.colors(context).cardBackground,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
             ),
             title: Text(
               S.of(context)!.cancelTradeDialogTitle,
@@ -694,7 +700,7 @@ class TradeDetailScreen extends ConsumerWidget {
                 onPressed: () => Navigator.of(dialogContext).pop(true),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.colors(context).accent,
-                  foregroundColor: Colors.black,
+                  foregroundColor: AppTheme.colors(context).onAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -721,7 +727,7 @@ class TradeDetailScreen extends ConsumerWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppTheme.colors(context).danger,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.colors(context).onDanger,
       ),
       child: Text(buttonText),
     ).withAutomationId(AutomationIds.tradeCancel);
@@ -739,7 +745,7 @@ class TradeDetailScreen extends ConsumerWidget {
             backgroundColor: AppTheme.colors(context).cardBackground,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              side: BorderSide(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
             ),
             title: Text(
               S.of(context)!.disputeTradeDialogTitle,
@@ -773,7 +779,7 @@ class TradeDetailScreen extends ConsumerWidget {
                 onPressed: () => Navigator.of(dialogContext).pop(true),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.colors(context).accent,
-                  foregroundColor: Colors.black,
+                  foregroundColor: AppTheme.colors(context).onAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -823,7 +829,7 @@ class TradeDetailScreen extends ConsumerWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: AppTheme.colors(context).danger,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.colors(context).onDanger,
       ),
       child: Text(S.of(context)!.disputeButton),
     ).withAutomationId(AutomationIds.tradeDispute);
