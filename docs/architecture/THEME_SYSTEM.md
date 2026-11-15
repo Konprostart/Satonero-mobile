@@ -65,18 +65,20 @@ themeMode: switch (themePreference) { ... },
 The default is `ThemeModePreference.dark`, preserving the app's historical
 dark-only appearance for existing installs.
 
-## Light-mode migration status (staged)
+## Light-mode migration status
 
-The app originally shipped dark-only, so ~750 widget references still use the
-`AppTheme.*` dark constants directly. Those constants were re-tuned to the OLED
-palette, so the dark default stays correct, while light mode is adopted
-progressively:
+The app originally shipped dark-only. All `AppTheme.*` colour references have
+now been migrated to `AppTheme.colors(context).<token>`, so every screen reads
+the semantic palette and renders correctly in both light and dark mode:
 
-- **Theme-driven surfaces** (any widget using `Theme.of(context)` colours) and
-  the migrated shell — `SatoneroAppBar`, `BottomNavBar`, and the settings
-  screen's scaffold/AppBar/Appearance card — render correctly in both modes.
-- **Remaining screens** still read the dark constants and keep their dark look
-  until they are migrated to `AppTheme.colors(context)`.
+- **Migrated** — all `AppTheme.*` colour constants, plus the muted text colours
+  (`Colors.white` / `Colors.white70` / `Colors.white60` / `Colors.white38` /
+  `Colors.white30` / `Colors.white24`) are resolved through `AppColors`.
+- **Remaining** — a handful of raw `Colors.*` values (`Colors.black`,
+  `Colors.red`, `Colors.green`, `Colors.orange`, `Colors.grey`, …) still appear
+  where the colour is intentionally fixed (button foregrounds, error/success
+  indicators, QR backgrounds) and should be moved to a semantic token only on a
+  case-by-case basis.
 
 Migration rule: replace `AppTheme.<token>` with the matching `AppColors` token
 and drop `const` where the expression is no longer compile-time constant.
