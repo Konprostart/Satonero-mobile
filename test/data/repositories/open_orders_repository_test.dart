@@ -103,9 +103,15 @@ void main() {
       ..add(order('a', createdAt: 100))
       ..add(order('b', createdAt: 101))
       ..add(order('c', createdAt: 102));
-    await Future<void>.delayed(
-      OpenOrdersRepository.emitDebounce + const Duration(milliseconds: 20),
-    );
+
+    // The debounce timer is wall-clock based; a loaded CI/dev machine can
+    // deliver it well past `emitDebounce`, so poll for the coalesced emission
+    // instead of asserting after a fixed margin.
+    final stopwatch = Stopwatch()..start();
+    while (emissions.isEmpty &&
+        stopwatch.elapsed < OpenOrdersRepository.emitDebounce * 40) {
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
 
     // Assert: one coalesced emission carrying the three orders
     expect(emissions, hasLength(1));
