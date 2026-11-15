@@ -1129,9 +1129,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "73379b8b1332f1ee78a250055494e6b73e673ea2"
-      resolved-ref: "73379b8b1332f1ee78a250055494e6b73e673ea2"
-      url: "https://github.com/MostroP2P/dart-nip44.git"
+      ref: "4bd64d70401b0ed171588f69da01955feef25b8d"
+      resolved-ref: "4bd64d70401b0ed171588f69da01955feef25b8d"
+      url: "https://github.com/Konprostart/dart-nip44.git"
     source: git
     version: "1.0.0"
   node_preamble:
