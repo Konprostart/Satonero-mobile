@@ -51,7 +51,7 @@ class CashuMintInfoCard extends ConsumerWidget {
               Icon(
                 isCashu ? LucideIcons.coins : LucideIcons.zap,
                 color: isCashu
-                    ? AppTheme.colors(context).lightningYellow
+                    ? AppTheme.colors(context).accent
                     : AppTheme.colors(context).lightningBlue,
                 size: 20,
               ),
@@ -155,7 +155,7 @@ class _EscrowModeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foreground = isCashu
-        ? AppTheme.colors(context).lightningYellow
+        ? AppTheme.colors(context).accent
         : AppTheme.colors(context).lightningBlue;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

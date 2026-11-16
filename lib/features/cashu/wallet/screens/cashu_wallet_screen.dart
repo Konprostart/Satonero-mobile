@@ -88,11 +88,10 @@ class _HeroCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.colors(context).lightningYellow.withValues(alpha: 0.12),
+        color: AppTheme.colors(context).accent.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color:
-              AppTheme.colors(context).lightningYellow.withValues(alpha: 0.35),
+          color: AppTheme.colors(context).accent.withValues(alpha: 0.35),
         ),
       ),
       child: Column(
@@ -102,14 +101,12 @@ class _HeroCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppTheme.colors(context)
-                  .lightningYellow
-                  .withValues(alpha: 0.18),
+              color: AppTheme.colors(context).accent.withValues(alpha: 0.18),
               shape: BoxShape.circle,
             ),
             child: Icon(
               LucideIcons.coins,
-              color: AppTheme.colors(context).lightningYellow,
+              color: AppTheme.colors(context).accent,
               size: 26,
             ),
           ),
@@ -157,7 +154,7 @@ class _EscrowBackendCard extends ConsumerWidget {
     return _SectionCard(
       icon: LucideIcons.zap,
       iconColor: isCashu == true
-          ? AppTheme.colors(context).lightningYellow
+          ? AppTheme.colors(context).accent
           : AppTheme.colors(context).lightningBlue,
       title: S.of(context)!.cashuEscrowMode,
       trailing: _EscrowChip(isCashu: isCashu),
@@ -278,7 +275,7 @@ class _NativeLibraryCard extends StatelessWidget {
     return nativeLibrary.when(
       loading: () => _SectionCard(
         icon: LucideIcons.zap,
-        iconColor: AppTheme.colors(context).lightningYellow,
+        iconColor: AppTheme.colors(context).accent,
         title: S.of(context)!.cashuWalletNativeLibrary,
         child: Text(
           S.of(context)!.cashuWalletNativeChecking,
@@ -480,7 +477,7 @@ class _EscrowChip extends StatelessWidget {
       foreground = AppTheme.colors(context).textInactive;
     } else if (isCashu!) {
       label = l10n.escrowCashu;
-      foreground = AppTheme.colors(context).lightningYellow;
+      foreground = AppTheme.colors(context).accent;
     } else {
       label = l10n.escrowLightning;
       foreground = AppTheme.colors(context).lightningBlue;

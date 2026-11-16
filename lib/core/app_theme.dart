@@ -361,7 +361,8 @@ class AppColors extends ThemeExtension<AppColors> {
           Color.lerp(statusWaitingText, other.statusWaitingText, t)!,
       statusActiveBackground:
           Color.lerp(statusActiveBackground, other.statusActiveBackground, t)!,
-      statusActiveText: Color.lerp(statusActiveText, other.statusActiveText, t)!,
+      statusActiveText:
+          Color.lerp(statusActiveText, other.statusActiveText, t)!,
       statusSuccessBackground: Color.lerp(
           statusSuccessBackground, other.statusSuccessBackground, t)!,
       statusSuccessText:
@@ -378,7 +379,8 @@ class AppColors extends ThemeExtension<AppColors> {
           statusInactiveBackground, other.statusInactiveBackground, t)!,
       statusInactiveText:
           Color.lerp(statusInactiveText, other.statusInactiveText, t)!,
-      createdByYouChip: Color.lerp(createdByYouChip, other.createdByYouChip, t)!,
+      createdByYouChip:
+          Color.lerp(createdByYouChip, other.createdByYouChip, t)!,
       takenByYouChip: Color.lerp(takenByYouChip, other.takenByYouChip, t)!,
       premiumPositiveChip:
           Color.lerp(premiumPositiveChip, other.premiumPositiveChip, t)!,
@@ -387,7 +389,6 @@ class AppColors extends ThemeExtension<AppColors> {
     );
   }
 }
-
 
 class AppTheme {
   // Brand accents
@@ -572,6 +573,7 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           foregroundColor: colors.onAccent,
           backgroundColor: satoneroOrange,
+          elevation: 0,
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
             fontSize: 14.0,
@@ -581,7 +583,7 @@ class AppTheme {
           minimumSize: Size.zero,
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
@@ -603,7 +605,7 @@ class AppTheme {
             fontSize: 14.0,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         ),

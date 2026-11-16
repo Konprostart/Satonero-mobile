@@ -33,7 +33,7 @@ class CashuWalletCard extends StatelessWidget {
               children: [
                 Icon(
                   LucideIcons.coins,
-                  color: AppTheme.colors(context).lightningYellow,
+                  color: AppTheme.colors(context).accent,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
@@ -73,7 +73,7 @@ class CashuWalletCard extends StatelessWidget {
                     children: [
                       Icon(
                         LucideIcons.coins,
-                        color: AppTheme.colors(context).lightningYellow,
+                        color: AppTheme.colors(context).accent,
                         size: 20,
                       ),
                       const SizedBox(width: 12),

@@ -53,10 +53,11 @@ class ActionButtons extends StatelessWidget {
               showSuccessIndicator:
                   onSubmit != null, // Only show success indicator when enabled
               backgroundColor: onSubmit != null
-                  ? AppTheme.colors(context).purple
+                  ? AppTheme.colors(context).accent
                   : AppTheme.colors(context).divider,
-              foregroundColor:
-                  onSubmit != null ? Colors.white : AppTheme.colors(context).textInactive,
+              foregroundColor: onSubmit != null
+                  ? AppTheme.colors(context).onAccent
+                  : AppTheme.colors(context).textInactive,
             ).withAutomationId(AutomationIds.orderCreateSubmit),
           ),
         ),
