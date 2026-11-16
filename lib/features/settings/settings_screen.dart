@@ -18,6 +18,7 @@ import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart'
 import 'package:satonero_mobile/shared/widgets/language_selector.dart';
 import 'package:satonero_mobile/shared/widgets/trade_history_selector.dart';
 import 'package:satonero_mobile/features/wallet/widgets/wallet_status_card.dart';
+import 'package:satonero_mobile/features/cashu/widgets/cashu_wallet_card.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -105,8 +106,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _buildLightningAddressCard(context),
                   const SizedBox(height: 16),
 
-                  // Wallet Card
+                  // Wallet Card (Lightning / NWC)
                   const WalletStatusCard(),
+                  const SizedBox(height: 16),
+
+                  // Cashu Mint Wallet Card (separate from the Lightning wallet)
+                  const CashuWalletCard(),
                   const SizedBox(height: 16),
 
                   // Relays Card

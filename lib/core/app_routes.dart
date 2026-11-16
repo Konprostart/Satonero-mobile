@@ -25,6 +25,7 @@ import 'package:satonero_mobile/features/walkthrough/screens/walkthrough_screen.
 import 'package:satonero_mobile/features/disputes/screens/dispute_chat_screen.dart';
 import 'package:satonero_mobile/features/wallet/screens/wallet_settings_screen.dart';
 import 'package:satonero_mobile/features/wallet/screens/connect_wallet_screen.dart';
+import 'package:satonero_mobile/features/cashu/wallet/screens/cashu_wallet_screen.dart';
 
 import 'package:satonero_mobile/features/notifications/screens/notifications_screen.dart';
 import 'package:satonero_mobile/features/logs/screens/logs_screen.dart';
@@ -378,6 +379,15 @@ GoRouter createRouter(WidgetRef ref) {
                   context: context,
                   state: state,
                   child: const ConnectWalletScreen(),
+                ),
+          ),
+          GoRoute(
+            path: '/cashu_wallet',
+            pageBuilder: (context, state) =>
+                buildPageWithDefaultTransition<void>(
+                  context: context,
+                  state: state,
+                  child: const CashuWalletScreen(),
                 ),
           ),
           GoRoute(

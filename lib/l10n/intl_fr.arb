@@ -1816,5 +1816,20 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "cashuMintWallet": "Portefeuille Cashu Mint",
+    "cashuWalletDescription": "Votre portefeuille ecash Cashu et le mint de séquestre, indépendants de votre portefeuille Lightning.",
+    "cashuWalletBackendUnknown": "En attente des informations du nœud…",
+    "cashuWalletMints": "Mints",
+    "cashuWalletOpenMint": "Ce nœud accepte tout mint public.",
+    "cashuWalletNoMints": "Aucun mint annoncé.",
+    "cashuWalletNativeLibrary": "Bibliothèque de portefeuille native",
+    "cashuWalletNativeAvailable": "Incluse dans cette version",
+    "cashuWalletNativeUnavailable": "Non incluse dans cette version",
+    "cashuWalletNativeChecking": "Vérification…",
+    "cashuWalletCapabilities": "Fonctionnalités",
+    "cashuWalletP2pkTitle": "Séquestre NUT-11 P2PK 2-sur-3",
+    "cashuWalletP2pkDescription": "Verrouillez, libérez, annulez et remboursez les jetons de séquestre avec les clés de l'acheteur, du vendeur et du séquestre.",
+    "cashuWalletComingSoon": "La session mint côté client et le stockage des preuves arriveront dans une prochaine version. Aujourd'hui, le nœud connecté effectue la cryptographie du séquestre et vous choisissez le mint lors de la création d'une commande.",
+    "cashuWalletLightningNotice": "Le nœud connecté utilise le séquestre Lightning. Passez à un nœud Cashu pour voir ses mints ici."
 }

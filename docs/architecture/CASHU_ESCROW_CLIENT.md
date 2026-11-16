@@ -81,3 +81,21 @@ The `AddOrderScreen` stores the choice in `_cashuMintUrl`. On submit it:
 `Order` gains a nullable `cashuMintUrl` with round-trip support in
 `toJson` / `fromJson` / `toMap` / `fromMap` / `props`, and is populated from
 `event.cashuMintUrl` in `Order.fromEvent`.
+
+## Dedicated wallet screen
+
+The Cashu mint wallet is surfaced as its own entity, deliberately separate from
+the Lightning (NWC) wallet:
+
+- `CashuWalletCard` (`lib/features/cashu/widgets/cashu_wallet_card.dart`) is a
+  lightweight navigation card in Settings, placed directly after the Lightning
+  `WalletStatusCard`. It uses the coins icon and lightning-yellow accent so it
+  reads as a distinct wallet, not a sub-mode of the NWC wallet.
+- `CashuWalletScreen` (`lib/features/cashu/wallet/screens/cashu_wallet_screen.dart`,
+  route `/cashu_wallet`) shows the connected node's escrow backend and advertised
+  mints, whether the native `satonero_cashu` library is bundled in this build
+  (`cashuNativeWalletAvailableProvider`), and the NUT-11 P2PK 2-of-3 capability
+  summary. The Lightning wallet screens are untouched.
+
+The client-side wallet cryptography itself remains a future step; see
+`CASHU_WALLET_CLIENT.md` for that roadmap.

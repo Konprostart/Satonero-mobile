@@ -1873,5 +1873,20 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "cashuMintWallet": "Cashu Mint Wallet",
+    "cashuWalletDescription": "Your separate Cashu ecash wallet and mint escrow — independent from your Lightning wallet.",
+    "cashuWalletBackendUnknown": "Waiting for node info…",
+    "cashuWalletMints": "Mints",
+    "cashuWalletOpenMint": "This node accepts any public mint.",
+    "cashuWalletNoMints": "No mints advertised.",
+    "cashuWalletNativeLibrary": "Native wallet library",
+    "cashuWalletNativeAvailable": "Bundled in this build",
+    "cashuWalletNativeUnavailable": "Not bundled in this build",
+    "cashuWalletNativeChecking": "Checking…",
+    "cashuWalletCapabilities": "Capabilities",
+    "cashuWalletP2pkTitle": "NUT-11 P2PK 2-of-3 escrow",
+    "cashuWalletP2pkDescription": "Lock, release, cancel and refund escrow tokens with buyer, seller and escrow keys.",
+    "cashuWalletComingSoon": "Client-side mint session and proof storage are coming in a future release. Today the connected node performs the escrow cryptography, and you choose the mint when creating an order.",
+    "cashuWalletLightningNotice": "The connected node runs Lightning escrow. Switch to a Cashu node to see its mints here."
 }

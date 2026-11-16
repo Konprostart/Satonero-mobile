@@ -1816,5 +1816,20 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "cashuMintWallet": "Cashu-Mint-Wallet",
+    "cashuWalletDescription": "Dein separates Cashu-ecash-Wallet und Mint-Escrow — unabhängig von deinem Lightning-Wallet.",
+    "cashuWalletBackendUnknown": "Warte auf Knoteninformationen…",
+    "cashuWalletMints": "Mints",
+    "cashuWalletOpenMint": "Dieser Knoten akzeptiert jedes öffentliche Mint.",
+    "cashuWalletNoMints": "Keine Mints angegeben.",
+    "cashuWalletNativeLibrary": "Native Wallet-Bibliothek",
+    "cashuWalletNativeAvailable": "In diesem Build enthalten",
+    "cashuWalletNativeUnavailable": "Nicht in diesem Build enthalten",
+    "cashuWalletNativeChecking": "Prüfe…",
+    "cashuWalletCapabilities": "Funktionen",
+    "cashuWalletP2pkTitle": "NUT-11-P2PK-2-von-3-Escrow",
+    "cashuWalletP2pkDescription": "Escrow-Tokens mit den Schlüsseln von Käufer, Verkäufer und Escrow sperren, freigeben, stornieren und zurückerstatten.",
+    "cashuWalletComingSoon": "Client-seitige Mint-Sitzung und Proof-Speicherung kommen in einer künftigen Version. Heute führt der verbundene Knoten die Escrow-Kryptografie aus, und du wählst das Mint beim Erstellen einer Order.",
+    "cashuWalletLightningNotice": "Der verbundene Knoten verwendet Lightning-Escrow. Wechsle zu einem Cashu-Knoten, um hier seine Mints zu sehen."
 }

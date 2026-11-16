@@ -1861,5 +1861,20 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "cashuMintWallet": "Carteira Cashu Mint",
+    "cashuWalletDescription": "Sua carteira ecash Cashu e o mint de escrow, independentes da sua carteira Lightning.",
+    "cashuWalletBackendUnknown": "Aguardando informações do nó…",
+    "cashuWalletMints": "Mints",
+    "cashuWalletOpenMint": "Este nó aceita qualquer mint público.",
+    "cashuWalletNoMints": "Nenhum mint anunciado.",
+    "cashuWalletNativeLibrary": "Biblioteca de carteira nativa",
+    "cashuWalletNativeAvailable": "Incluída nesta compilação",
+    "cashuWalletNativeUnavailable": "Não incluída nesta compilação",
+    "cashuWalletNativeChecking": "Verificando…",
+    "cashuWalletCapabilities": "Recursos",
+    "cashuWalletP2pkTitle": "Escrow NUT-11 P2PK 2-de-3",
+    "cashuWalletP2pkDescription": "Bloqueie, libere, cancele e reembolse tokens de escrow com as chaves do comprador, vendedor e escrow.",
+    "cashuWalletComingSoon": "A sessão de mint no cliente e o armazenamento de provas virão em uma versão futura. Hoje o nó conectado realiza a criptografia do escrow e você escolhe o mint ao criar um pedido.",
+    "cashuWalletLightningNotice": "O nó conectado usa escrow Lightning. Mude para um nó Cashu para ver seus mints aqui."
 }

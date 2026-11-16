@@ -1861,5 +1861,20 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "cashuMintWallet": "Cashu-mint-portemonnee",
+    "cashuWalletDescription": "Je aparte Cashu-ecash-portemonnee en mint-escrow — onafhankelijk van je Lightning-portemonnee.",
+    "cashuWalletBackendUnknown": "Wachten op node-informatie…",
+    "cashuWalletMints": "Mints",
+    "cashuWalletOpenMint": "Deze node accepteert elke openbare mint.",
+    "cashuWalletNoMints": "Geen mints vermeld.",
+    "cashuWalletNativeLibrary": "Native portemonnee-bibliotheek",
+    "cashuWalletNativeAvailable": "In deze build gebundeld",
+    "cashuWalletNativeUnavailable": "Niet in deze build gebundeld",
+    "cashuWalletNativeChecking": "Controleren…",
+    "cashuWalletCapabilities": "Mogelijkheden",
+    "cashuWalletP2pkTitle": "NUT-11 P2PK 2-van-3 escrow",
+    "cashuWalletP2pkDescription": "Vergrendel, geef vrij, annuleer en retourneer escrow-tokens met de sleutels van koper, verkoper en escrow.",
+    "cashuWalletComingSoon": "Client-side mint-sessie en proof-opslag komen in een toekomstige release. Vandaag voert de verbonden node de escrow-cryptografie uit en kies je de mint bij het aanmaken van een order.",
+    "cashuWalletLightningNotice": "De verbonden node gebruikt Lightning-escrow. Schakel over naar een Cashu-node om hier de mints te zien."
 }
