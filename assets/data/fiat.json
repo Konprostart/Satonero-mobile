@@ -27,8 +27,9 @@
     "decimal_digits": 0,
     "rounding": 0,
     "code": "ALL",
-    "emoji": "",
-    "name_plural": "Albanian lekë"
+    "emoji": "🇦🇱",
+    "name_plural": "Albanian lekë",
+    "price": true
   },
   "AMD": {
     "symbol": "AMD",
@@ -104,8 +105,9 @@
     "decimal_digits": 2,
     "rounding": 0,
     "code": "BAM",
-    "emoji": "",
-    "name_plural": "Bosnia-Herzegovina convertible marks"
+    "emoji": "🇧🇦",
+    "name_plural": "Bosnia-Herzegovina convertible marks",
+    "price": true
   },
   "BDT": {
     "symbol": "Tk",
@@ -125,8 +127,9 @@
     "decimal_digits": 2,
     "rounding": 0,
     "code": "BGN",
-    "emoji": "",
-    "name_plural": "Bulgarian leva"
+    "emoji": "🇧🇬",
+    "name_plural": "Bulgarian leva",
+    "price": true
   },
   "BHD": {
     "symbol": "BHD",
@@ -521,8 +524,9 @@
     "decimal_digits": 2,
     "rounding": 0,
     "code": "HRK",
-    "emoji": "",
-    "name_plural": "Croatian kunas"
+    "emoji": "🇭🇷",
+    "name_plural": "Croatian kunas",
+    "price": true
   },
   "HUF": {
     "symbol": "Ft",
@@ -775,8 +779,9 @@
     "decimal_digits": 2,
     "rounding": 0,
     "code": "MDL",
-    "emoji": "",
-    "name_plural": "Moldovan lei"
+    "emoji": "🇲🇩",
+    "name_plural": "Moldovan lei",
+    "price": true
   },
   "MGA": {
     "symbol": "MGA",
@@ -795,8 +800,9 @@
     "decimal_digits": 2,
     "rounding": 0,
     "code": "MKD",
-    "emoji": "",
-    "name_plural": "Macedonian denari"
+    "emoji": "🇲🇰",
+    "name_plural": "Macedonian denari",
+    "price": true
   },
   "MLC": {
     "symbol": "MLC",
@@ -1056,7 +1062,7 @@
     "decimal_digits": 0,
     "rounding": 0,
     "code": "RSD",
-    "emoji": "",
+    "emoji": "🇷🇸",
     "name_plural": "Serbian dinars",
     "price": true
   },

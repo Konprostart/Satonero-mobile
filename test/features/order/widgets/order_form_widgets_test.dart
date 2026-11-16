@@ -368,6 +368,57 @@ void main() {
       ]);
       expect(tester.takeException(), isNull);
     });
+
+    testWidgets('invokes add callback from the Add button', (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      var added = 0;
+
+      await pump(
+        tester,
+        PaymentMethodsSection(
+          selectedMethods: const [],
+          customController: controller,
+          onMethodsChanged: (_) {},
+          onAddCustomMethod: () => added++,
+        ),
+      );
+
+      final addButton = find.byKey(const Key('addCustomPaymentMethodButton'));
+      expect(addButton, findsOneWidget);
+      await tester.tap(addButton);
+      await tester.pump();
+
+      expect(added, 1);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('renders and wires removal of committed custom method chips',
+        (tester) async {
+      final controller = TextEditingController();
+      addTearDown(controller.dispose);
+      final removed = <String>[];
+
+      await pump(
+        tester,
+        PaymentMethodsSection(
+          selectedMethods: const [],
+          customMethods: const ['Aircash', 'xCash'],
+          customController: controller,
+          onMethodsChanged: (_) {},
+          onRemoveCustomMethod: removed.add,
+        ),
+      );
+
+      expect(find.byType(Chip), findsNWidgets(2));
+      expect(find.text('Aircash'), findsOneWidget);
+      expect(find.text('xCash'), findsOneWidget);
+
+      final firstChip = tester.widget<Chip>(find.byType(Chip).first);
+      firstChip.onDeleted!();
+      expect(removed, ['Aircash']);
+      expect(tester.takeException(), isNull);
+    });
   });
 
   group('PremiumSection', () {

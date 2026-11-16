@@ -13,6 +13,15 @@ class PaymentMethodsSection extends ConsumerWidget {
   final TextEditingController customController;
   final Function(List<String>) onMethodsChanged;
 
+  /// Custom methods committed via the "Add" button (unlimited).
+  final List<String> customMethods;
+
+  /// Invoked when the user taps "Add" with a non-empty custom method.
+  final VoidCallback? onAddCustomMethod;
+
+  /// Invoked when the user removes a committed custom method chip.
+  final void Function(String method)? onRemoveCustomMethod;
+
   /// Helper function to translate payment method names
   String _translatePaymentMethod(String method, BuildContext context) {
     switch (method) {
@@ -32,6 +41,9 @@ class PaymentMethodsSection extends ConsumerWidget {
     required this.selectedMethods,
     required this.customController,
     required this.onMethodsChanged,
+    this.customMethods = const [],
+    this.onAddCustomMethod,
+    this.onRemoveCustomMethod,
   });
 
   @override
@@ -47,17 +59,69 @@ class PaymentMethodsSection extends ConsumerWidget {
       iconBackgroundColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
       extraContent: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        child: TextField(
-          key: const Key('paymentMethodField'),
-          controller: customController,
-          style: TextStyle(color: AppTheme.colors(context).textPrimary, fontSize: 15),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: S.of(context)!.enterCustomPaymentMethod,
-            hintStyle: TextStyle(
-                color: AppTheme.colors(context).textInactive, fontSize: 13),
-          ),
-        ).withAutomationId(AutomationIds.orderCreatePaymentMethod),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: const Key('paymentMethodField'),
+                    controller: customController,
+                    style: TextStyle(
+                        color: AppTheme.colors(context).textPrimary,
+                        fontSize: 15),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => onAddCustomMethod?.call(),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: S.of(context)!.enterCustomPaymentMethod,
+                      hintStyle: TextStyle(
+                          color: AppTheme.colors(context).textInactive,
+                          fontSize: 13),
+                    ),
+                  ).withAutomationId(AutomationIds.orderCreatePaymentMethod),
+                ),
+                IconButton(
+                  key: const Key('addCustomPaymentMethodButton'),
+                  onPressed: onAddCustomMethod,
+                  tooltip: S.of(context)!.add,
+                  icon: Icon(
+                    Icons.add_circle,
+                    color: AppTheme.colors(context).accent,
+                    size: 28,
+                  ),
+                ),
+              ],
+            ),
+            if (customMethods.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: customMethods
+                    .map((method) => Chip(
+                          label: Text(
+                            method,
+                            style: TextStyle(
+                                color: AppTheme.colors(context).textPrimary),
+                          ),
+                          backgroundColor: AppTheme.colors(context)
+                              .accent
+                              .withValues(alpha: 0.15),
+                          side: BorderSide(
+                              color: AppTheme.colors(context).accent),
+                          deleteIconColor:
+                              AppTheme.colors(context).textSecondary,
+                          onDeleted: onRemoveCustomMethod == null
+                              ? null
+                              : () => onRemoveCustomMethod!(method),
+                        ))
+                    .toList(),
+              ),
+            ],
+          ],
+        ),
       ),
       child: paymentMethodsData.when(
         loading: () => Text(S.of(context)!.loadingPaymentMethods,

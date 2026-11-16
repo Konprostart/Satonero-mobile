@@ -57,6 +57,9 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
 
   List<String> _selectedPaymentMethods = [];
 
+  /// Custom payment methods committed via the "Add" button (unlimited).
+  List<String> _customPaymentMethods = [];
+
   /// The Cashu mint the maker chose for this order's escrow (Cashu nodes only).
   String? _cashuMintUrl;
 
@@ -105,6 +108,35 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
 
   void _onCustomPaymentMethodChanged() {
     setState(() {});
+  }
+
+  /// Strips characters that would corrupt the comma-separated
+  /// `payment_method` field sent to the daemon.
+  String _sanitizePaymentMethod(String raw) {
+    final problematicChars = RegExp(r'[,"\\\[\]{}]');
+    return raw
+        .replaceAll(problematicChars, ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
+  }
+
+  void _onAddCustomPaymentMethod() {
+    final sanitized =
+        _sanitizePaymentMethod(_customPaymentMethodController.text);
+    if (sanitized.isEmpty) return;
+    setState(() {
+      if (!_customPaymentMethods.contains(sanitized)) {
+        _customPaymentMethods = [..._customPaymentMethods, sanitized];
+      }
+    });
+    _customPaymentMethodController.clear();
+  }
+
+  void _onRemoveCustomPaymentMethod(String method) {
+    setState(() {
+      _customPaymentMethods =
+          _customPaymentMethods.where((m) => m != method).toList();
+    });
   }
 
   void _onAmountChanged(int? minAmount, int? maxAmount) {
@@ -337,12 +369,15 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                         const SizedBox(height: 16),
                         PaymentMethodsSection(
                           selectedMethods: _selectedPaymentMethods,
+                          customMethods: _customPaymentMethods,
                           customController: _customPaymentMethodController,
                           onMethodsChanged: (methods) {
                             setState(() {
                               _selectedPaymentMethods = methods;
                             });
                           },
+                          onAddCustomMethod: _onAddCustomPaymentMethod,
+                          onRemoveCustomMethod: _onRemoveCustomPaymentMethod,
                         ),
                         const SizedBox(height: 16),
                         // Cashu escrow: only rendered when the connected node
@@ -485,6 +520,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
     }
 
     if (_selectedPaymentMethods.isEmpty &&
+        _customPaymentMethods.isEmpty &&
         _customPaymentMethodController.text.trim().isEmpty) {
       return null;
     }
@@ -511,6 +547,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
       final l10n = S.of(context)!;
 
       if (_selectedPaymentMethods.isEmpty &&
+          _customPaymentMethods.isEmpty &&
           _customPaymentMethodController.text.trim().isEmpty) {
         SnackBarHelper.showTopSnackBar(
           context,
@@ -590,18 +627,14 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
 
         List<String> paymentMethods =
             List<String>.from(_selectedPaymentMethods);
-        if (_customPaymentMethodController.text.isNotEmpty) {
-          String sanitizedPaymentMethod = _customPaymentMethodController.text;
-
-          final problematicChars = RegExp(r'[,"\\\[\]{}]');
-          sanitizedPaymentMethod = sanitizedPaymentMethod
-              .replaceAll(problematicChars, ' ')
-              .replaceAll(RegExp(r'\s+'), ' ')
-              .trim();
-
-          if (sanitizedPaymentMethod.isNotEmpty) {
-            paymentMethods.add(sanitizedPaymentMethod);
-          }
+        // Include custom methods committed via the "Add" button.
+        paymentMethods.addAll(_customPaymentMethods);
+        // Flush any text still sitting in the field (user typed but did not
+        // press "Add") so nothing is silently dropped.
+        final pendingCustom =
+            _sanitizePaymentMethod(_customPaymentMethodController.text);
+        if (pendingCustom.isNotEmpty && !paymentMethods.contains(pendingCustom)) {
+          paymentMethods.add(pendingCustom);
         }
 
         final buyerInvoice = _orderType == OrderType.buy &&
