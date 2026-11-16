@@ -21,11 +21,11 @@ class LightningAddressSection extends StatelessWidget {
           AppTheme.colors(context).lightningBlue.withValues(alpha: 0.3),
       child: TextField(
         controller: controller,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: AppTheme.colors(context).textPrimary),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: S.of(context)!.enterLightningAddress,
-          hintStyle: const TextStyle(color: Colors.grey),
+          hintStyle: TextStyle(color: AppTheme.colors(context).textInactive),
         ),
       ),
     );

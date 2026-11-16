@@ -55,10 +55,10 @@ class _CurrencySelectionDialogWidgetState
             backgroundColor: AppTheme.colors(context).inputBackground,
             title: Text(
               widget.title,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: AppTheme.colors(context).textPrimary),
             ),
             leading: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
+              icon: Icon(Icons.close, color: AppTheme.colors(context).textPrimary),
               onPressed: () => Navigator.of(context).pop(),
             ),
             centerTitle: true,
@@ -78,12 +78,13 @@ class _CurrencySelectionDialogWidgetState
               ),
               child: TextField(
                 textAlign: TextAlign.left,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
                 decoration: InputDecoration(
                   hintText: S.of(context)!.searchCurrencies,
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  prefixIcon:
-                      const Icon(Icons.search, color: Colors.grey, size: 20),
+                  hintStyle:
+                      TextStyle(color: AppTheme.colors(context).textInactive),
+                  prefixIcon: Icon(Icons.search,
+                      color: AppTheme.colors(context).textInactive, size: 20),
                   filled: false,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14.0),
@@ -149,7 +150,9 @@ class _CurrencySelectionDialogWidgetState
                                 ),
                                 title: Text(
                                   '$code - ${currency.name}',
-                                  style: const TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                      color:
+                                          AppTheme.colors(context).textPrimary),
                                 ),
                                 trailing: isSelected
                                     ? Icon(Icons.check,

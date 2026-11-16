@@ -54,13 +54,14 @@ class PaymentMethodsSection extends ConsumerWidget {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: S.of(context)!.enterCustomPaymentMethod,
-            hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+            hintStyle: TextStyle(
+                color: AppTheme.colors(context).textInactive, fontSize: 13),
           ),
         ).withAutomationId(AutomationIds.orderCreatePaymentMethod),
       ),
       child: paymentMethodsData.when(
         loading: () => Text(S.of(context)!.loadingPaymentMethods,
-            style: const TextStyle(color: Colors.white)),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary)),
         error: (error, _) => Text(
             S.of(context)!.errorLoadingPaymentMethods(error.toString()),
             style:  TextStyle(color: AppTheme.colors(context).danger)),
@@ -98,13 +99,15 @@ class PaymentMethodsSection extends ConsumerWidget {
                     displayText,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color:
-                          selectedMethods.isEmpty ? Colors.grey : Colors.white,
+                      color: selectedMethods.isEmpty
+                          ? AppTheme.colors(context).textInactive
+                          : AppTheme.colors(context).textPrimary,
                       fontSize: 16,
                     ),
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                Icon(Icons.keyboard_arrow_down,
+                    color: AppTheme.colors(context).textPrimary),
               ],
             ),
           );
@@ -150,7 +153,9 @@ class PaymentMethodsSection extends ConsumerWidget {
                     children: availableMethods
                         .map((method) => CheckboxListTile(
                               title: Text(method,
-                                  style: const TextStyle(color: Colors.white)),
+                                  style: TextStyle(
+                                      color: AppTheme.colors(context)
+                                          .textPrimary)),
                               value: dialogSelectedMethods.contains(method),
                               activeColor: AppTheme.colors(context).accent,
                               checkColor: AppTheme.colors(context).onAccent,

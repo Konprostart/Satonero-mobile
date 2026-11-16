@@ -24,7 +24,6 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.divider,
     required this.accent,
     required this.lightningBlue,
-    required this.lightningYellow,
     required this.sell,
     required this.danger,
     required this.info,
@@ -82,9 +81,6 @@ class AppColors extends ThemeExtension<AppColors> {
 
   /// Lightning-network electric blue accent.
   final Color lightningBlue;
-
-  /// Lightning-network yellow accent.
-  final Color lightningYellow;
 
   /// Sell / negative-action accent.
   final Color sell;
@@ -154,7 +150,6 @@ class AppColors extends ThemeExtension<AppColors> {
     divider: Color(0xFFE3E3E6),
     accent: Color(0xFFF7931A),
     lightningBlue: Color(0xFF2979FF),
-    lightningYellow: Color(0xFFF3CA29),
     sell: Color(0xFFC62828),
     danger: Color(0xFFC62828),
     info: Color(0xFF1565C0),
@@ -198,12 +193,11 @@ class AppColors extends ThemeExtension<AppColors> {
     divider: Color(0xFF1F1F1F),
     accent: Color(0xFFF7931A),
     lightningBlue: Color(0xFF2979FF),
-    lightningYellow: Color(0xFFF3CA29),
     sell: Color(0xFFFF8A8A),
     danger: Color(0xFFEF6A6A),
     info: Color(0xFF2A7BD6),
     purple: Color(0xFF7856AF),
-    warning: Color(0xFFF3CA29),
+    warning: Color(0xFFE67E22),
     onAccent: Color(0xFF000000),
     onDanger: Color(0xFFFFFFFF),
     success: Color(0xFF4CAF50),
@@ -242,7 +236,6 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? divider,
     Color? accent,
     Color? lightningBlue,
-    Color? lightningYellow,
     Color? sell,
     Color? danger,
     Color? info,
@@ -284,7 +277,6 @@ class AppColors extends ThemeExtension<AppColors> {
       divider: divider ?? this.divider,
       accent: accent ?? this.accent,
       lightningBlue: lightningBlue ?? this.lightningBlue,
-      lightningYellow: lightningYellow ?? this.lightningYellow,
       sell: sell ?? this.sell,
       danger: danger ?? this.danger,
       info: info ?? this.info,
@@ -340,7 +332,6 @@ class AppColors extends ThemeExtension<AppColors> {
       divider: Color.lerp(divider, other.divider, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
       lightningBlue: Color.lerp(lightningBlue, other.lightningBlue, t)!,
-      lightningYellow: Color.lerp(lightningYellow, other.lightningYellow, t)!,
       sell: Color.lerp(sell, other.sell, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
       info: Color.lerp(info, other.info, t)!,
@@ -402,13 +393,9 @@ class AppTheme {
   /// Lightning electric blue accent.
   static const Color lightningBlue = Color(0xFF2979FF);
 
-  /// Lightning yellow accent.
-  static const Color lightningYellow = Color(0xFFF3CA29);
-
   // Original colors (dark palette)
   static const Color grey = Color(0xFFCCCCCC);
   static const Color grey2 = Color(0xFF92949A);
-  static const Color yellow = Color(0xFFF3CA29);
 
   /// Red color for destructive actions, sell buttons, and critical operations
   /// Use for: Cancel buttons, dispute buttons, sell actions, inactive states
@@ -445,7 +432,6 @@ class AppTheme {
 
   // Colors for states
   static const Color statusSuccess = satoneroOrange;
-  static const Color statusWarning = Color(0xFFF3CA29);
 
   /// Red color for error states, validation failures, and error notifications
   /// Use for: Error messages, failed operations, validation errors

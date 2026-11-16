@@ -30,7 +30,7 @@ class CurrencySection extends ConsumerWidget {
       iconBackgroundColor: AppTheme.colors(context).purple.withValues(alpha: 0.3),
       child: currenciesAsync.when(
         loading: () => Text(S.of(context)!.loadingCurrencies,
-            style: const TextStyle(color: Colors.white)),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary)),
         error: (_, __) => Text(S.of(context)!.errorLoadingCurrencies,
             style:  TextStyle(color: AppTheme.colors(context).danger)),
         data: (currencies) {
@@ -71,11 +71,13 @@ class CurrencySection extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Text(
                       displayCode.isNotEmpty ? '$displayCode - $name' : name,
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          color: AppTheme.colors(context).textPrimary),
                     ),
                   ],
                 ),
-                const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                Icon(Icons.keyboard_arrow_down,
+                    color: AppTheme.colors(context).textPrimary),
               ],
             ),
           ).withAutomationId(AutomationIds.orderCreateCurrency);

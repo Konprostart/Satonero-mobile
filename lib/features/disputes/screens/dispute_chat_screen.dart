@@ -80,7 +80,7 @@ class _DisputeChatScreenState extends ConsumerState<DisputeChatScreen> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppTheme.colors(context).textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -90,7 +90,7 @@ class _DisputeChatScreenState extends ConsumerState<DisputeChatScreen> {
             return Center(
               child: Text(
                 S.of(context)?.disputeNotFound ?? 'Dispute not found',
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppTheme.colors(context).textPrimary),
               ),
             );
           }
@@ -123,7 +123,7 @@ class _DisputeChatScreenState extends ConsumerState<DisputeChatScreen> {
         error: (error, stack) => Center(
           child: Text(
             S.of(context)?.errorLoadingDispute(error.toString()) ?? 'Error loading dispute: ${error.toString()}',
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: AppTheme.colors(context).textPrimary),
             textAlign: TextAlign.center,
           ),
         ),

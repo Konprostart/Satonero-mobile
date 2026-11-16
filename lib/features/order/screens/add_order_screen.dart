@@ -285,7 +285,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
         backgroundColor: AppTheme.colors(context).scaffoldBackground,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: AppTheme.colors(context).textPrimary),
           onPressed: () => context.pop(),
         ),
         title: Text(
@@ -397,11 +397,14 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                                 .withValues(alpha: 0.3),
                             child: TextFormField(
                               controller: _satsAmountController,
-                              style: const TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                  color: AppTheme.colors(context).textPrimary),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: S.of(context)!.enterSatsAmount,
-                                hintStyle: const TextStyle(color: Colors.grey),
+                                hintStyle: TextStyle(
+                                    color:
+                                        AppTheme.colors(context).textInactive),
                               ),
                               keyboardType: TextInputType.number,
                               validator: (value) {
@@ -627,9 +630,9 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
             builder: (context) => AlertDialog(
               backgroundColor: AppTheme.colors(context).cardBackground,
               title:
-                  Text(l10n.error, style: const TextStyle(color: Colors.white)),
+                  Text(l10n.error, style: TextStyle(color: AppTheme.colors(context).textPrimary)),
               content: Text(e.toString(),
-                  style: const TextStyle(color: Colors.white)),
+                  style: TextStyle(color: AppTheme.colors(context).textSecondary)),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),

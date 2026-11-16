@@ -1019,15 +1019,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               margin: const EdgeInsets.only(top: 16),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.amber.withValues(alpha: 0.1),
+                color: AppTheme.colors(context).inputBackground,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                border: Border.all(color: AppTheme.colors(context).divider),
               ),
               child: Text(
                 S.of(context)!.communityDisclaimerBody,
                 style: TextStyle(
                   fontSize: 12,
-                  color: AppTheme.colors(context).warning,
+                  color: AppTheme.colors(context).textSecondary,
                 ),
               ),
             ),
