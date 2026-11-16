@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:satonero_mobile/core/app_theme.dart';
 
 /// Five-star rating strip used by the order cards.
 ///
@@ -9,7 +10,7 @@ class StarRatingRow extends StatelessWidget {
     super.key,
     required this.rating,
     this.size = 14,
-    this.color = Colors.amber,
+    this.color = AppTheme.bitcoinOrange,
   });
 
   final double rating;

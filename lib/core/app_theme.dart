@@ -94,7 +94,7 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Decorative / interactive purple accent.
   final Color purple;
 
-  /// Warning amber (darkened in light mode for contrast).
+  /// Warning accent (Bitcoin orange; darkened in light mode for contrast).
   final Color warning;
 
   /// Foreground (text/icon) on the Bitcoin-orange accent. Fixed black in both
@@ -154,16 +154,16 @@ class AppColors extends ThemeExtension<AppColors> {
     danger: Color(0xFFC62828),
     info: Color(0xFF1565C0),
     purple: Color(0xFF5E35B1),
-    warning: Color(0xFFB8860B),
+    warning: Color(0xFFB45309),
     onAccent: Color(0xFF000000),
     onDanger: Color(0xFFFFFFFF),
     success: Color(0xFF2E7D32),
     qrBackground: Color(0xFFFFFFFF),
     qrForeground: Color(0xFF000000),
-    statusPendingBackground: Color(0xFFFEF3C7),
-    statusPendingText: Color(0xFF92400E),
-    statusWaitingBackground: Color(0xFFFFEDD5),
-    statusWaitingText: Color(0xFF9A3412),
+    statusPendingBackground: Color(0xFFFDE8D0),
+    statusPendingText: Color(0xFF9A5B12),
+    statusWaitingBackground: Color(0xFFFDE8D0),
+    statusWaitingText: Color(0xFF9A5B12),
     statusActiveBackground: Color(0xFFDBEAFE),
     statusActiveText: Color(0xFF1E40AF),
     statusSuccessBackground: Color(0xFFD1FAE5),
@@ -197,16 +197,16 @@ class AppColors extends ThemeExtension<AppColors> {
     danger: Color(0xFFEF6A6A),
     info: Color(0xFF2A7BD6),
     purple: Color(0xFF7856AF),
-    warning: Color(0xFFE67E22),
+    warning: Color(0xFFF7931A),
     onAccent: Color(0xFF000000),
     onDanger: Color(0xFFFFFFFF),
     success: Color(0xFF4CAF50),
     qrBackground: Color(0xFFFFFFFF),
     qrForeground: Color(0xFF000000),
-    statusPendingBackground: Color(0xFF854D0E),
-    statusPendingText: Color(0xFFFCD34D),
-    statusWaitingBackground: Color(0xFF7C2D12),
-    statusWaitingText: Color(0xFFFED7AA),
+    statusPendingBackground: Color(0xFF3A2A14),
+    statusPendingText: Color(0xFFF7931A),
+    statusWaitingBackground: Color(0xFF3A2A14),
+    statusWaitingText: Color(0xFFF0A55C),
     statusActiveBackground: Color(0xFF1E3A8A),
     statusActiveText: Color(0xFF93C5FD),
     statusSuccessBackground: Color(0xFF065F46),
@@ -449,11 +449,11 @@ class AppTheme {
   static const Color premiumNegativeChip =
       Color(0xFFC62828); // Colors.red.shade700
 
-  // Colors for status chips
-  static const Color statusPendingBackground = Color(0xFF854D0E);
-  static const Color statusPendingText = Color(0xFFFCD34D);
-  static const Color statusWaitingBackground = Color(0xFF7C2D12);
-  static const Color statusWaitingText = Color(0xFFFED7AA);
+  // Colors for status chips (Bitcoin orange, no yellow).
+  static const Color statusPendingBackground = Color(0xFF3A2A14);
+  static const Color statusPendingText = Color(0xFFF7931A);
+  static const Color statusWaitingBackground = Color(0xFF3A2A14);
+  static const Color statusWaitingText = Color(0xFFF0A55C);
   static const Color statusActiveBackground = Color(0xFF1E3A8A);
   static const Color statusActiveText = Color(0xFF93C5FD);
   static const Color statusSuccessBackground = Color(0xFF065F46);
