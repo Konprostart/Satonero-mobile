@@ -4,68 +4,59 @@ import 'package:satonero_mobile/core/automation/automation_id.dart';
 import 'package:satonero_mobile/core/automation/automation_ids.dart';
 import 'package:satonero_mobile/features/order/widgets/form_section.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
-import 'package:satonero_mobile/shared/widgets/mostro_switch.dart';
+import 'package:satonero_mobile/shared/widgets/choice_segment.dart';
 
+/// How the sats side of the order is priced: market (exchange rate at
+/// take time + optional premium) or fixed (an exact sats amount).
 class PriceTypeSection extends StatelessWidget {
   final bool isMarketRate;
   final ValueChanged<bool> onToggle;
   final String? errorMessage;
+
+  /// When false (e.g. the amount is a range), the fixed-price option is
+  /// disabled because a range order always trades at market price.
+  final bool fixedEnabled;
 
   const PriceTypeSection({
     super.key,
     required this.isMarketRate,
     required this.onToggle,
     this.errorMessage,
+    this.fixedEnabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Define the icon for the FormSection
-    final priceTypeIcon = Icon(
-      Icons.attach_money,
-      size: 18,
-      color: AppTheme.colors(context).textPrimary,
-    );
-
     return FormSection(
       title: S.of(context)!.priceType,
-      icon: priceTypeIcon,
-      iconBackgroundColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
+      icon: Icon(
+        Icons.attach_money,
+        size: 18,
+        color: AppTheme.colors(context).textPrimary,
+      ),
+      iconBackgroundColor:
+          AppTheme.colors(context).accent.withValues(alpha: 0.3),
       infoTooltip: S.of(context)!.priceTypeTooltip,
       infoTitle: S.of(context)!.priceType,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                isMarketRate
-                    ? S.of(context)!.marketPrice
-                    : S.of(context)!.fixedPrice,
-                style: TextStyle(
-                    color: AppTheme.colors(context).textPrimary, fontWeight: FontWeight.w500),
+          ChoiceSegment<bool>(
+            value: isMarketRate,
+            onChanged: onToggle,
+            options: [
+              ChoiceSegmentOption<bool>(
+                value: true,
+                label: S.of(context)!.market,
               ),
-              Row(
-                children: [
-                  Text(
-                    S.of(context)!.market,
-                    style: TextStyle(
-                      color: isMarketRate
-                          ? AppTheme.colors(context).accent
-                          : AppTheme.colors(context).textInactive,
-                      fontSize: 14,
-                    ),
-                  ),
-                  MostroSwitch(
-                    key: const Key('fixedSwitch'),
-                    value: isMarketRate,
-                    onChanged: onToggle,
-                  ).withAutomationId(AutomationIds.orderCreatePriceType),
-                ],
+              ChoiceSegmentOption<bool>(
+                value: false,
+                label: S.of(context)!.fixed,
+                key: const Key('fixedSwitch'),
+                enabled: fixedEnabled,
               ),
             ],
-          ),
+          ).withAutomationId(AutomationIds.orderCreatePriceType),
           if (errorMessage != null) ...[
             const SizedBox(height: 12),
             Container(

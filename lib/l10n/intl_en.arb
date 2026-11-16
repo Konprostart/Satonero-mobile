@@ -1888,5 +1888,9 @@
     "cashuWalletP2pkTitle": "NUT-11 P2PK 2-of-3 escrow",
     "cashuWalletP2pkDescription": "Lock, release, cancel and refund escrow tokens with buyer, seller and escrow keys.",
     "cashuWalletComingSoon": "Client-side mint session and proof storage are coming in a future release. Today the connected node performs the escrow cryptography, and you choose the mint when creating an order.",
-    "cashuWalletLightningNotice": "The connected node runs Lightning escrow. Switch to a Cashu node to see its mints here."
+    "cashuWalletLightningNotice": "The connected node runs Lightning escrow. Switch to a Cashu node to see its mints here.",
+    "amountSingle": "Single",
+    "amountRange": "Range",
+    "minAmount": "Min amount",
+    "fixed": "Fixed"
 }

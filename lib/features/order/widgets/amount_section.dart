@@ -6,7 +6,11 @@ import 'package:satonero_mobile/core/automation/automation_ids.dart';
 import 'package:satonero_mobile/data/models/enums/order_type.dart';
 import 'package:satonero_mobile/features/order/widgets/form_section.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
+import 'package:satonero_mobile/shared/widgets/choice_segment.dart';
 
+/// The maker's fiat amount for the order: a single fixed amount or a range
+/// (min..max). The mode is chosen through an explicit segmented control rather
+/// than the previous implicit "type then tap the second field" flow.
 class AmountSection extends StatefulWidget {
   final OrderType orderType;
   final Function(int? minAmount, int? maxAmount) onAmountChanged;
@@ -36,71 +40,37 @@ class AmountSection extends StatefulWidget {
 class _AmountSectionState extends State<AmountSection> {
   final TextEditingController _minAmountController = TextEditingController();
   final TextEditingController _maxAmountController = TextEditingController();
-  final FocusNode _maxAmountFocusNode = FocusNode();
 
-  bool _showSecondInput = false;
   bool _isRangeMode = false;
-  bool _hasUserInteractedWithSecondField = false;
 
   @override
   void initState() {
     super.initState();
-
-    // Listen to min amount changes to show/hide second input
-    _minAmountController.addListener(_onMinAmountChanged);
-
-    // Listen to max amount changes to update badge display
-    _maxAmountController.addListener(_onMaxAmountChanged);
-
-    // Listen to focus changes on max amount field to enter range mode
-    _maxAmountFocusNode.addListener(_onMaxAmountFocusChanged);
+    _minAmountController.addListener(_onAmountFieldChanged);
+    _maxAmountController.addListener(_onAmountFieldChanged);
   }
 
   @override
   void dispose() {
     _minAmountController.dispose();
     _maxAmountController.dispose();
-    _maxAmountFocusNode.dispose();
     super.dispose();
   }
 
-  void _onMinAmountChanged() {
-    final hasContent = _minAmountController.text.isNotEmpty;
-    if (hasContent != _showSecondInput) {
-      setState(() {
-        _showSecondInput = hasContent;
-        if (!hasContent) {
-          // Reset everything when min amount is cleared
-          final wasRangeMode = _isRangeMode;
-          _isRangeMode = false;
-          _hasUserInteractedWithSecondField = false;
-          _maxAmountController.clear();
-          if (wasRangeMode) {
-            widget.onRangeModeChanged?.call(false);
-          }
-        }
-      });
-    }
+  void _onModeChanged(bool isRange) {
+    if (isRange == _isRangeMode) return;
+    setState(() {
+      _isRangeMode = isRange;
+      if (!isRange) {
+        _maxAmountController.clear();
+      }
+    });
+    widget.onRangeModeChanged?.call(isRange);
     _notifyAmountChanged();
   }
 
-  void _onMaxAmountChanged() {
-    final hasMax = _maxAmountController.text.isNotEmpty;
-    final isEffectivelyRange = _isRangeMode && hasMax;
-    // Trigger rebuild to show/hide badge when max amount content changes
-    setState(() {});
+  void _onAmountFieldChanged() {
     _notifyAmountChanged();
-    widget.onRangeModeChanged?.call(isEffectivelyRange);
-  }
-
-  void _onMaxAmountFocusChanged() {
-    if (_maxAmountFocusNode.hasFocus && !_hasUserInteractedWithSecondField) {
-      setState(() {
-        _isRangeMode = true;
-        _hasUserInteractedWithSecondField = true;
-      });
-      widget.onRangeModeChanged?.call(true);
-    }
   }
 
   void _notifyAmountChanged() {
@@ -121,27 +91,6 @@ class _AmountSectionState extends State<AmountSection> {
     return widget.orderType == OrderType.buy
         ? S.of(context)!.enterAmountYouWantToSendCurrency(currency)
         : S.of(context)!.enterAmountYouWantToReceiveCurrency(currency);
-  }
-
-  Widget? _getTopRightWidget() {
-    if (_isRangeMode && _maxAmountController.text.isNotEmpty) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: AppTheme.colors(context).accent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          S.of(context)!.rangeOrder,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
-    }
-    return null;
   }
 
   String? _validateMinAmount(String? value) {
@@ -200,54 +149,71 @@ class _AmountSectionState extends State<AmountSection> {
   Widget build(BuildContext context) {
     return FormSection(
       title: _getTitle(),
-      topRightWidget: _getTopRightWidget(),
       icon: Icon(Icons.money, color: AppTheme.colors(context).accent, size: 18),
-      iconBackgroundColor: AppTheme.colors(context).accent.withValues(alpha: 0.3),
+      iconBackgroundColor:
+          AppTheme.colors(context).accent.withValues(alpha: 0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Input row (min amount + optional max amount)
+          ChoiceSegment<bool>(
+            value: _isRangeMode,
+            onChanged: _onModeChanged,
+            options: [
+              ChoiceSegmentOption<bool>(
+                value: false,
+                label: S.of(context)!.amountSingle,
+              ),
+              ChoiceSegmentOption<bool>(
+                value: true,
+                label: S.of(context)!.amountRange,
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Input row (single amount, or min + max for a range).
           Row(
             children: [
-              // Min amount input
               Expanded(
-                flex: _showSecondInput ? 2 : 1,
                 child: TextFormField(
-                  key: const Key('minAmountField'),
+                  key: const Key('fiatAmountField'),
                   controller: _minAmountController,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppTheme.colors(context).textPrimary),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: S.of(context)!.enterAmountHint,
-                    hintStyle: const TextStyle(color: Colors.grey),
+                    hintText: _isRangeMode
+                        ? S.of(context)!.minAmount
+                        : S.of(context)!.enterAmountHint,
+                    hintStyle:
+                        TextStyle(color: AppTheme.colors(context).textInactive),
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: _validateMinAmount,
-                  onChanged: (_) => _notifyAmountChanged(),
                 ).withAutomationId(AutomationIds.orderCreateFiatAmount),
               ),
-
-              // "to" label and max amount input (shown after first digit)
-              if (_showSecondInput) ...[
+              if (_isRangeMode) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     S.of(context)!.to,
-                    style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textInactive,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 Expanded(
-                  flex: 2,
                   child: TextFormField(
                     key: const Key('maxAmountField'),
                     controller: _maxAmountController,
-                    focusNode: _maxAmountFocusNode,
-                    style: const TextStyle(color: Colors.white),
+                    style:
+                        TextStyle(color: AppTheme.colors(context).textPrimary),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: S.of(context)!.maxAmount,
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(
+                          color: AppTheme.colors(context).textInactive),
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -257,18 +223,6 @@ class _AmountSectionState extends State<AmountSection> {
               ],
             ],
           ),
-
-          // Tip text (shown when second input is visible but user hasn't tapped it)
-          if (_showSecondInput && !_hasUserInteractedWithSecondField) ...[
-            const SizedBox(height: 8),
-            Text(
-              S.of(context)!.tapSecondFieldForRange,
-              style: TextStyle(
-                color: AppTheme.colors(context).accent,
-                fontSize: 12,
-              ),
-            ),
-          ],
 
           // Validation message (shown inside card when there's an error)
           if (widget.validationError != null) ...[

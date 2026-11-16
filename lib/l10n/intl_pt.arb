@@ -1876,5 +1876,9 @@
     "cashuWalletP2pkTitle": "Escrow NUT-11 P2PK 2-de-3",
     "cashuWalletP2pkDescription": "Bloqueie, libere, cancele e reembolse tokens de escrow com as chaves do comprador, vendedor e escrow.",
     "cashuWalletComingSoon": "A sessão de mint no cliente e o armazenamento de provas virão em uma versão futura. Hoje o nó conectado realiza a criptografia do escrow e você escolhe o mint ao criar um pedido.",
-    "cashuWalletLightningNotice": "O nó conectado usa escrow Lightning. Mude para um nó Cashu para ver seus mints aqui."
+    "cashuWalletLightningNotice": "O nó conectado usa escrow Lightning. Mude para um nó Cashu para ver seus mints aqui.",
+    "amountSingle": "Único",
+    "amountRange": "Faixa",
+    "minAmount": "Montante mínimo",
+    "fixed": "Fixo"
 }

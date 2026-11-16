@@ -1831,5 +1831,9 @@
     "cashuWalletP2pkTitle": "Séquestre NUT-11 P2PK 2-sur-3",
     "cashuWalletP2pkDescription": "Verrouillez, libérez, annulez et remboursez les jetons de séquestre avec les clés de l'acheteur, du vendeur et du séquestre.",
     "cashuWalletComingSoon": "La session mint côté client et le stockage des preuves arriveront dans une prochaine version. Aujourd'hui, le nœud connecté effectue la cryptographie du séquestre et vous choisissez le mint lors de la création d'une commande.",
-    "cashuWalletLightningNotice": "Le nœud connecté utilise le séquestre Lightning. Passez à un nœud Cashu pour voir ses mints ici."
+    "cashuWalletLightningNotice": "Le nœud connecté utilise le séquestre Lightning. Passez à un nœud Cashu pour voir ses mints ici.",
+    "amountSingle": "Unique",
+    "amountRange": "Plage",
+    "minAmount": "Montant minimum",
+    "fixed": "Fixe"
 }

@@ -1831,5 +1831,9 @@
     "cashuWalletP2pkTitle": "NUT-11-P2PK-2-von-3-Escrow",
     "cashuWalletP2pkDescription": "Escrow-Tokens mit den Schlüsseln von Käufer, Verkäufer und Escrow sperren, freigeben, stornieren und zurückerstatten.",
     "cashuWalletComingSoon": "Client-seitige Mint-Sitzung und Proof-Speicherung kommen in einer künftigen Version. Heute führt der verbundene Knoten die Escrow-Kryptografie aus, und du wählst das Mint beim Erstellen einer Order.",
-    "cashuWalletLightningNotice": "Der verbundene Knoten verwendet Lightning-Escrow. Wechsle zu einem Cashu-Knoten, um hier seine Mints zu sehen."
+    "cashuWalletLightningNotice": "Der verbundene Knoten verwendet Lightning-Escrow. Wechsle zu einem Cashu-Knoten, um hier seine Mints zu sehen.",
+    "amountSingle": "Einzeln",
+    "amountRange": "Bereich",
+    "minAmount": "Mindestbetrag",
+    "fixed": "Fest"
 }

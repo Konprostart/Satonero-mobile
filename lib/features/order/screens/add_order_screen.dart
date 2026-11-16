@@ -360,6 +360,7 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                         PriceTypeSection(
                           isMarketRate: _marketRate,
                           errorMessage: _fixedPriceRangeError,
+                          fixedEnabled: !_isRangeMode,
                           onToggle: (value) {
                             if (!value && _isRangeMode) {
                               _showFixedPriceRangeError();
@@ -389,9 +390,11 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                                 ? S.of(context)!.enterSatsAmountBuy
                                 : S.of(context)!.enterSatsAmountSell,
                             icon: Icon(Icons.bolt,
-                                color: AppTheme.colors(context).lightningYellow, size: 18),
-                            iconBackgroundColor:
-                                AppTheme.colors(context).lightningYellow.withValues(alpha: 0.3),
+                                color: AppTheme.colors(context).accent,
+                                size: 18),
+                            iconBackgroundColor: AppTheme.colors(context)
+                                .accent
+                                .withValues(alpha: 0.3),
                             child: TextFormField(
                               controller: _satsAmountController,
                               style: const TextStyle(color: Colors.white),
@@ -432,7 +435,9 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
                           decoration: BoxDecoration(
                             border: Border(
                               top: BorderSide(
-                                color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1),
+                                color: AppTheme.colors(context)
+                                    .textPrimary
+                                    .withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),
