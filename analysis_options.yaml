@@ -16,6 +16,10 @@ analyzer:
     - "**/*.freezed.dart"
     - "**/*.gr.dart"
     - "**/*.config.dart"
+    # Vendored Cargokit build tool (a standalone Dart package used at build
+    # time to cross-compile the Rust crate). Its dependencies are resolved by
+    # its own pubspec, not the app's, so it is excluded from app analysis.
+    - "rust_builder/**"
 
 linter:
   # The lint rules applied to this project can be customized in the

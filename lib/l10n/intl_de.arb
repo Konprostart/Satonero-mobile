@@ -1835,5 +1835,70 @@
     "amountSingle": "Einzeln",
     "amountRange": "Bereich",
     "minAmount": "Mindestbetrag",
-    "fixed": "Fest"
+    "fixed": "Fest",
+    "cashuWalletBalance": "Guthaben",
+    "cashuWalletSync": "Mit mint synchronisieren",
+    "cashuWalletSyncing": "Synchronisiere…",
+    "cashuWalletReceive": "Empfangen",
+    "cashuWalletSend": "Senden",
+    "cashuWalletRedeem": "Token einlösen",
+    "cashuWalletCustomMint": "Eigene mint-URL",
+    "cashuWalletConnect": "Verbinden",
+    "cashuWalletNoMintSelected": "Wähle oder gib eine mint ein, um Empfangen, Senden und Synchronisieren zu aktivieren.",
+    "cashuWalletNativeUnavailableNotice": "Die native Bibliothek ist in diesem Build nicht enthalten, daher sind Empfangen, Senden und Synchronisieren nicht verfügbar.",
+    "cashuWalletReceiveTitle": "Sats empfangen",
+    "cashuWalletAmountLabel": "Betrag (sats)",
+    "cashuWalletCreateInvoice": "Rechnung erstellen",
+    "cashuWalletInvoiceTitle": "Diese Lightning-Rechnung bezahlen",
+    "cashuWalletInvoiceHint": "Zahle aus einem beliebigen Lightning-Wallet und präge die Token dann hier.",
+    "cashuWalletMintTokens": "Ich habe bezahlt — Token prägen",
+    "cashuWalletSendTitle": "Sats senden",
+    "cashuWalletInvoiceFieldLabel": "Lightning-Rechnung (BOLT11)",
+    "cashuWalletInvoiceFieldHint": "lnbc…",
+    "cashuWalletSendAction": "Senden",
+    "cashuWalletRedeemTitle": "Cashu-Token einlösen",
+    "cashuWalletTokenLabel": "Cashu-Token",
+    "cashuWalletTokenHint": "cashuA…",
+    "cashuWalletRedeemAction": "Einlösen",
+    "cashuWalletErrorTitle": "Cashu-Wallet-Fehler",
+    "cashuWalletMinted": "{amount} sats geprägt",
+    "@cashuWalletMinted": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSent": "{amount} sats bezahlt",
+    "@cashuWalletSent": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletReceived": "{amount} sats empfangen",
+    "@cashuWalletReceived": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSyncDone": "Synchronisiert — Guthaben {amount} sats",
+    "@cashuWalletSyncDone": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletFreed": "{amount} sats aus stornierten Proofs freigegeben",
+    "@cashuWalletFreed": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    }
 }

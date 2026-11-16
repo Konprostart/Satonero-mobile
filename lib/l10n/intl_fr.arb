@@ -1835,5 +1835,70 @@
     "amountSingle": "Unique",
     "amountRange": "Plage",
     "minAmount": "Montant minimum",
-    "fixed": "Fixe"
+    "fixed": "Fixe",
+    "cashuWalletBalance": "Solde",
+    "cashuWalletSync": "Synchroniser avec le mint",
+    "cashuWalletSyncing": "Synchronisation…",
+    "cashuWalletReceive": "Recevoir",
+    "cashuWalletSend": "Envoyer",
+    "cashuWalletRedeem": "Échanger le token",
+    "cashuWalletCustomMint": "URL de mint personnalisée",
+    "cashuWalletConnect": "Connecter",
+    "cashuWalletNoMintSelected": "Sélectionnez ou saisissez un mint pour activer Recevoir, Envoyer et Synchroniser.",
+    "cashuWalletNativeUnavailableNotice": "La bibliothèque native n'est pas incluse dans cette build, donc Recevoir, Envoyer et Synchroniser sont indisponibles.",
+    "cashuWalletReceiveTitle": "Recevoir des sats",
+    "cashuWalletAmountLabel": "Montant (sats)",
+    "cashuWalletCreateInvoice": "Créer la facture",
+    "cashuWalletInvoiceTitle": "Payer cette facture Lightning",
+    "cashuWalletInvoiceHint": "Payez depuis n'importe quel wallet Lightning, puis frappez les tokens ici.",
+    "cashuWalletMintTokens": "J'ai payé — frapper les tokens",
+    "cashuWalletSendTitle": "Envoyer des sats",
+    "cashuWalletInvoiceFieldLabel": "Facture Lightning (BOLT11)",
+    "cashuWalletInvoiceFieldHint": "lnbc…",
+    "cashuWalletSendAction": "Envoyer",
+    "cashuWalletRedeemTitle": "Échanger un token Cashu",
+    "cashuWalletTokenLabel": "Token Cashu",
+    "cashuWalletTokenHint": "cashuA…",
+    "cashuWalletRedeemAction": "Échanger",
+    "cashuWalletErrorTitle": "Erreur du wallet Cashu",
+    "cashuWalletMinted": "{amount} sats frappés",
+    "@cashuWalletMinted": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSent": "{amount} sats payés",
+    "@cashuWalletSent": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletReceived": "{amount} sats reçus",
+    "@cashuWalletReceived": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSyncDone": "Synchronisé — solde {amount} sats",
+    "@cashuWalletSyncDone": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletFreed": "{amount} sats libérés de preuves annulées",
+    "@cashuWalletFreed": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    }
 }

@@ -1892,5 +1892,70 @@
     "amountSingle": "Single",
     "amountRange": "Range",
     "minAmount": "Min amount",
-    "fixed": "Fixed"
+    "fixed": "Fixed",
+    "cashuWalletBalance": "Balance",
+    "cashuWalletSync": "Sync with mint",
+    "cashuWalletSyncing": "Syncing…",
+    "cashuWalletReceive": "Receive",
+    "cashuWalletSend": "Send",
+    "cashuWalletRedeem": "Redeem token",
+    "cashuWalletCustomMint": "Custom mint URL",
+    "cashuWalletConnect": "Connect",
+    "cashuWalletNoMintSelected": "Select or enter a mint to enable Receive, Send and Sync.",
+    "cashuWalletNativeUnavailableNotice": "The native wallet isn't bundled in this build, so Receive, Send and Sync are unavailable.",
+    "cashuWalletReceiveTitle": "Receive sats",
+    "cashuWalletAmountLabel": "Amount (sats)",
+    "cashuWalletCreateInvoice": "Create invoice",
+    "cashuWalletInvoiceTitle": "Pay this Lightning invoice",
+    "cashuWalletInvoiceHint": "Pay from any Lightning wallet, then mint the tokens here.",
+    "cashuWalletMintTokens": "I've paid — mint tokens",
+    "cashuWalletSendTitle": "Send sats",
+    "cashuWalletInvoiceFieldLabel": "Lightning invoice (BOLT11)",
+    "cashuWalletInvoiceFieldHint": "lnbc…",
+    "cashuWalletSendAction": "Send",
+    "cashuWalletRedeemTitle": "Redeem Cashu token",
+    "cashuWalletTokenLabel": "Cashu token",
+    "cashuWalletTokenHint": "cashuA…",
+    "cashuWalletRedeemAction": "Redeem",
+    "cashuWalletErrorTitle": "Cashu wallet error",
+    "cashuWalletMinted": "Minted {amount} sats",
+    "@cashuWalletMinted": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSent": "Paid {amount} sats",
+    "@cashuWalletSent": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletReceived": "Received {amount} sats",
+    "@cashuWalletReceived": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSyncDone": "Synced — balance {amount} sats",
+    "@cashuWalletSyncDone": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletFreed": "Freed {amount} sats from cancelled proofs",
+    "@cashuWalletFreed": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    }
 }

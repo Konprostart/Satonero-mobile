@@ -10,6 +10,7 @@ import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'wallet.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
@@ -68,7 +69,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 621622285;
+  int get rustContentHash => -916066584;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -86,10 +87,37 @@ abstract class RustLibApi extends BaseApi {
       required String escrowPubkeyHex,
       required int locktimeDays});
 
+  Future<String> crateWalletMintInfo(
+      {required String mintUrl, required String dbPath});
+
+  Future<BigInt> crateWalletMintTokens(
+      {required String mintUrl,
+      required String dbPath,
+      required String quoteId});
+
+  Future<String> crateWalletReceiveInvoice(
+      {required String mintUrl,
+      required String dbPath,
+      required BigInt amountSats});
+
+  Future<BigInt> crateWalletReceiveToken(
+      {required String mintUrl, required String dbPath, required String token});
+
+  Future<String> crateWalletSendInvoice(
+      {required String mintUrl,
+      required String dbPath,
+      required String bolt11});
+
   Future<String> crateEscrowSignProof(
       {required String proofJson, required String secretKeyHex});
 
+  Future<String> crateWalletSyncWallet(
+      {required String mintUrl, required String dbPath});
+
   Future<bool> crateEscrowVerifyProofP2Pk({required String proofJson});
+
+  Future<BigInt> crateWalletWalletBalance(
+      {required String mintUrl, required String dbPath});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -143,6 +171,148 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<String> crateWalletMintInfo(
+      {required String mintUrl, required String dbPath}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 2, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletMintInfoConstMeta,
+      argValues: [mintUrl, dbPath],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletMintInfoConstMeta => const TaskConstMeta(
+        debugName: "mint_info",
+        argNames: ["mintUrl", "dbPath"],
+      );
+
+  @override
+  Future<BigInt> crateWalletMintTokens(
+      {required String mintUrl,
+      required String dbPath,
+      required String quoteId}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        sse_encode_String(quoteId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 3, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_u_64,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletMintTokensConstMeta,
+      argValues: [mintUrl, dbPath, quoteId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletMintTokensConstMeta => const TaskConstMeta(
+        debugName: "mint_tokens",
+        argNames: ["mintUrl", "dbPath", "quoteId"],
+      );
+
+  @override
+  Future<String> crateWalletReceiveInvoice(
+      {required String mintUrl,
+      required String dbPath,
+      required BigInt amountSats}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        sse_encode_u_64(amountSats, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 4, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletReceiveInvoiceConstMeta,
+      argValues: [mintUrl, dbPath, amountSats],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletReceiveInvoiceConstMeta => const TaskConstMeta(
+        debugName: "receive_invoice",
+        argNames: ["mintUrl", "dbPath", "amountSats"],
+      );
+
+  @override
+  Future<BigInt> crateWalletReceiveToken(
+      {required String mintUrl,
+      required String dbPath,
+      required String token}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        sse_encode_String(token, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 5, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_u_64,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletReceiveTokenConstMeta,
+      argValues: [mintUrl, dbPath, token],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletReceiveTokenConstMeta => const TaskConstMeta(
+        debugName: "receive_token",
+        argNames: ["mintUrl", "dbPath", "token"],
+      );
+
+  @override
+  Future<String> crateWalletSendInvoice(
+      {required String mintUrl,
+      required String dbPath,
+      required String bolt11}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        sse_encode_String(bolt11, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 6, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletSendInvoiceConstMeta,
+      argValues: [mintUrl, dbPath, bolt11],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletSendInvoiceConstMeta => const TaskConstMeta(
+        debugName: "send_invoice",
+        argNames: ["mintUrl", "dbPath", "bolt11"],
+      );
+
+  @override
   Future<String> crateEscrowSignProof(
       {required String proofJson, required String secretKeyHex}) {
     return handler.executeNormal(NormalTask(
@@ -151,7 +321,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(proofJson, serializer);
         sse_encode_String(secretKeyHex, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 2, port: port_);
+            funcId: 7, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -169,13 +339,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<String> crateWalletSyncWallet(
+      {required String mintUrl, required String dbPath}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 8, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletSyncWalletConstMeta,
+      argValues: [mintUrl, dbPath],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletSyncWalletConstMeta => const TaskConstMeta(
+        debugName: "sync_wallet",
+        argNames: ["mintUrl", "dbPath"],
+      );
+
+  @override
   Future<bool> crateEscrowVerifyProofP2Pk({required String proofJson}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(proofJson, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 3, port: port_);
+            funcId: 9, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -190,6 +386,32 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateEscrowVerifyProofP2PkConstMeta => const TaskConstMeta(
         debugName: "verify_proof_p2pk",
         argNames: ["proofJson"],
+      );
+
+  @override
+  Future<BigInt> crateWalletWalletBalance(
+      {required String mintUrl, required String dbPath}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(mintUrl, serializer);
+        sse_encode_String(dbPath, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 10, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_u_64,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kCrateWalletWalletBalanceConstMeta,
+      argValues: [mintUrl, dbPath],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateWalletWalletBalanceConstMeta => const TaskConstMeta(
+        debugName: "wallet_balance",
+        argNames: ["mintUrl", "dbPath"],
       );
 
   @protected
@@ -220,6 +442,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   int dco_decode_u_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
+  }
+
+  @protected
+  BigInt dco_decode_u_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
   }
 
   @protected
@@ -259,6 +487,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   int sse_decode_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint32();
+  }
+
+  @protected
+  BigInt sse_decode_u_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
   }
 
   @protected
@@ -304,6 +538,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_u_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint32(self);
+  }
+
+  @protected
+  void sse_encode_u_64(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putBigUint64(self);
   }
 
   @protected

@@ -1880,5 +1880,70 @@
     "amountSingle": "Enkel",
     "amountRange": "Bereik",
     "minAmount": "Minimumbedrag",
-    "fixed": "Vast"
+    "fixed": "Vast",
+    "cashuWalletBalance": "Saldo",
+    "cashuWalletSync": "Synchroniseren met mint",
+    "cashuWalletSyncing": "Synchroniseren…",
+    "cashuWalletReceive": "Ontvangen",
+    "cashuWalletSend": "Verzenden",
+    "cashuWalletRedeem": "Token inwisselen",
+    "cashuWalletCustomMint": "Aangepaste mint-URL",
+    "cashuWalletConnect": "Verbinden",
+    "cashuWalletNoMintSelected": "Selecteer of voer een mint in om Ontvangen, Verzenden en Synchroniseren in te schakelen.",
+    "cashuWalletNativeUnavailableNotice": "De native bibliotheek zit niet in deze build, dus Ontvangen, Verzenden en Synchroniseren zijn niet beschikbaar.",
+    "cashuWalletReceiveTitle": "Sats ontvangen",
+    "cashuWalletAmountLabel": "Bedrag (sats)",
+    "cashuWalletCreateInvoice": "Factuur aanmaken",
+    "cashuWalletInvoiceTitle": "Deze Lightning-factuur betalen",
+    "cashuWalletInvoiceHint": "Betaal vanuit elke Lightning-wallet en sla de tokens hier aan.",
+    "cashuWalletMintTokens": "Ik heb betaald — tokens aanslaan",
+    "cashuWalletSendTitle": "Sats verzenden",
+    "cashuWalletInvoiceFieldLabel": "Lightning-factuur (BOLT11)",
+    "cashuWalletInvoiceFieldHint": "lnbc…",
+    "cashuWalletSendAction": "Verzenden",
+    "cashuWalletRedeemTitle": "Cashu-token inwisselen",
+    "cashuWalletTokenLabel": "Cashu-token",
+    "cashuWalletTokenHint": "cashuA…",
+    "cashuWalletRedeemAction": "Inwisselen",
+    "cashuWalletErrorTitle": "Cashu-wallet-fout",
+    "cashuWalletMinted": "{amount} sats aangemaakt",
+    "@cashuWalletMinted": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSent": "{amount} sats betaald",
+    "@cashuWalletSent": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletReceived": "{amount} sats ontvangen",
+    "@cashuWalletReceived": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletSyncDone": "Gesynchroniseerd — saldo {amount} sats",
+    "@cashuWalletSyncDone": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    },
+    "cashuWalletFreed": "{amount} sats vrijgemaakt uit geannuleerde proofs",
+    "@cashuWalletFreed": {
+        "placeholders": {
+            "amount": {
+                "type": "String"
+            }
+        }
+    }
 }

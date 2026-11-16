@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.85.0"
 publish = false
-description = "Cashu escrow wallet bridge for Satonero (NUT-11 P2PK 2-of-3)."
+description = "Cashu escrow + wallet bridge for Satonero (NUT-11 P2PK 2-of-3 and NUT-04/05/06/07 wallet)."
 license = "MIT"
 
 # The CDK is `unsafe_code = forbid`; cdylib/staticlib are the standard targets
@@ -13,11 +13,25 @@ license = "MIT"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-# Cashu Development Kit — shared types + crypto (MIT OR Apache-2.0).
-# `wallet` enables the client-side mint API; NUT-11 `SpendingConditions` /
-# `P2PKConditions` / `sign_p2pk` live in the core crate and need no extra flag.
-# default-features = false keeps the mint-side code out of the client binary.
-cashu = { version = "=0.18.0", default-features = false, features = ["wallet"] }
+# Cashu shared types + crypto (MIT OR Apache-2.0). Pinned to the same version
+# the CDK (`cdk` 0.17.2) depends on so there is a single `cashu` in the tree and
+# types interoperate. NUT-11 `SpendingConditions` / `sign_p2pk` / BDHKE live in
+# the core crate and need no feature flag.
+cashu = { version = "=0.17.2", default-features = false }
+
+# Cashu Development Kit — client-side wallet (MIT). `wallet` enables the mint
+# client (NUT-04/05/06/07) and pulls the HTTP transport + rustls.
+cdk = { version = "=0.17.2", default-features = false, features = ["wallet"] }
+
+# Redb-backed wallet store (MIT). Pure Rust (no C), so it cross-compiles to
+# Android/iOS without a C toolchain. Persists proofs, quotes and transactions.
+cdk-redb = { version = "=0.17.2", default-features = false, features = ["wallet"] }
+
+# Runtime used to drive the async CDK wallet from the synchronous FFI surface.
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
+
+# OS randomness for the wallet signing seed.
+getrandom = "0.2"
 
 # flutter_rust_bridge runtime + codegen hooks (MIT). Version must match the
 # `flutter_rust_bridge_codegen` binary (2.12.0) used to generate the glue.

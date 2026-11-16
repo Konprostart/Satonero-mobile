@@ -55,6 +55,10 @@ dependencies:
   # pinned to the matching 2.12.0 version (the last one supporting the pinned
   # Dart 3.8 SDK).
   flutter_rust_bridge: 2.12.0
+  # FFI plugin that builds the `satonero_cashu` Rust crate (via Cargokit) and
+  # ships it as a native library on Android/iOS/desktop. MIT.
+  satonero_cashu:
+    path: rust_builder
   collection: ^1.18.0
   elliptic: ^0.3.11
   intl: ^0.20.2
