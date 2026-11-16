@@ -1,40 +1,346 @@
 {
-  "ALL": ["Aircash", "Bank Transfer", "Cash in person", "Western Union", "Payoneer", "Wise"],
-  "ARS": ["Mercado Pago", "MODO", "CVU", "Belo", "Lemon", "CBU", "Efectivo"],
-  "AUD": ["PayID", "Alipay", "Cash deposit", "Revolut", "Cash"],
-  "BAM": ["Aircash", "Bank Transfer", "Cash in person", "PayPal", "Wise", "Payoneer"],
-  "BGN": ["Aircash", "ePay.bg", "Revolut", "Bank Transfer", "Cash in person", "SEPA", "Wise"],
-  "BOB": ["QR", "Transferencia Bancaria", "Efectivo"],
-  "BRL": ["PIX", "TED", "PicPay", "Depósito", "Cash"],
-  "CAD": ["Interac e-Transfer", "Any national bank", "Wise", "Revolut", "Cash"],
-  "CHF": ["TWINT", "Cash"],
-  "CLP": ["MACH", "Cuenta RUT", "Mercado Pago", "Transferencia bancaria", "Efectivo"],
-  "CRC": ["Bank transfer (IBAN)", "SINPE Móvil", "Cash"],
-  "COP": ["Nequi", "Daviplata", "PSE", "Llaves BRE-B", "Transferencia bancaria", "Efectivo"],
-  "CUP": ["Transfermovil", "EnZona", "Tarjeta Clásica", "Saldo móvil", "MiTransfer", "Efectivo"],
-  "EUR": ["Aircash", "KEKS Pay", "Flik", "NLB Klik", "Revolut", "Wise", "Payoneer", "SEPA instant", "Bank Transfer", "Bizum", "Satispay", "HalCash", "Cash", "BBVA Efectivo Móvil", "QR Santander"],
-  "GBP": ["Revolut", "Monzo", "Wise", "Any national bank", "Bank Transfer", "Cash"],
-  "HRK": ["KEKS Pay", "Flik", "Aircash", "Bank Transfer", "Cash in person", "SEPA", "Revolut"],
-  "HUF": ["Revolut", "Bank Transfer", "Cash in person", "Wise"],
-  "JPY": ["PayPay", "Bank Transfer", "Cash"],
-  "KES": ["M-PESA", "Equity Bank", "NCBA Bank", "Airtel Money", "Co-operative Bank", "Standard Chartered", "Ecobank", "GTBank", "Pochi la Biashara", "Cash"],
-  "MKD": ["Aircash", "Bank Transfer", "Cash in person", "Payoneer", "Wise"],
-  "MLC": ["Transfermovil", "EnZona"],
-  "MWK": ["Airtel Money", "TNM Mpamba", "Bank Transfer", "Cash"],
-  "MXN": ["SPEI", "CoDi", "Retiro Cajero BBVA", "Efectivo"],
-  "MZN": ["M-Pesa", "e-Mola", "Millennium bim", "BCI", "Cash"],
-  "NGN": ["OPay", "PalmPay", "Moniepoint", "GTBank", "Access Bank", "UBA", "Zenith Bank", "Bank Transfer", "Cash"],
-  "PEN": ["Yape", "Plin", "QR Yape", "Transferencia bancaria", "Cash"],
-  "PHP": ["Any national bank", "GCash", "Cash"],
-  "PYG": ["SIPAP", "Transferencia bancaria", "Efectivo"],
-  "RON": ["Aircash", "Revolut", "Bank Transfer", "Cash in person", "SEPA", "Wise", "Payoneer"],
-  "RSD": ["Aircash", "xCash", "S-Bon", "IPS", "DinaCard", "Bank Transfer", "Cash in person", "PayPal", "Wise", "Payoneer"],
-  "TRY": ["Papara", "ininal", "Bank Transfer", "Cash in person", "Wise", "Payoneer"],
-  "TZS": ["M-Pesa", "Mixx by Yas (Tigo Pesa)", "Airtel Money", "Halopesa", "CRDB Bank", "Cash"],
-  "UGX": ["MTN MoMo", "Airtel Money", "Chipper Cash", "Cash"],
-  "USD": ["Cash App", "Venmo", "Zelle", "PayPal", "Wise", "Payoneer", "Strike", "Revolut", "N1CO", "Transfer365", "Cash"],
-  "VES": ["Pago Móvil", "Binance P2P", "Transferencia bancaria", "Efectivo"],
-  "ZAR": ["Capitec", "FNB", "Absa", "Nedbank", "Standard Bank", "FNB eWallet", "MTN MoMo", "Cash"],
-  "ZMW": ["Airtel Money", "MTN MoMo", "Zamtel Kwacha", "FNB eWallet", "Stanbic Bank", "SPENN", "Cash"],
-  "default": ["Bank Transfer", "Cash in person", "PayPal", "Wise", "Revolut", "Payoneer", "Western Union", "SEPA", "Mobile Money"]
+  "ALL": [
+    "Aircash",
+    "Bank Transfer",
+    "Cash in person",
+    "Western Union",
+    "Payoneer",
+    "Wise",
+    "PayPal",
+    "Skrill",
+    "Neteller",
+    "Paysera",
+    "Raiffeisen",
+    "ePay"
+  ],
+  "ARS": [
+    "Mercado Pago",
+    "MODO",
+    "CVU",
+    "Belo",
+    "Lemon",
+    "CBU",
+    "Efectivo"
+  ],
+  "AUD": [
+    "PayID",
+    "Alipay",
+    "Cash deposit",
+    "Revolut",
+    "Cash"
+  ],
+  "BAM": [
+    "Aircash",
+    "Bank Transfer",
+    "Cash in person",
+    "PayPal",
+    "Wise",
+    "Payoneer",
+    "KEKS Pay",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ],
+  "BGN": [
+    "Aircash",
+    "ePay.bg",
+    "Revolut",
+    "Bank Transfer",
+    "Cash in person",
+    "SEPA",
+    "Wise",
+    "PayPal",
+    "Payoneer",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ],
+  "BOB": [
+    "QR",
+    "Transferencia Bancaria",
+    "Efectivo"
+  ],
+  "BRL": [
+    "PIX",
+    "TED",
+    "PicPay",
+    "Depósito",
+    "Cash"
+  ],
+  "CAD": [
+    "Interac e-Transfer",
+    "Any national bank",
+    "Wise",
+    "Revolut",
+    "Cash"
+  ],
+  "CHF": [
+    "TWINT",
+    "Cash"
+  ],
+  "CLP": [
+    "MACH",
+    "Cuenta RUT",
+    "Mercado Pago",
+    "Transferencia bancaria",
+    "Efectivo"
+  ],
+  "CRC": [
+    "Bank transfer (IBAN)",
+    "SINPE Móvil",
+    "Cash"
+  ],
+  "COP": [
+    "Nequi",
+    "Daviplata",
+    "PSE",
+    "Llaves BRE-B",
+    "Transferencia bancaria",
+    "Efectivo"
+  ],
+  "CUP": [
+    "Transfermovil",
+    "EnZona",
+    "Tarjeta Clásica",
+    "Saldo móvil",
+    "MiTransfer",
+    "Efectivo"
+  ],
+  "EUR": [
+    "Aircash",
+    "KEKS Pay",
+    "Flik",
+    "NLB Klik",
+    "Revolut",
+    "Wise",
+    "Payoneer",
+    "SEPA instant",
+    "Bank Transfer",
+    "Bizum",
+    "Satispay",
+    "HalCash",
+    "Cash",
+    "BBVA Efectivo Móvil",
+    "QR Santander",
+    "PayPal",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ],
+  "GBP": [
+    "Revolut",
+    "Monzo",
+    "Wise",
+    "Any national bank",
+    "Bank Transfer",
+    "Cash"
+  ],
+  "HRK": [
+    "KEKS Pay",
+    "Flik",
+    "Aircash",
+    "Bank Transfer",
+    "Cash in person",
+    "SEPA",
+    "Revolut",
+    "PayPal",
+    "Wise",
+    "Payoneer",
+    "Skrill",
+    "Neteller"
+  ],
+  "HUF": [
+    "Revolut",
+    "Bank Transfer",
+    "Cash in person",
+    "Wise",
+    "PayPal",
+    "Payoneer",
+    "Skrill",
+    "Neteller"
+  ],
+  "JPY": [
+    "PayPay",
+    "Bank Transfer",
+    "Cash"
+  ],
+  "KES": [
+    "M-PESA",
+    "Equity Bank",
+    "NCBA Bank",
+    "Airtel Money",
+    "Co-operative Bank",
+    "Standard Chartered",
+    "Ecobank",
+    "GTBank",
+    "Pochi la Biashara",
+    "Cash"
+  ],
+  "MKD": [
+    "Aircash",
+    "Bank Transfer",
+    "Cash in person",
+    "Payoneer",
+    "Wise",
+    "PayPal",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ],
+  "MLC": [
+    "Transfermovil",
+    "EnZona"
+  ],
+  "MWK": [
+    "Airtel Money",
+    "TNM Mpamba",
+    "Bank Transfer",
+    "Cash"
+  ],
+  "MXN": [
+    "SPEI",
+    "CoDi",
+    "Retiro Cajero BBVA",
+    "Efectivo"
+  ],
+  "MZN": [
+    "M-Pesa",
+    "e-Mola",
+    "Millennium bim",
+    "BCI",
+    "Cash"
+  ],
+  "NGN": [
+    "OPay",
+    "PalmPay",
+    "Moniepoint",
+    "GTBank",
+    "Access Bank",
+    "UBA",
+    "Zenith Bank",
+    "Bank Transfer",
+    "Cash"
+  ],
+  "PEN": [
+    "Yape",
+    "Plin",
+    "QR Yape",
+    "Transferencia bancaria",
+    "Cash"
+  ],
+  "PHP": [
+    "Any national bank",
+    "GCash",
+    "Cash"
+  ],
+  "PYG": [
+    "SIPAP",
+    "Transferencia bancaria",
+    "Efectivo"
+  ],
+  "RON": [
+    "Aircash",
+    "Revolut",
+    "Bank Transfer",
+    "Cash in person",
+    "SEPA",
+    "Wise",
+    "Payoneer",
+    "PayPal",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ],
+  "RSD": [
+    "Aircash",
+    "xCash",
+    "S-Bon",
+    "IPS",
+    "DinaCard",
+    "Bank Transfer",
+    "Cash in person",
+    "PayPal",
+    "Wise",
+    "Payoneer",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ],
+  "TRY": [
+    "Papara",
+    "ininal",
+    "Bank Transfer",
+    "Cash in person",
+    "Wise",
+    "Payoneer",
+    "PayPal",
+    "Skrill",
+    "Neteller"
+  ],
+  "TZS": [
+    "M-Pesa",
+    "Mixx by Yas (Tigo Pesa)",
+    "Airtel Money",
+    "Halopesa",
+    "CRDB Bank",
+    "Cash"
+  ],
+  "UGX": [
+    "MTN MoMo",
+    "Airtel Money",
+    "Chipper Cash",
+    "Cash"
+  ],
+  "USD": [
+    "Cash App",
+    "Venmo",
+    "Zelle",
+    "PayPal",
+    "Wise",
+    "Payoneer",
+    "Strike",
+    "Revolut",
+    "N1CO",
+    "Transfer365",
+    "Cash"
+  ],
+  "VES": [
+    "Pago Móvil",
+    "Binance P2P",
+    "Transferencia bancaria",
+    "Efectivo"
+  ],
+  "ZAR": [
+    "Capitec",
+    "FNB",
+    "Absa",
+    "Nedbank",
+    "Standard Bank",
+    "FNB eWallet",
+    "MTN MoMo",
+    "Cash"
+  ],
+  "ZMW": [
+    "Airtel Money",
+    "MTN MoMo",
+    "Zamtel Kwacha",
+    "FNB eWallet",
+    "Stanbic Bank",
+    "SPENN",
+    "Cash"
+  ],
+  "default": [
+    "Bank Transfer",
+    "Cash in person",
+    "PayPal",
+    "Wise",
+    "Revolut",
+    "Payoneer",
+    "Western Union",
+    "SEPA",
+    "Mobile Money",
+    "Skrill",
+    "Neteller",
+    "Paysera"
+  ]
 }
