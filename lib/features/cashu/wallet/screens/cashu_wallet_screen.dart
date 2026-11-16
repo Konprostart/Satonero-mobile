@@ -374,8 +374,9 @@ class _CashuWalletScreenState extends ConsumerState<CashuWalletScreen> {
 
     try {
       final result = await ref.read(cashuWalletProvider.notifier).send(bolt11);
-      if (mounted)
+      if (mounted) {
         _showSnack(l10n.cashuWalletSent(result.amountSats.toString()));
+      }
     } on CashuWalletException catch (e) {
       _showError(e.message);
     } catch (e) {
