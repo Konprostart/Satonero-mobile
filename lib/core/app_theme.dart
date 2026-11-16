@@ -522,10 +522,7 @@ class AppTheme {
       extensions: [colors],
       hoverColor: isDark ? dark1 : Colors.black12,
       primaryColor: satoneroOrange,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: satoneroOrange,
-        brightness: brightness,
-      ),
+      colorScheme: _buildColorScheme(brightness: brightness, colors: colors),
       scaffoldBackgroundColor: colors.scaffoldBackground,
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -625,6 +622,170 @@ class AppTheme {
         ),
       ),
       dividerColor: colors.divider,
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: satoneroOrange,
+        foregroundColor: colors.onAccent,
+        elevation: 0,
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return colors.textPrimary;
+          }
+          return colors.textSecondary;
+        }),
+        trackColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return colors.accent;
+          }
+          return colors.divider;
+        }),
+        trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(WidgetState.selected)) {
+              return colors.accent;
+            }
+            return Colors.transparent;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(WidgetState.selected)) {
+              return colors.onAccent;
+            }
+            return colors.textPrimary;
+          }),
+          iconColor: WidgetStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(WidgetState.selected)) {
+              return colors.onAccent;
+            }
+            return colors.textPrimary;
+          }),
+          side: WidgetStateProperty.all(BorderSide(color: colors.divider)),
+        ),
+      ),
+      tabBarTheme: TabBarThemeData(
+        labelColor: colors.accent,
+        unselectedLabelColor: colors.textInactive,
+        indicatorColor: colors.accent,
+        indicatorSize: TabBarIndicatorSize.tab,
+      ),
+      toggleButtonsTheme: ToggleButtonsThemeData(
+        selectedColor: colors.onAccent,
+        fillColor: colors.accent,
+        color: colors.textPrimary,
+        borderColor: colors.divider,
+        selectedBorderColor: colors.accent,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return colors.accent;
+          }
+          return Colors.transparent;
+        }),
+        checkColor: WidgetStateProperty.all(colors.onAccent),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return colors.accent;
+          }
+          return colors.textInactive;
+        }),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: colors.accent,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedItemColor: colors.accent,
+        unselectedItemColor: colors.textInactive,
+        backgroundColor: colors.navBarBackground,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: colors.navBarBackground,
+        indicatorColor: colors.accent,
+        iconTheme: WidgetStateProperty.resolveWith<IconThemeData?>((states) {
+          if (states.contains(WidgetState.selected)) {
+            return IconThemeData(color: colors.onAccent);
+          }
+          return IconThemeData(color: colors.textInactive);
+        }),
+        labelTextStyle: WidgetStateProperty.resolveWith<TextStyle?>((states) {
+          return TextStyle(
+            color: states.contains(WidgetState.selected)
+                ? colors.onAccent
+                : colors.textInactive,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          );
+        }),
+      ),
+    );
+  }
+
+  /// Builds an explicit [ColorScheme] with no amber/yellow tones.
+  ///
+  /// The previous `ColorScheme.fromSeed` derived `secondaryContainer` and
+  /// `tertiary` from the orange seed, producing amber/yellow fills that leaked
+  /// into `SegmentedButton`, `Switch` and other Material widgets which read the
+  /// scheme instead of the semantic [AppColors] tokens. Pinning the scheme to
+  /// Bitcoin orange, neutral greys and Lightning blue guarantees a clean OLED
+  /// look on every interactive element in both brightness modes.
+  static ColorScheme _buildColorScheme({
+    required Brightness brightness,
+    required AppColors colors,
+  }) {
+    if (brightness == Brightness.dark) {
+      return ColorScheme.dark(
+        primary: colors.accent,
+        onPrimary: colors.onAccent,
+        primaryContainer: const Color(0xFF3A2A14),
+        onPrimaryContainer: const Color(0xFFF0A55C),
+        secondary: colors.accent,
+        onSecondary: colors.onAccent,
+        secondaryContainer: const Color(0xFF1F1F1F),
+        onSecondaryContainer: colors.textPrimary,
+        tertiary: colors.lightningBlue,
+        onTertiary: const Color(0xFFFFFFFF),
+        tertiaryContainer: const Color(0xFF1E3A8A),
+        onTertiaryContainer: const Color(0xFF93C5FD),
+        error: colors.danger,
+        onError: colors.onDanger,
+        errorContainer: const Color(0xFF7F1D1D),
+        onErrorContainer: const Color(0xFFFCA5A5),
+        surface: colors.scaffoldBackground,
+        onSurface: colors.textPrimary,
+        outline: const Color(0xFF3A3A3A),
+        outlineVariant: const Color(0xFF1F1F1F),
+        inversePrimary: const Color(0xFF9A5B12),
+        surfaceTint: Colors.transparent,
+      );
+    }
+    return ColorScheme.light(
+      primary: colors.accent,
+      onPrimary: colors.onAccent,
+      primaryContainer: const Color(0xFFFDE8D0),
+      onPrimaryContainer: const Color(0xFF9A5B12),
+      secondary: colors.accent,
+      onSecondary: colors.onAccent,
+      secondaryContainer: const Color(0xFFFDE8D0),
+      onSecondaryContainer: const Color(0xFF9A5B12),
+      tertiary: colors.info,
+      onTertiary: const Color(0xFFFFFFFF),
+      tertiaryContainer: const Color(0xFFDBEAFE),
+      onTertiaryContainer: const Color(0xFF1E40AF),
+      error: colors.danger,
+      onError: const Color(0xFFFFFFFF),
+      errorContainer: const Color(0xFFFEE2E2),
+      onErrorContainer: const Color(0xFF991B1B),
+      surface: colors.scaffoldBackground,
+      onSurface: colors.textPrimary,
+      outline: const Color(0xFF8A8A92),
+      outlineVariant: const Color(0xFFE3E3E6),
+      inversePrimary: const Color(0xFFF0A55C),
+      surfaceTint: Colors.transparent,
     );
   }
 
