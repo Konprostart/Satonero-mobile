@@ -41,6 +41,7 @@ ios/.dart_tool/
 
 # Android
 android/.gradle/
+android/.kotlin/
 #android/app/proguard-rules.pro
 android/local.properties
 android/key.properties
