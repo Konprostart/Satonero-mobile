@@ -312,7 +312,7 @@ class _NwcInvoiceWidgetState extends ConsumerState<NwcInvoiceWidget> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.withAlpha(128)),
+        border: Border.all(color: AppTheme.colors(context).divider),
       ),
       child: Column(
         children: [

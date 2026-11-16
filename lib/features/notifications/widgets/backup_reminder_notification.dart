@@ -24,7 +24,7 @@ class BackupReminderNotification extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha: 0.1),
+                  color: AppTheme.colors(context).inputBackground,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child:  HeroIcon(

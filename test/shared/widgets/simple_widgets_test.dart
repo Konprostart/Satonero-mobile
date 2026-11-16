@@ -224,13 +224,13 @@ void main() {
       final widget = tester.widget<Switch>(find.byType(Switch));
 
       expect(widget.thumbColor!.resolve({WidgetState.selected}),
-          AppColors.dark.textPrimary);
-      expect(
-          widget.thumbColor!.resolve(<WidgetState>{}), AppTheme.textSecondary);
+          AppColors.dark.onAccent);
+      expect(widget.thumbColor!.resolve(<WidgetState>{}),
+          AppColors.dark.textSecondary);
       expect(widget.trackColor!.resolve({WidgetState.selected}),
-          AppTheme.satoneroOrange);
-      expect(widget.trackColor!.resolve(<WidgetState>{}),
-          AppTheme.backgroundInactive);
+          AppColors.dark.accent);
+      expect(
+          widget.trackColor!.resolve(<WidgetState>{}), AppColors.dark.divider);
       expect(widget.trackOutlineColor!.resolve(<WidgetState>{}),
           Colors.transparent);
     });
@@ -266,14 +266,15 @@ void main() {
       expect(find.byIcon(Icons.star), findsNWidgets(4));
     });
 
-    testWidgets('colours filled stars with the brand green', (tester) async {
+    testWidgets('colours filled stars with the monochrome accent',
+        (tester) async {
       await tester.pumpWidget(host(StarRating(
         initialRating: 1,
         onRatingChanged: (_) {},
       )));
 
       expect(tester.widget<Icon>(find.byIcon(Icons.star)).color,
-          AppTheme.satoneroOrange);
+          AppColors.dark.accent);
       expect(tester.widget<Icon>(find.byIcon(Icons.star_border).first).color,
           AppColors.dark.textInactive);
     });

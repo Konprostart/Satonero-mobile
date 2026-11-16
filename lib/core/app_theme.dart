@@ -76,36 +76,35 @@ class AppColors extends ThemeExtension<AppColors> {
   /// Hairline separators (borders between cards / app bar / nav bar).
   final Color divider;
 
-  /// Primary brand accent: Bitcoin orange.
+  /// Primary accent. Pure white on dark, pure black on light (Zen monochrome).
   final Color accent;
 
-  /// Lightning-network electric blue accent.
+  /// Lightning accent, unified with [accent] in the monochrome identity.
   final Color lightningBlue;
 
   /// Sell / negative-action accent.
   final Color sell;
 
-  /// Error and destructive-action red.
+  /// Error and destructive-action accent.
   final Color danger;
 
-  /// Informational blue.
+  /// Informational accent.
   final Color info;
 
-  /// Decorative / interactive purple accent.
+  /// Decorative / interactive accent.
   final Color purple;
 
-  /// Warning accent (Bitcoin orange; darkened in light mode for contrast).
+  /// Warning accent.
   final Color warning;
 
-  /// Foreground (text/icon) on the Bitcoin-orange accent. Fixed black in both
-  /// modes so it always contrasts against the brand orange.
+  /// Foreground (text/icon) drawn on the [accent] fill. Flips per mode so the
+  /// white-on-black / black-on-white contrast always holds.
   final Color onAccent;
 
-  /// Foreground on danger/sell/error fills. Fixed white in both modes.
+  /// Foreground on danger/sell/error fills. Flips per mode like [onAccent].
   final Color onDanger;
 
-  /// Success green for positive indicators. Brighter in dark mode and deeper
-  /// in light mode for contrast on each surface.
+  /// Success accent for positive indicators.
   final Color success;
 
   /// QR-code quiet zone. Always white regardless of theme so scanners can read
@@ -137,90 +136,92 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color premiumPositiveChip;
   final Color premiumNegativeChip;
 
-  /// High-contrast light palette.
+  /// High-contrast light palette. Strictly monochrome: pure white surfaces,
+  /// pure black text and accents, and neutral grey for secondary emphasis.
   static const AppColors light = AppColors(
-    scaffoldBackground: Color(0xFFF7F7F8),
+    scaffoldBackground: Color(0xFFFFFFFF),
     cardBackground: Color(0xFFFFFFFF),
-    inputBackground: Color(0xFFEFEFF1),
+    inputBackground: Color(0xFFF5F5F5),
     navBarBackground: Color(0xFFFFFFFF),
-    textPrimary: Color(0xFF111114),
-    textSecondary: Color(0xFF4B4B52),
-    textInactive: Color(0xFF8A8A92),
+    textPrimary: Color(0xFF000000),
+    textSecondary: Color(0xFF3A3A3A),
+    textInactive: Color(0xFF8A8A8A),
     textSubtle: Color(0x8A000000),
-    divider: Color(0xFFE3E3E6),
-    accent: Color(0xFFF7931A),
-    lightningBlue: Color(0xFF2979FF),
-    sell: Color(0xFFC62828),
-    danger: Color(0xFFC62828),
-    info: Color(0xFF1565C0),
-    purple: Color(0xFF5E35B1),
-    warning: Color(0xFFB45309),
-    onAccent: Color(0xFF000000),
+    divider: Color(0xFFE5E5E5),
+    accent: Color(0xFF000000),
+    lightningBlue: Color(0xFF000000),
+    sell: Color(0xFF000000),
+    danger: Color(0xFF000000),
+    info: Color(0xFF000000),
+    purple: Color(0xFF000000),
+    warning: Color(0xFF000000),
+    onAccent: Color(0xFFFFFFFF),
     onDanger: Color(0xFFFFFFFF),
-    success: Color(0xFF2E7D32),
+    success: Color(0xFF000000),
     qrBackground: Color(0xFFFFFFFF),
     qrForeground: Color(0xFF000000),
-    statusPendingBackground: Color(0xFFFDE8D0),
-    statusPendingText: Color(0xFF9A5B12),
-    statusWaitingBackground: Color(0xFFFDE8D0),
-    statusWaitingText: Color(0xFF9A5B12),
-    statusActiveBackground: Color(0xFFDBEAFE),
-    statusActiveText: Color(0xFF1E40AF),
-    statusSuccessBackground: Color(0xFFD1FAE5),
-    statusSuccessText: Color(0xFF065F46),
-    statusDisputeBackground: Color(0xFFFEE2E2),
-    statusDisputeText: Color(0xFF991B1B),
-    statusSettledBackground: Color(0xFFF3E8FF),
-    statusSettledText: Color(0xFF6B21A8),
-    statusInactiveBackground: Color(0xFFE5E7EB),
-    statusInactiveText: Color(0xFF374151),
-    createdByYouChip: Color(0xFF1565C0),
-    takenByYouChip: Color(0xFF00796B),
-    premiumPositiveChip: Color(0xFF388E3C),
-    premiumNegativeChip: Color(0xFFC62828),
+    statusPendingBackground: Color(0xFFF0F0F0),
+    statusPendingText: Color(0xFF000000),
+    statusWaitingBackground: Color(0xFFF0F0F0),
+    statusWaitingText: Color(0xFF3A3A3A),
+    statusActiveBackground: Color(0xFFF0F0F0),
+    statusActiveText: Color(0xFF000000),
+    statusSuccessBackground: Color(0xFFF0F0F0),
+    statusSuccessText: Color(0xFF000000),
+    statusDisputeBackground: Color(0xFFF0F0F0),
+    statusDisputeText: Color(0xFF000000),
+    statusSettledBackground: Color(0xFFF0F0F0),
+    statusSettledText: Color(0xFF000000),
+    statusInactiveBackground: Color(0xFFF0F0F0),
+    statusInactiveText: Color(0xFF8A8A8A),
+    createdByYouChip: Color(0xFF000000),
+    takenByYouChip: Color(0xFF000000),
+    premiumPositiveChip: Color(0xFF000000),
+    premiumNegativeChip: Color(0xFF000000),
   );
 
-  /// Deep OLED dark palette.
+  /// Deep OLED dark palette. Strictly monochrome: pure black surfaces, pure
+  /// white text and accents, and neutral grey for secondary emphasis.
   static const AppColors dark = AppColors(
     scaffoldBackground: Color(0xFF000000),
-    cardBackground: Color(0xFF121212),
-    inputBackground: Color(0xFF1C1C1C),
-    navBarBackground: Color(0xFF0A0A0A),
-    textPrimary: Color(0xFFF9F8F1),
+    cardBackground: Color(0xFF0A0A0A),
+    inputBackground: Color(0xFF141414),
+    navBarBackground: Color(0xFF000000),
+    textPrimary: Color(0xFFFFFFFF),
     textSecondary: Color(0xFFCCCCCC),
     textInactive: Color(0xFF8A8D98),
     textSubtle: Color(0x99FFFFFF),
-    divider: Color(0xFF1F1F1F),
-    accent: Color(0xFFF7931A),
-    lightningBlue: Color(0xFF2979FF),
-    sell: Color(0xFFFF8A8A),
-    danger: Color(0xFFEF6A6A),
-    info: Color(0xFF2A7BD6),
-    purple: Color(0xFF7856AF),
-    warning: Color(0xFFF7931A),
+    divider: Color(0xFF2A2A2A),
+    accent: Color(0xFFFFFFFF),
+    lightningBlue: Color(0xFFFFFFFF),
+    sell: Color(0xFFFFFFFF),
+    danger: Color(0xFFFFFFFF),
+    info: Color(0xFFFFFFFF),
+    purple: Color(0xFFFFFFFF),
+    warning: Color(0xFFFFFFFF),
     onAccent: Color(0xFF000000),
-    onDanger: Color(0xFFFFFFFF),
-    success: Color(0xFF4CAF50),
+    onDanger: Color(0xFF000000),
+    success: Color(0xFFFFFFFF),
     qrBackground: Color(0xFFFFFFFF),
     qrForeground: Color(0xFF000000),
-    statusPendingBackground: Color(0xFF3A2A14),
-    statusPendingText: Color(0xFFF7931A),
-    statusWaitingBackground: Color(0xFF3A2A14),
-    statusWaitingText: Color(0xFFF0A55C),
-    statusActiveBackground: Color(0xFF1E3A8A),
-    statusActiveText: Color(0xFF93C5FD),
-    statusSuccessBackground: Color(0xFF065F46),
-    statusSuccessText: Color(0xFF6EE7B7),
-    statusDisputeBackground: Color(0xFF7F1D1D),
-    statusDisputeText: Color(0xFFFCA5A5),
-    statusSettledBackground: Color(0xFF581C87),
-    statusSettledText: Color(0xFFC084FC),
-    statusInactiveBackground: Color(0xFF1F2937),
-    statusInactiveText: Color(0xFFD1D5DB),
-    createdByYouChip: Color(0xFF1565C0),
-    takenByYouChip: Color(0xFF00796B),
-    premiumPositiveChip: Color(0xFF388E3C),
-    premiumNegativeChip: Color(0xFFC62828),
+    statusPendingBackground: Color(0xFF1A1A1A),
+    statusPendingText: Color(0xFFFFFFFF),
+    statusWaitingBackground: Color(0xFF1A1A1A),
+    statusWaitingText: Color(0xFFCCCCCC),
+    statusActiveBackground: Color(0xFF1A1A1A),
+    statusActiveText: Color(0xFFFFFFFF),
+    statusSuccessBackground: Color(0xFF1A1A1A),
+    statusSuccessText: Color(0xFFFFFFFF),
+    statusDisputeBackground: Color(0xFF1A1A1A),
+    statusDisputeText: Color(0xFFFFFFFF),
+    statusSettledBackground: Color(0xFF1A1A1A),
+    statusSettledText: Color(0xFFFFFFFF),
+    statusInactiveBackground: Color(0xFF1A1A1A),
+    statusInactiveText: Color(0xFF8A8D98),
+    createdByYouChip: Color(0xFFFFFFFF),
+    takenByYouChip: Color(0xFFFFFFFF),
+    premiumPositiveChip: Color(0xFFFFFFFF),
+    premiumNegativeChip: Color(0xFFFFFFFF),
   );
 
   @override
@@ -382,38 +383,38 @@ class AppColors extends ThemeExtension<AppColors> {
 }
 
 class AppTheme {
-  // Brand accents
-  /// Bitcoin orange, the Satonero primary accent.
-  static const Color bitcoinOrange = Color(0xFFF7931A);
+  // Brand accents — monochrome (Zen identity): white in dark, black in light.
+  /// Primary accent. Legacy alias kept for compatibility; resolves to white so
+  /// no coloured tone ever renders.
+  static const Color bitcoinOrange = Color(0xFFFFFFFF);
 
-  /// Kept as an alias so the ~100 existing `AppTheme.satoneroOrange` references
-  /// resolve to the Bitcoin orange identity without a mechanical rename.
+  /// Legacy alias of [bitcoinOrange]; kept so existing references stay valid
+  /// without a mechanical rename while still resolving to a monochrome accent.
   static const Color satoneroOrange = bitcoinOrange;
 
-  /// Lightning electric blue accent.
-  static const Color lightningBlue = Color(0xFF2979FF);
+  /// Legacy Lightning accent, unified with the monochrome accent.
+  static const Color lightningBlue = Color(0xFFFFFFFF);
 
   // Original colors (dark palette)
   static const Color grey = Color(0xFFCCCCCC);
   static const Color grey2 = Color(0xFF92949A);
 
-  /// Red color for destructive actions, sell buttons, and critical operations
-  /// Use for: Cancel buttons, dispute buttons, sell actions, inactive states
-  static const Color red1 = Color(0xFFD84D4D);
+  /// Destructive-action accent (monochrome).
+  static const Color red1 = Color(0xFFFFFFFF);
 
   // Colors for backgrounds — deep OLED blacks.
   static const Color dark1 = Color(0xFF0A0A0A);
   static const Color dark2 = Color(0xFF1A1A1A);
-  static const Color cream1 = Color(0xFFF9F8F1);
+  static const Color cream1 = Color(0xFFFFFFFF);
 
   // New colors
 
   // Colors for backgrounds
   static const Color backgroundDark = Color(0xFF000000); // OLED main background
-  static const Color backgroundCard = Color(0xFF121212);
-  static const Color backgroundInput = Color(0xFF1C1C1C);
-  static const Color backgroundInactive = Color(0xFF1F1F1F);
-  static const Color backgroundNavBar = Color(0xFF0A0A0A);
+  static const Color backgroundCard = Color(0xFF0A0A0A);
+  static const Color backgroundInput = Color(0xFF141414);
+  static const Color backgroundInactive = Color(0xFF2A2A2A);
+  static const Color backgroundNavBar = Color(0xFF000000);
 
   // Colors for text
   static const Color textPrimary = Colors.white;
@@ -423,49 +424,42 @@ class AppTheme {
 
   // Colors for actions
   static const Color buyColor = satoneroOrange;
-  static const Color sellColor = Color(0xFFFF8A8A);
+  static const Color sellColor = Color(0xFFFFFFFF);
   static const Color activeColor = satoneroOrange;
 
-  /// Purple color for accent elements, buttons, and decorative UI elements
-  /// Use for: Submit buttons, message bubbles, section accents, interactive elements
-  static const Color purpleButton = Color(0xFF7856AF);
+  /// Accent for buttons and decorative elements (monochrome).
+  static const Color purpleButton = Color(0xFFFFFFFF);
 
   // Colors for states
   static const Color statusSuccess = satoneroOrange;
 
-  /// Red color for error states, validation failures, and error notifications
-  /// Use for: Error messages, failed operations, validation errors
-  static const Color statusError = Color(0xFFEF6A6A);
+  /// Accent for error states, validation failures, and error notifications.
+  static const Color statusError = Color(0xFFFFFFFF);
 
   static const Color statusActive = satoneroOrange;
-  static const Color statusInfo = Color.fromARGB(255, 42, 123, 214);
+  static const Color statusInfo = Color(0xFFFFFFFF);
 
-  // Colors for role chips
-  static const Color createdByYouChip =
-      Color(0xFF1565C0); // Colors.blue.shade700
-  static const Color takenByYouChip = Color(0xFF00796B); // Colors.teal.shade700
-  static const Color premiumPositiveChip =
-      Color(0xFF388E3C); // Colors.green.shade700
-  static const Color premiumNegativeChip =
-      Color(0xFFC62828); // Colors.red.shade700
+  // Colors for role chips (monochrome).
+  static const Color createdByYouChip = Color(0xFFFFFFFF);
+  static const Color takenByYouChip = Color(0xFFFFFFFF);
+  static const Color premiumPositiveChip = Color(0xFFFFFFFF);
+  static const Color premiumNegativeChip = Color(0xFFFFFFFF);
 
-  // Colors for status chips (Bitcoin orange, no yellow).
-  static const Color statusPendingBackground = Color(0xFF3A2A14);
-  static const Color statusPendingText = Color(0xFFF7931A);
-  static const Color statusWaitingBackground = Color(0xFF3A2A14);
-  static const Color statusWaitingText = Color(0xFFF0A55C);
-  static const Color statusActiveBackground = Color(0xFF1E3A8A);
-  static const Color statusActiveText = Color(0xFF93C5FD);
-  static const Color statusSuccessBackground = Color(0xFF065F46);
-  static const Color statusSuccessText = Color(0xFF6EE7B7);
-  static const Color statusDisputeBackground = Color(0xFF7F1D1D);
-  static const Color statusDisputeText = Color(0xFFFCA5A5);
-  static const Color statusSettledBackground = Color(0xFF581C87);
-  static const Color statusSettledText = Color(0xFFC084FC);
-  static const Color statusInactiveBackground =
-      Color(0xFF1F2937); // Colors.grey.shade800
-  static const Color statusInactiveText =
-      Color(0xFFD1D5DB); // Colors.grey.shade300
+  // Colors for status chips (monochrome).
+  static const Color statusPendingBackground = Color(0xFF1A1A1A);
+  static const Color statusPendingText = Color(0xFFFFFFFF);
+  static const Color statusWaitingBackground = Color(0xFF1A1A1A);
+  static const Color statusWaitingText = Color(0xFFCCCCCC);
+  static const Color statusActiveBackground = Color(0xFF1A1A1A);
+  static const Color statusActiveText = Color(0xFFFFFFFF);
+  static const Color statusSuccessBackground = Color(0xFF1A1A1A);
+  static const Color statusSuccessText = Color(0xFFFFFFFF);
+  static const Color statusDisputeBackground = Color(0xFF1A1A1A);
+  static const Color statusDisputeText = Color(0xFFFFFFFF);
+  static const Color statusSettledBackground = Color(0xFF1A1A1A);
+  static const Color statusSettledText = Color(0xFFFFFFFF);
+  static const Color statusInactiveBackground = Color(0xFF1A1A1A);
+  static const Color statusInactiveText = Color(0xFF8A8D98);
 
   // Text colors
   static const Color secondaryText = Color(0xFFBDBDBD); // Colors.grey.shade400
@@ -521,7 +515,7 @@ class AppTheme {
       brightness: brightness,
       extensions: [colors],
       hoverColor: isDark ? dark1 : Colors.black12,
-      primaryColor: satoneroOrange,
+      primaryColor: colors.accent,
       colorScheme: _buildColorScheme(brightness: brightness, colors: colors),
       scaffoldBackgroundColor: colors.scaffoldBackground,
       appBarTheme: AppBarTheme(
@@ -555,7 +549,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: colors.onAccent,
-          backgroundColor: satoneroOrange,
+          backgroundColor: colors.accent,
           elevation: 0,
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
@@ -572,7 +566,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: satoneroOrange,
+          foregroundColor: colors.accent,
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
             fontSize: 14.0,
@@ -581,8 +575,8 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: satoneroOrange,
-          side: const BorderSide(color: satoneroOrange),
+          foregroundColor: colors.accent,
+          side: BorderSide(color: colors.accent),
           textStyle: GoogleFonts.robotoCondensed(
             fontWeight: FontWeight.w500,
             fontSize: 14.0,
@@ -599,8 +593,8 @@ class AppTheme {
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: colors.textSecondary),
         ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: satoneroOrange),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: colors.accent),
         ),
       ),
       cardTheme: CardThemeData(
@@ -623,14 +617,14 @@ class AppTheme {
       ),
       dividerColor: colors.divider,
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: satoneroOrange,
+        backgroundColor: colors.accent,
         foregroundColor: colors.onAccent,
         elevation: 0,
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith<Color?>((states) {
           if (states.contains(WidgetState.selected)) {
-            return colors.textPrimary;
+            return colors.onAccent;
           }
           return colors.textSecondary;
         }),
@@ -725,14 +719,13 @@ class AppTheme {
     );
   }
 
-  /// Builds an explicit [ColorScheme] with no amber/yellow tones.
+  /// Builds an explicit, fully monochrome [ColorScheme].
   ///
-  /// The previous `ColorScheme.fromSeed` derived `secondaryContainer` and
-  /// `tertiary` from the orange seed, producing amber/yellow fills that leaked
-  /// into `SegmentedButton`, `Switch` and other Material widgets which read the
-  /// scheme instead of the semantic [AppColors] tokens. Pinning the scheme to
-  /// Bitcoin orange, neutral greys and Lightning blue guarantees a clean OLED
-  /// look on every interactive element in both brightness modes.
+  /// Every hue is eliminated: `primary`/`secondary` resolve to the pure accent
+  /// (white on dark, black on light), `tertiary` and the container surfaces to
+  /// neutral greys, and `error` to the same accent so no semantic state can
+  /// reintroduce a coloured tone. `surfaceTint` is transparent so cards stay
+  /// pure black (dark) / pure white (light).
   static ColorScheme _buildColorScheme({
     required Brightness brightness,
     required AppColors colors,
@@ -741,50 +734,54 @@ class AppTheme {
       return ColorScheme.dark(
         primary: colors.accent,
         onPrimary: colors.onAccent,
-        primaryContainer: const Color(0xFF3A2A14),
-        onPrimaryContainer: const Color(0xFFF0A55C),
+        primaryContainer: const Color(0xFF1A1A1A),
+        onPrimaryContainer: const Color(0xFFFFFFFF),
         secondary: colors.accent,
         onSecondary: colors.onAccent,
-        secondaryContainer: const Color(0xFF1F1F1F),
-        onSecondaryContainer: colors.textPrimary,
-        tertiary: colors.lightningBlue,
-        onTertiary: const Color(0xFFFFFFFF),
-        tertiaryContainer: const Color(0xFF1E3A8A),
-        onTertiaryContainer: const Color(0xFF93C5FD),
+        secondaryContainer: const Color(0xFF1A1A1A),
+        onSecondaryContainer: const Color(0xFFFFFFFF),
+        tertiary: colors.textSecondary,
+        onTertiary: const Color(0xFF000000),
+        tertiaryContainer: const Color(0xFF1A1A1A),
+        onTertiaryContainer: const Color(0xFFFFFFFF),
         error: colors.danger,
         onError: colors.onDanger,
-        errorContainer: const Color(0xFF7F1D1D),
-        onErrorContainer: const Color(0xFFFCA5A5),
+        errorContainer: const Color(0xFF1A1A1A),
+        onErrorContainer: const Color(0xFFFFFFFF),
         surface: colors.scaffoldBackground,
         onSurface: colors.textPrimary,
         outline: const Color(0xFF3A3A3A),
-        outlineVariant: const Color(0xFF1F1F1F),
-        inversePrimary: const Color(0xFF9A5B12),
+        outlineVariant: const Color(0xFF2A2A2A),
+        inversePrimary: const Color(0xFF000000),
+        inverseSurface: const Color(0xFFFFFFFF),
+        onInverseSurface: const Color(0xFF000000),
         surfaceTint: Colors.transparent,
       );
     }
     return ColorScheme.light(
       primary: colors.accent,
       onPrimary: colors.onAccent,
-      primaryContainer: const Color(0xFFFDE8D0),
-      onPrimaryContainer: const Color(0xFF9A5B12),
+      primaryContainer: const Color(0xFFF0F0F0),
+      onPrimaryContainer: const Color(0xFF000000),
       secondary: colors.accent,
       onSecondary: colors.onAccent,
-      secondaryContainer: const Color(0xFFFDE8D0),
-      onSecondaryContainer: const Color(0xFF9A5B12),
-      tertiary: colors.info,
+      secondaryContainer: const Color(0xFFF0F0F0),
+      onSecondaryContainer: const Color(0xFF000000),
+      tertiary: colors.textSecondary,
       onTertiary: const Color(0xFFFFFFFF),
-      tertiaryContainer: const Color(0xFFDBEAFE),
-      onTertiaryContainer: const Color(0xFF1E40AF),
+      tertiaryContainer: const Color(0xFFF0F0F0),
+      onTertiaryContainer: const Color(0xFF000000),
       error: colors.danger,
-      onError: const Color(0xFFFFFFFF),
-      errorContainer: const Color(0xFFFEE2E2),
-      onErrorContainer: const Color(0xFF991B1B),
+      onError: colors.onDanger,
+      errorContainer: const Color(0xFFF0F0F0),
+      onErrorContainer: const Color(0xFF000000),
       surface: colors.scaffoldBackground,
       onSurface: colors.textPrimary,
-      outline: const Color(0xFF8A8A92),
-      outlineVariant: const Color(0xFFE3E3E6),
-      inversePrimary: const Color(0xFFF0A55C),
+      outline: const Color(0xFFC0C0C0),
+      outlineVariant: const Color(0xFFE5E5E5),
+      inversePrimary: const Color(0xFFFFFFFF),
+      inverseSurface: const Color(0xFF000000),
+      onInverseSurface: const Color(0xFFFFFFFF),
       surfaceTint: Colors.transparent,
     );
   }

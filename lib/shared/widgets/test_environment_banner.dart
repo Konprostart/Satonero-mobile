@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:satonero_mobile/core/automation/automation_ids.dart';
 import 'package:satonero_mobile/core/test_environment.dart';
 
@@ -38,13 +37,13 @@ class TestEnvironmentBanner extends StatelessWidget {
                 container: true,
                 child: IgnorePointer(
                   child: Container(
-                    color: const Color(0xCCB71C1C),
+                    color: const Color(0xFF2A2A2A),
                     padding: const EdgeInsets.symmetric(vertical: 2),
                     alignment: Alignment.center,
                     child: Text(
                       TestEnvironment.markerLabel,
-                      style: TextStyle(
-                        color: AppTheme.colors(context).textPrimary,
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.none,

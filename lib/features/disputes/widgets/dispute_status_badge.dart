@@ -47,7 +47,7 @@ class DisputeStatusBadge extends StatelessWidget {
       case 'resolved':
       case 'solved':
       case 'seller-refunded':
-        return Colors.blue.withValues(alpha: 0.3);
+        return AppTheme.colors(context).statusSuccessBackground.withValues(alpha: 0.3);
       case 'closed':
         return AppTheme.colors(context).statusInactiveBackground.withValues(alpha: 0.3);
       default:

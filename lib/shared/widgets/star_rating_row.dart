@@ -10,15 +10,16 @@ class StarRatingRow extends StatelessWidget {
     super.key,
     required this.rating,
     this.size = 14,
-    this.color = AppTheme.bitcoinOrange,
+    this.color,
   });
 
   final double rating;
   final double size;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final resolvedColor = color ?? AppTheme.colors(context).textPrimary;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (index) {
@@ -30,7 +31,7 @@ class StarRatingRow extends StatelessWidget {
         } else {
           icon = Icons.star_border;
         }
-        return Icon(icon, color: color, size: size);
+        return Icon(icon, color: resolvedColor, size: size);
       }),
     );
   }

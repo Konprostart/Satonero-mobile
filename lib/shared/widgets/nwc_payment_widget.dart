@@ -221,9 +221,9 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.orange.withAlpha(26),
+              color: AppTheme.colors(context).inputBackground,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.orange.withAlpha(77)),
+              border: Border.all(color: AppTheme.colors(context).divider),
             ),
             child: Row(
               children: [
@@ -248,9 +248,9 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.red.withAlpha(26),
+              color: AppTheme.colors(context).inputBackground,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.red.withAlpha(77)),
+              border: Border.all(color: AppTheme.colors(context).divider),
             ),
             child: Row(
               children: [
@@ -397,7 +397,7 @@ class _NwcPaymentWidgetState extends ConsumerState<NwcPaymentWidget> {
       decoration: BoxDecoration(
         color: AppTheme.colors(context).cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.withAlpha(128)),
+        border: Border.all(color: AppTheme.colors(context).divider),
       ),
       child: Column(
         children: [

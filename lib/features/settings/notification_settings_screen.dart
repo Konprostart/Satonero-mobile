@@ -125,9 +125,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.1),
+                  color: AppTheme.colors(context).inputBackground,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                  border: Border.all(color: AppTheme.colors(context).divider),
                 ),
                 child: Row(
                   children: [

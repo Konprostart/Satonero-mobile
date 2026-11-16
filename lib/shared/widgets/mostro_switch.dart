@@ -19,7 +19,7 @@ class MostroSwitch extends StatelessWidget {
       thumbColor: WidgetStateProperty.resolveWith<Color?>(
         (Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
-            return AppTheme.colors(context).textPrimary;
+            return AppTheme.colors(context).onAccent;
           }
           return AppTheme.colors(context).textSecondary;
         },

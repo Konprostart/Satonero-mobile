@@ -352,10 +352,10 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
       ),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.red.withValues(alpha: 0.098),
+        color: AppTheme.colors(context).inputBackground,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.red.withValues(alpha: 0.5),
+          color: AppTheme.colors(context).divider,
           width: 1,
         ),
       ),
@@ -384,7 +384,7 @@ class _EncryptedFileMessageState extends State<EncryptedFileMessage> {
                 _errorMessage!,
                 style: TextStyle(
                   fontSize: 10,
-                  color: Colors.red.withValues(alpha: 0.6),
+                  color: AppTheme.colors(context).textSecondary,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,

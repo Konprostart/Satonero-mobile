@@ -581,7 +581,6 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
               ? l10n.mostroInstanceNotAvailable
               : l10n.exchangeRateNotAvailable,
           duration: const Duration(seconds: 3),
-          backgroundColor: Colors.orange.withValues(alpha: 0.8),
         );
         return;
       }
@@ -599,7 +598,6 @@ class _AddOrderScreenState extends ConsumerState<AddOrderScreen> {
             context,
             l10n.cashuMintNotSelected,
             duration: const Duration(seconds: 3),
-            backgroundColor: Colors.orange.withValues(alpha: 0.8),
           );
           return;
         }
