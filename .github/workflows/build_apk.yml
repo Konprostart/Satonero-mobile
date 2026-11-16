@@ -1,0 +1,75 @@
+name: Build APK
+
+# Builds a release APK and exposes it as a downloadable GitHub Artifact.
+#
+# Triggered automatically on every push to `main` and manually from the
+# Actions tab (`workflow_dispatch`). No secrets are required: the release
+# build is signed with the debug keystore via the `ALLOW_DEBUG_SIGNING=true`
+# escape hatch (see `android/app/build.gradle`), so the artifact is for
+# testing only and must never be published to a store.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.5'
+          channel: stable
+          cache: true
+
+      # Rust + Android targets for the Cashu wallet bridge (satonero_cashu via
+      # flutter_rust_bridge / cargokit). The crate requires Rust >= 1.85.
+      # Installing the toolchain and targets here keeps this workflow ready for
+      # the FFI integration and is a no-op for the current Dart-only build.
+      - name: Set up Rust toolchain (Android targets)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
+
+      - name: Disable Flutter analytics
+        run: flutter config --no-analytics
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Generated files (*.g.dart, *.mocks.dart, lib/generated/l10n.dart) are
+      # gitignored and must be regenerated before building.
+      - name: Generate required files
+        run: dart run build_runner build -d
+
+      - name: Generate localizations
+        run: flutter gen-l10n
+
+      - name: Build release APK
+        env:
+          ALLOW_DEBUG_SIGNING: 'true'
+        run: flutter build apk --release
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: satonero-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
