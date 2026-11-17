@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -489,9 +491,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 MostroSwitch(
                   value: settings.telegramNotificationsEnabled,
-                  onChanged: (_linkingTelegram || !Config.telegramConfigured)
-                      ? null
-                      : _handleTelegramToggle,
+                  onChanged:
+                      Config.telegramConfigured ? _handleTelegramToggle : null,
                 ),
               ],
             ),
@@ -503,6 +504,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 fontSize: 14,
               ),
             ),
+            if (_linkingTelegram) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppTheme.colors(context).accent,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    S.of(context)!.telegramLinking,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textSecondary,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             if (!Config.telegramConfigured) ...[
               const SizedBox(height: 8),
               Text(
@@ -521,31 +545,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _handleTelegramToggle(bool enabled) async {
-    final settingsNotifier = ref.read(settingsProvider.notifier);
+    // Local persistence only. The preference is committed immediately and the
+    // switch never waits on — or gets reverted by — the network handshake, so
+    // toggling on/off always works even when the daemon is slow or unreachable.
+    await ref
+        .read(settingsProvider.notifier)
+        .updateTelegramNotificationsEnabled(enabled);
 
-    // Turning off is always allowed and immediate.
     if (!enabled) {
-      await settingsNotifier.updateTelegramNotificationsEnabled(false);
+      // Disabling is purely local: nothing to request from the daemon.
       return;
     }
 
-    // Guard: the switch is disabled when Telegram is not configured, so this
-    // is defensive only.
+    // The switch is disabled when Telegram is not configured, so this is a
+    // defensive guard only.
     if (!Config.telegramConfigured) {
-      _showTelegramError(S.of(context)!.telegramBotNotConfigured);
       return;
     }
 
-    // Persist the preference immediately so the switch follows the user's
-    // choice. The linking handshake below is a best-effort side effect and
-    // must never silently revert an enabled toggle — the previous behavior
-    // only committed the state after the deep link opened, so any handshake
-    // failure left the switch stuck off.
-    await settingsNotifier.updateTelegramNotificationsEnabled(true);
+    // Fire-and-forget the linking handshake so it can never block the toggle.
+    // A second tap while a request is already in flight is a no-op.
+    if (_linkingTelegram) return;
+    unawaited(_linkTelegram());
+  }
 
+  Future<void> _linkTelegram() async {
     setState(() => _linkingTelegram = true);
     try {
       final code = await ref.read(telegramLinkServiceProvider).requestCode();
+      // The screen may have been disposed while the request was in flight.
+      if (!mounted) return;
+      // The user may have toggled Telegram off while the request was in
+      // flight; in that case do not surface the deep link.
+      if (!ref.read(settingsProvider).telegramNotificationsEnabled) {
+        return;
+      }
       final uri = buildTelegramDeepLink(Config.telegramBotUsername, code);
       final opened = await openTelegramDeepLink(uri);
       if (!opened) {

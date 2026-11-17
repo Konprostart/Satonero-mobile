@@ -1904,5 +1904,6 @@
     "telegramNotifications": "Notifications Telegram",
     "telegramNotificationsDescription": "Associez votre compte Telegram pour recevoir les mises à jour d'achat, de vente et d'escrow directement dans Telegram. Lecture seule : vous ne pouvez pas trader depuis Telegram.",
     "telegramBotNotConfigured": "Telegram n'est pas configuré dans cette version de Satonero.",
-    "telegramLinkFailed": "Impossible d'associer Telegram. Vérifiez votre connexion et réessayez."
+    "telegramLinkFailed": "Impossible d'associer Telegram pour le moment. Réessayez.",
+    "telegramLinking": "Association en cours…"
 }

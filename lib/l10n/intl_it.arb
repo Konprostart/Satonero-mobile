@@ -1945,5 +1945,6 @@
     "telegramNotifications": "Notifiche Telegram",
     "telegramNotificationsDescription": "Collega il tuo account Telegram per ricevere aggiornamenti su acquisto, vendita ed escrow direttamente su Telegram. Solo lettura: non puoi operare da Telegram.",
     "telegramBotNotConfigured": "Telegram non è configurato in questa build di Satonero.",
-    "telegramLinkFailed": "Impossibile collegare Telegram. Controlla la connessione e riprova."
+    "telegramLinkFailed": "Impossibile collegare Telegram in questo momento. Riprova.",
+    "telegramLinking": "Collegamento…"
 }
