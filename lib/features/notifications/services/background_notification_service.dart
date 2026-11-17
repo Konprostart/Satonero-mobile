@@ -41,6 +41,15 @@ import 'package:satonero_mobile/shared/providers/mostro_database_provider.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+/// Whether the background isolate should surface local (system) notifications.
+///
+/// Mirrors the user's notifications setting (`pushNotificationsEnabled`) and
+/// is set by `serviceMain` from the settings it receives on `start` and
+/// `update-settings`. Defaults to `true` so the behavior is unchanged before
+/// the first settings message arrives; turning the setting off must actually
+/// silence notifications, not just stop the FCM registration.
+bool localNotificationsEnabled = true;
+
 Future<void> initializeNotifications() async {
   const android = AndroidInitializationSettings('@drawable/ic_bg_service_small');
   const ios = DarwinInitializationSettings();
@@ -167,6 +176,9 @@ void _onNotificationTap(NotificationResponse response) {
 }
 
 Future<void> showLocalNotification(NostrEvent event) async {
+  // The user turned notifications off: no system notification, and no work.
+  if (!localNotificationsEnabled) return;
+
   try {
     final mostroMessage = await _decryptAndProcessEvent(event);
     if (mostroMessage == null) return;

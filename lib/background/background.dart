@@ -133,6 +133,8 @@ Future<void> serviceMain(ServiceInstance service) async {
         SharedPreferencesAsync(),
       );
       currentLanguage = settings.selectedLanguage ?? PlatformDispatcher.instance.locale.languageCode;
+      notification_service.localNotificationsEnabled =
+          settings.pushNotificationsEnabled;
       await nostrService.init(settings);
 
       // Restore persisted subscription filters so the background service can
@@ -304,6 +306,8 @@ Future<void> serviceMain(ServiceInstance service) async {
       SharedPreferencesAsync(),
     );
     currentLanguage = settings.selectedLanguage ?? PlatformDispatcher.instance.locale.languageCode;
+    notification_service.localNotificationsEnabled =
+        settings.pushNotificationsEnabled;
     await nostrService.updateSettings(settings);
 
     service.invoke('service-ready', {});

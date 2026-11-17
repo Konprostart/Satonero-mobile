@@ -19,6 +19,11 @@ class NotificationSettingsScreen extends ConsumerWidget {
     return Platform.isAndroid || Platform.isIOS;
   }
 
+  /// Whether the push-server-backed delivery path is available. This only
+  /// gates the informational "not configured / not supported" banner and the
+  /// FCM registration behind the scenes — it must never disable the toggle
+  /// itself, otherwise the user cannot switch notifications off when the
+  /// build has no push server (Satonero's default).
   bool get _isPushSupported => _isPlatformSupported && Config.pushConfigured;
 
   @override
@@ -102,7 +107,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 ),
                 MostroSwitch(
                   value: isEnabled,
-                  onChanged: _isPushSupported
+                  onChanged: _isPlatformSupported
                       ? (value) {
                           ref
                               .read(settingsProvider.notifier)
@@ -203,7 +208,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
               title: S.of(context)!.notificationSound,
               subtitle: S.of(context)!.notificationSoundDescription,
               value: soundEnabled,
-              enabled: pushEnabled && _isPushSupported,
+              enabled: pushEnabled,
               onChanged: (value) {
                 ref
                     .read(settingsProvider.notifier)
@@ -217,7 +222,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
               title: S.of(context)!.notificationVibration,
               subtitle: S.of(context)!.notificationVibrationDescription,
               value: vibrationEnabled,
-              enabled: pushEnabled && _isPushSupported,
+              enabled: pushEnabled,
               onChanged: (value) {
                 ref
                     .read(settingsProvider.notifier)

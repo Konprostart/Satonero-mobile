@@ -489,7 +489,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 MostroSwitch(
                   value: settings.telegramNotificationsEnabled,
-                  onChanged: _linkingTelegram ? null : _handleTelegramToggle,
+                  onChanged: (_linkingTelegram || !Config.telegramConfigured)
+                      ? null
+                      : _handleTelegramToggle,
                 ),
               ],
             ),
@@ -501,6 +503,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 fontSize: 14,
               ),
             ),
+            if (!Config.telegramConfigured) ...[
+              const SizedBox(height: 8),
+              Text(
+                S.of(context)!.telegramBotNotConfigured,
+                style: TextStyle(
+                  color: AppTheme.colors(context).textSecondary,
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -510,15 +523,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _handleTelegramToggle(bool enabled) async {
     final settingsNotifier = ref.read(settingsProvider.notifier);
 
+    // Turning off is always allowed and immediate.
     if (!enabled) {
       await settingsNotifier.updateTelegramNotificationsEnabled(false);
       return;
     }
 
+    // Guard: the switch is disabled when Telegram is not configured, so this
+    // is defensive only.
     if (!Config.telegramConfigured) {
       _showTelegramError(S.of(context)!.telegramBotNotConfigured);
       return;
     }
+
+    // Persist the preference immediately so the switch follows the user's
+    // choice. The linking handshake below is a best-effort side effect and
+    // must never silently revert an enabled toggle — the previous behavior
+    // only committed the state after the deep link opened, so any handshake
+    // failure left the switch stuck off.
+    await settingsNotifier.updateTelegramNotificationsEnabled(true);
 
     setState(() => _linkingTelegram = true);
     try {
@@ -527,9 +550,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final opened = await openTelegramDeepLink(uri);
       if (!opened) {
         throw const TelegramLinkException('Could not open Telegram');
-      }
-      if (mounted) {
-        await settingsNotifier.updateTelegramNotificationsEnabled(true);
       }
     } catch (e) {
       logger.w('Telegram link failed', error: e);
