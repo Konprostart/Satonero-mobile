@@ -142,6 +142,9 @@ class NotificationItem extends ConsumerWidget {
         case mostro_action.Action.bondInvoiceAccepted:
         case mostro_action.Action.bondPayoutCompleted:
           break;
+        case mostro_action.Action.requestTelegramCode:
+        case mostro_action.Action.telegramCode:
+          break;
         case mostro_action.Action.bondSlashed:
           _showBondSlashedDialog(context);
           break;

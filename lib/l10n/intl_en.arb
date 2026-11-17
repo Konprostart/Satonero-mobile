@@ -1957,5 +1957,9 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "telegramNotifications": "Telegram Notifications",
+    "telegramNotificationsDescription": "Link your Telegram account to receive buy, sell and escrow updates directly in Telegram. Read-only: you cannot trade from Telegram.",
+    "telegramBotNotConfigured": "Telegram is not configured in this Satonero build.",
+    "telegramLinkFailed": "Could not link Telegram. Please check your connection and try again."
 }

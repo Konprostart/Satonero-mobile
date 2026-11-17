@@ -1945,5 +1945,9 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "telegramNotifications": "Telegram-meldingen",
+    "telegramNotificationsDescription": "Koppel je Telegram-account om updates over kopen, verkopen en escrow rechtstreeks in Telegram te ontvangen. Alleen-lezen: je kunt niet handelen via Telegram.",
+    "telegramBotNotConfigured": "Telegram is niet geconfigureerd in deze Satonero-build.",
+    "telegramLinkFailed": "Kon Telegram niet koppelen. Controleer je verbinding en probeer het opnieuw."
 }

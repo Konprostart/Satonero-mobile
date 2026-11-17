@@ -112,6 +112,18 @@ class Config {
   );
 
   static bool get pushConfigured => pushServerUrl.isNotEmpty;
+
+  // Telegram notification configuration
+  // The bot username used to build the `t.me/<bot>?start=<code>` linking deep
+  // link. Empty by default: Satonero does not run a Telegram bot itself; a
+  // build pins one with --dart-define=TELEGRAM_BOT_USERNAME=<username>
+  // (without the leading '@').
+  static const String telegramBotUsername = String.fromEnvironment(
+    'TELEGRAM_BOT_USERNAME',
+    defaultValue: '',
+  );
+
+  static bool get telegramConfigured => telegramBotUsername.isNotEmpty;
   // Logger configuration
   static const int logMaxEntries = 1000;
   static const int logBatchDeleteSize = 100;

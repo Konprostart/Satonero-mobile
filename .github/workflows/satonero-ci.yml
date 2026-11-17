@@ -62,7 +62,8 @@ jobs:
         run: |
           flutter build apk --release \
             --build-name=1.5.0 \
-            --build-number=${{ github.run_number }}
+            --build-number=${{ github.run_number }} \
+            --dart-define=TELEGRAM_BOT_USERNAME=${{ secrets.TELEGRAM_BOT_USERNAME }}
 
       - name: Verify identity and removed infrastructure
         run: |

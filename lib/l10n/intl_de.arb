@@ -1900,5 +1900,9 @@
                 "type": "String"
             }
         }
-    }
+    },
+    "telegramNotifications": "Telegram-Benachrichtigungen",
+    "telegramNotificationsDescription": "Verknüpfe dein Telegram-Konto, um Updates zu Kauf, Verkauf und Escrow direkt in Telegram zu erhalten. Nur Lesezugriff: Du kannst nicht über Telegram handeln.",
+    "telegramBotNotConfigured": "Telegram ist in diesem Satonero-Build nicht konfiguriert.",
+    "telegramLinkFailed": "Telegram konnte nicht verknüpft werden. Prüfe deine Verbindung und versuche es erneut."
 }

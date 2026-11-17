@@ -283,6 +283,12 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await _saveToPrefs();
   }
 
+  Future<void> updateTelegramNotificationsEnabled(bool newValue) async {
+    state = state.copyWith(telegramNotificationsEnabled: newValue);
+    await _saveToPrefs();
+    logger.i('Telegram notifications ${newValue ? 'enabled' : 'disabled'}');
+  }
+
   Future<void> updateSessionExpirationHours(int newValue) async {
     final oldValue = state.sessionExpirationHours;
     state = state.copyWith(sessionExpirationHours: newValue);
