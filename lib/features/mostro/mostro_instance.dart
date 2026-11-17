@@ -53,6 +53,13 @@ class MostroInstance {
   /// a node the app is actually speaking v2 to.
   final int? protocolVersion;
 
+  /// Stiffer NIP-13 PoW a *first-contact* sender must clear, advertised via
+  /// the `pow_first_contact` tag. `null` when the node does not advertise it
+  /// (legacy daemon, or no first-contact toll). When advertised it is always
+  /// `>= pow`; a sender that cannot know whether the node already recognises
+  /// its trade key should mine at this value.
+  final int? powFirstContact;
+
   /// Bond policy state. See [BondPolicy] for the three-state semantics.
   final BondPolicy bondPolicy;
 
@@ -101,6 +108,7 @@ class MostroInstance {
     this.fiatCurrenciesAccepted,
     this.maxOrdersPerResponse, {
     this.protocolVersion,
+    this.powFirstContact,
     this.bondPolicy = BondPolicy.unsupported,
     this.bondApplyTo,
     this.bondSlashOnWaitingTimeout,
@@ -137,6 +145,7 @@ class MostroInstance {
       event.fiatCurrenciesAccepted,
       event.maxOrdersPerResponse,
       protocolVersion: event.protocolVersion,
+      powFirstContact: event.powFirstContact,
       bondPolicy: event.bondPolicy,
       bondApplyTo: event.bondApplyTo,
       bondSlashOnWaitingTimeout: event.bondSlashOnWaitingTimeout,
@@ -213,6 +222,15 @@ extension MostroInstanceExtensions on NostrEvent {
   /// `protocol_version=1`, the one value that still selects gift wrap.
   int? get protocolVersion {
     final raw = _getOptionalTagValue('protocol_version');
+    return raw == null ? null : int.tryParse(raw);
+  }
+
+  /// Parses the anti-spam first-contact PoW difficulty from the
+  /// `pow_first_contact` tag. Returns `null` when absent or unparseable so
+  /// callers fall back to [pow]; the daemon's advertised value already folds
+  /// the base PoW in (`max(pow, effective_pow_first_contact)`).
+  int? get powFirstContact {
+    final raw = _getOptionalTagValue('pow_first_contact');
     return raw == null ? null : int.tryParse(raw);
   }
 

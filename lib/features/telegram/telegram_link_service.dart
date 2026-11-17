@@ -7,6 +7,7 @@ import 'package:dart_nostr/nostr/model/request/filter.dart';
 import 'package:dart_nostr/nostr/model/request/request.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/data/models/cant_do.dart';
 import 'package:satonero_mobile/data/models/enums/action.dart';
 import 'package:satonero_mobile/data/models/enums/cant_do_reason.dart';
@@ -22,6 +23,54 @@ import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:satonero_mobile/shared/providers/nostr_service_provider.dart';
 import 'package:satonero_mobile/shared/providers/order_repository_provider.dart';
 import 'package:satonero_mobile/shared/utils/nostr_utils.dart';
+
+/// Why a Telegram linking request failed. The settings screen maps each kind
+/// to a distinct, actionable message instead of one generic error.
+enum TelegramLinkFailure {
+  /// The request was sent but the node did not reply in time.
+  timeout,
+
+  /// The node rate-limited the request (a code is already outstanding).
+  rateLimited,
+
+  /// The node refused the request (e.g. Telegram is disabled on it).
+  unavailable,
+
+  /// The node could not be reached at all (no live relay connection).
+  serverUnreachable,
+
+  /// A local prerequisite is missing (master key / node not configured).
+  notConfigured,
+
+  /// The reply could not be decoded, or did not carry a code.
+  badReply,
+
+  /// Opening the Telegram app / web fallback failed.
+  openFailed,
+
+  /// Another linking request is already in flight.
+  inProgress,
+
+  /// Any other unexpected failure.
+  unexpected,
+}
+
+/// Error surfaced to the UI when the link request cannot be completed.
+///
+/// [kind] carries the machine-readable reason so the settings screen can pick
+/// the right localized message; [message] is a developer-facing description.
+class TelegramLinkException implements Exception {
+  final String message;
+  final TelegramLinkFailure kind;
+
+  const TelegramLinkException(
+    this.message, {
+    this.kind = TelegramLinkFailure.unexpected,
+  });
+
+  @override
+  String toString() => 'TelegramLinkException(${kind.name}): $message';
+}
 
 /// Requests a one-time Telegram linking code from the connected Mostro node.
 ///
@@ -52,6 +101,7 @@ class TelegramLinkService {
     if (_inProgress) {
       throw const TelegramLinkException(
         'Telegram link request already in progress',
+        kind: TelegramLinkFailure.inProgress,
       );
     }
     _inProgress = true;
@@ -59,23 +109,27 @@ class TelegramLinkService {
       final keyManager = ref.read(keyManagerProvider);
       final master = keyManager.masterKeyPair;
       if (master == null) {
-        throw const TelegramLinkException('Master key not initialized');
+        throw const TelegramLinkException(
+          'Master key not initialized',
+          kind: TelegramLinkFailure.notConfigured,
+        );
       }
       _masterKey = master;
       _tempTradeKey = await keyManager.deriveTradeKeyFromIndex(1);
 
       final settings = ref.read(settingsProvider);
       if (settings.mostroPublicKey.isEmpty) {
-        throw const TelegramLinkException('Mostro node not configured');
+        throw const TelegramLinkException(
+          'Mostro node not configured',
+          kind: TelegramLinkFailure.notConfigured,
+        );
       }
 
-      // Resolve the node's transport and PoW before sending, matching the
-      // restore request path. The subscription filter depends on it.
-      final mostroInstance =
-          await ref.read(orderRepositoryProvider).awaitMostroInstance();
-      if (mostroInstance == null) {
-        logger.w('Telegram link: node info unavailable, sending with PoW 0');
-      }
+      // Wait for a live connection to the node before firing the request. A
+      // freshly selected node resets the relay list and rediscovers it
+      // asynchronously (kind 10002); sending immediately races connectivity
+      // and times out. This mirrors the restore flow's connectivity gate.
+      final mostroInstance = await _resolveNodeInfo(settings.mostroPublicKey);
 
       _subscription = await _subscribe(
         settings.mostroPublicKey,
@@ -86,12 +140,15 @@ class TelegramLinkService {
       final requestId = DateTime.now().millisecondsSinceEpoch;
       await _sendRequest(requestId, settings.mostroPublicKey, mostroInstance);
 
-      final event = await _completer!.future.timeout(
-        timeout,
-        onTimeout: () => throw TimeoutException(
-          'Telegram code request timed out after ${timeout.inSeconds}s',
-        ),
-      );
+      final NostrEvent event;
+      try {
+        event = await _completer!.future.timeout(timeout);
+      } on TimeoutException {
+        throw const TelegramLinkException(
+          'Telegram code request timed out',
+          kind: TelegramLinkFailure.timeout,
+        );
+      }
 
       final code = await _extractCode(event, settings.mostroPublicKey);
       logger.i('Telegram link: received code');
@@ -104,6 +161,54 @@ class TelegramLinkService {
       _masterKey = null;
       _inProgress = false;
     }
+  }
+
+  /// Ensures the app is actually connected to the node before the request.
+  ///
+  /// Engages the defensive bootstrap relays (same as the restore flow), then
+  /// waits for the node's kind-38385 info event — which proves we are on a
+  /// relay the node publishes on, and carries the PoW and `protocol_version`
+  /// the send needs. Returns the info event, or `null` when it never arrived
+  /// but we still have live relays (best-effort send with defaults).
+  Future<NostrEvent?> _resolveNodeInfo(String mostroPubkey) async {
+    final nostrService = ref.read(nostrServiceProvider);
+    final orderRepo = ref.read(orderRepositoryProvider);
+
+    try {
+      await nostrService.ensureBootstrapConnectivity();
+    } catch (e, stackTrace) {
+      logger.w(
+        'Telegram link: failed to engage bootstrap relays',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final maxWait = Config.relayDiscoveryTimeout + const Duration(seconds: 4);
+    final start = DateTime.now();
+    while (DateTime.now().difference(start) < maxWait) {
+      final instance = orderRepo.mostroInstance;
+      if (instance != null && instance.pubkey == mostroPubkey) {
+        return instance;
+      }
+      await Future.delayed(const Duration(milliseconds: 250));
+    }
+
+    // One last await for the info event; then degrade to best-effort defaults.
+    final instance = await orderRepo.awaitMostroInstance();
+    if (instance != null) return instance;
+
+    if (nostrService.liveRelayCount == 0) {
+      throw const TelegramLinkException(
+        'No live relay connection to the node',
+        kind: TelegramLinkFailure.serverUnreachable,
+      );
+    }
+    logger.w(
+      'Telegram link: node info unavailable, sending with defaults '
+      '(${nostrService.liveRelayCount} live relays)',
+    );
+    return null;
   }
 
   Future<StreamSubscription<NostrEvent>> _subscribe(
@@ -164,12 +269,18 @@ class TelegramLinkService {
       requestId: requestId,
     );
 
+    // A linking request is typically first-contact: the node may require the
+    // stiffer `pow_first_contact` rather than the base `pow`. When the tag is
+    // advertised it is always `>= pow`, so mining at it is safe for known
+    // senders too (just a touch more work).
+    final difficulty = instance?.powFirstContact ?? instance?.pow ?? 0;
+
     final event = await message.wrapForTransport(
       protocolVersion: instance?.protocolVersion,
       tradeKey: _tempTradeKey!,
       recipientPubKey: mostroPubkey,
       masterKey: settings.fullPrivacyMode ? null : _masterKey,
-      difficulty: instance?.pow ?? 0,
+      difficulty: difficulty,
     );
 
     await ref.read(nostrServiceProvider).publishEvent(event);
@@ -185,7 +296,10 @@ class TelegramLinkService {
     try {
       msg = MostroMessage.fromJson(messageData);
     } catch (e) {
-      throw TelegramLinkException('Could not parse reply: $e');
+      throw TelegramLinkException(
+        'Could not parse reply: $e',
+        kind: TelegramLinkFailure.badReply,
+      );
     }
 
     if (msg.action == Action.cantDo) {
@@ -193,19 +307,28 @@ class TelegramLinkService {
       if (reason == CantDoReason.tooManyRequests) {
         throw const TelegramLinkException(
           'Too many link attempts; wait a moment and try again',
+          kind: TelegramLinkFailure.rateLimited,
         );
       }
-      throw const TelegramLinkException(
-        'Telegram notifications are not available on this node',
+      // `invalid_action` (Telegram disabled) and any other structured refusal.
+      throw TelegramLinkException(
+        'Telegram linking refused by the node (${reason?.value ?? 'unknown'})',
+        kind: TelegramLinkFailure.unavailable,
       );
     }
     if (msg.action != Action.telegramCode) {
-      throw TelegramLinkException('Unexpected reply action: ${msg.action}');
+      throw TelegramLinkException(
+        'Unexpected reply action: ${msg.action}',
+        kind: TelegramLinkFailure.badReply,
+      );
     }
 
     final code = msg.getPayload<TextMessage>()?.message;
     if (code == null || code.isEmpty) {
-      throw const TelegramLinkException('Reply did not include a code');
+      throw const TelegramLinkException(
+        'Reply did not include a code',
+        kind: TelegramLinkFailure.badReply,
+      );
     }
     return code;
   }
@@ -230,23 +353,19 @@ class TelegramLinkService {
     }
 
     if (content.isEmpty) {
-      throw const TelegramLinkException('Reply content is empty');
+      throw const TelegramLinkException(
+        'Reply content is empty',
+        kind: TelegramLinkFailure.badReply,
+      );
     }
 
     final list = jsonDecode(content) as List<dynamic>;
     if (list.isEmpty) {
-      throw const TelegramLinkException('Reply tuple is empty');
+      throw const TelegramLinkException(
+        'Reply tuple is empty',
+        kind: TelegramLinkFailure.badReply,
+      );
     }
     return list[0] as Map<String, dynamic>;
   }
-}
-
-/// Error surfaced to the UI when the link request cannot be completed.
-class TelegramLinkException implements Exception {
-  final String message;
-
-  const TelegramLinkException(this.message);
-
-  @override
-  String toString() => 'TelegramLinkException: $message';
 }

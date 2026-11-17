@@ -1965,5 +1965,8 @@
     "telegramNotificationsDescription": "Link your Telegram account to receive buy, sell and escrow updates directly in Telegram. Read-only: you cannot trade from Telegram.",
     "telegramBotNotConfigured": "Telegram is not configured in this Satonero build.",
     "telegramLinkFailed": "Could not link Telegram right now. Please try again.",
-    "telegramLinking": "Linking…"
+    "telegramLinking": "Linking…",
+    "telegramLinkTimeout": "No response from your server. Check that it is online and try again.",
+    "telegramLinkRateLimited": "Too many attempts. Wait a moment and try again.",
+    "telegramLinkUnavailable": "Telegram is not enabled on your Satonero server."
 }

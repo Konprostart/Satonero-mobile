@@ -1883,5 +1883,8 @@
     "telegramNotificationsDescription": "Vincula tu cuenta de Telegram para recibir actualizaciones de compra, venta y escrow directamente en Telegram. Solo lectura: no puedes operar desde Telegram.",
     "telegramBotNotConfigured": "Telegram no está configurado en esta compilación de Satonero.",
     "telegramLinkFailed": "No se pudo vincular Telegram en este momento. Inténtalo de nuevo.",
-    "telegramLinking": "Vinculando…"
+    "telegramLinking": "Vinculando…",
+    "telegramLinkTimeout": "No hubo respuesta de tu servidor. Verifica que esté en línea e inténtalo de nuevo.",
+    "telegramLinkRateLimited": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+    "telegramLinkUnavailable": "Telegram no está habilitado en tu servidor Satonero."
 }

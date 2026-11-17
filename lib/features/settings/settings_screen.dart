@@ -586,12 +586,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       final uri = buildTelegramDeepLink(Config.telegramBotUsername, code);
       final opened = await openTelegramDeepLink(uri);
       if (!opened) {
-        throw const TelegramLinkException('Could not open Telegram');
+        throw const TelegramLinkException(
+          'Could not open Telegram',
+          kind: TelegramLinkFailure.openFailed,
+        );
       }
     } catch (e) {
       logger.w('Telegram link failed', error: e);
       if (mounted) {
-        _showTelegramError(S.of(context)!.telegramLinkFailed);
+        _showTelegramError(_telegramErrorMessage(e));
       }
     } finally {
       if (mounted) {
@@ -607,6 +610,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       duration: const Duration(seconds: 3),
       backgroundColor: AppTheme.colors(context).danger,
     );
+  }
+
+  /// Maps a [TelegramLinkException] failure kind to a distinct, actionable
+  /// message. Everything else falls back to the generic link-failed string.
+  String _telegramErrorMessage(Object error) {
+    if (error is! TelegramLinkException) {
+      return S.of(context)!.telegramLinkFailed;
+    }
+    switch (error.kind) {
+      case TelegramLinkFailure.timeout:
+      case TelegramLinkFailure.serverUnreachable:
+        return S.of(context)!.telegramLinkTimeout;
+      case TelegramLinkFailure.rateLimited:
+        return S.of(context)!.telegramLinkRateLimited;
+      case TelegramLinkFailure.unavailable:
+        return S.of(context)!.telegramLinkUnavailable;
+      case TelegramLinkFailure.notConfigured:
+        return S.of(context)!.telegramBotNotConfigured;
+      case TelegramLinkFailure.openFailed:
+      case TelegramLinkFailure.badReply:
+      case TelegramLinkFailure.inProgress:
+      case TelegramLinkFailure.unexpected:
+        return S.of(context)!.telegramLinkFailed;
+    }
   }
 
   Widget _buildTradeHistoryCard(BuildContext context) {

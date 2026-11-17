@@ -1953,5 +1953,8 @@
     "telegramNotificationsDescription": "Koppel je Telegram-account om updates over kopen, verkopen en escrow rechtstreeks in Telegram te ontvangen. Alleen-lezen: je kunt niet handelen via Telegram.",
     "telegramBotNotConfigured": "Telegram is niet geconfigureerd in deze Satonero-build.",
     "telegramLinkFailed": "Kon Telegram nu niet koppelen. Probeer het opnieuw.",
-    "telegramLinking": "Koppelen…"
+    "telegramLinking": "Koppelen…",
+    "telegramLinkTimeout": "Geen reactie van je server. Controleer of deze online is en probeer het opnieuw.",
+    "telegramLinkRateLimited": "Te veel pogingen. Wacht even en probeer het opnieuw.",
+    "telegramLinkUnavailable": "Telegram is niet ingeschakeld op je Satonero-server."
 }

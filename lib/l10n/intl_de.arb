@@ -1908,5 +1908,8 @@
     "telegramNotificationsDescription": "Verknüpfe dein Telegram-Konto, um Updates zu Kauf, Verkauf und Escrow direkt in Telegram zu erhalten. Nur Lesezugriff: Du kannst nicht über Telegram handeln.",
     "telegramBotNotConfigured": "Telegram ist in diesem Satonero-Build nicht konfiguriert.",
     "telegramLinkFailed": "Telegram konnte gerade nicht verknüpft werden. Bitte versuche es erneut.",
-    "telegramLinking": "Wird verknüpft…"
+    "telegramLinking": "Wird verknüpft…",
+    "telegramLinkTimeout": "Keine Antwort von deinem Server. Prüfe, ob er online ist, und versuche es erneut.",
+    "telegramLinkRateLimited": "Zu viele Versuche. Warte einen Moment und versuche es erneut.",
+    "telegramLinkUnavailable": "Telegram ist auf deinem Satonero-Server nicht aktiviert."
 }
