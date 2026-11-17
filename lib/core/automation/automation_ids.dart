@@ -54,6 +54,7 @@ class AutomationIds {
   // Settings
   static const String settingsMostroNode = 'settings.mostro_node';
   static const String settingsMostroNodePubkey = 'settings.mostro_node.pubkey';
+  static const String settingsMostroNodeAdd = 'settings.mostro_node.add';
   static const String settingsWallet = 'settings.wallet';
   static const String settingsRelaysAdd = 'settings.relays.add';
   static const String settingsRelaysAddUrl = 'settings.relays.add.url';

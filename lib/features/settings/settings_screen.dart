@@ -10,10 +10,12 @@ import 'package:satonero_mobile/core/automation/automation_id.dart';
 import 'package:satonero_mobile/core/automation/automation_ids.dart';
 import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
+import 'package:satonero_mobile/features/mostro/widgets/add_custom_node_dialog.dart';
 import 'package:satonero_mobile/features/mostro/widgets/mostro_node_avatar.dart';
 import 'package:satonero_mobile/features/mostro/widgets/mostro_node_selector.dart';
 import 'package:satonero_mobile/features/mostro/widgets/trusted_badge.dart';
 import 'package:satonero_mobile/features/relays/widgets/relay_selector.dart';
+import 'package:satonero_mobile/features/restore/restore_manager.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
 import 'package:satonero_mobile/features/telegram/telegram_deep_link.dart';
@@ -40,6 +42,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late final TextEditingController _lightningAddressController;
   bool _linkingTelegram = false;
+  bool _switchingServerNode = false;
 
   @override
   void initState() {
@@ -128,6 +131,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _buildRelaysCard(context),
                   const SizedBox(height: 16),
 
+                  // Server (Mostro node) Card
+                  _buildMostroCard(context),
+                  const SizedBox(height: 16),
+
                   // Private Mode Card
                   _buildPrivateModeCard(context),
                   const SizedBox(height: 16),
@@ -146,10 +153,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                   // Dev Tools Card
                   _buildDevToolsCard(context),
-                  const SizedBox(height: 16),
-
-                  // Mostro Card
-                  _buildMostroCard(context),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -1052,13 +1055,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             Row(
               children: [
                 Icon(
-                  LucideIcons.zap,
+                  LucideIcons.server,
                   color: AppTheme.colors(context).accent,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  S.of(context)!.mostro,
+                  S.of(context)!.serverNode,
                   style: TextStyle(
                     color: AppTheme.colors(context).textPrimary,
                     fontSize: 18,
@@ -1069,7 +1072,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 InkWell(
                   onTap: () => _showInfoDialog(
                     context,
-                    S.of(context)!.mostro,
+                    S.of(context)!.serverNode,
                     S.of(context)!.mostroInfoText,
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -1086,7 +1089,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              S.of(context)!.mostroNodeDescription,
+              S.of(context)!.serverNodeDescription,
               style: TextStyle(
                 color: AppTheme.colors(context).textSecondary,
                 fontSize: 13,
@@ -1178,6 +1181,44 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ).withAutomationId(AutomationIds.settingsMostroNode,
                   merge: false),
             ),
+            const SizedBox(height: 12),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _switchingServerNode ? null : _addServerNode,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppTheme.colors(context).inputBackground,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: AppTheme.colors(context).accent.withValues(alpha: 0.4),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        LucideIcons.plus,
+                        color: AppTheme.colors(context).accent,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        S.of(context)!.addYourServer,
+                        style: TextStyle(
+                          color: AppTheme.colors(context).accent,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ).withAutomationId(AutomationIds.settingsMostroNodeAdd,
+                  merge: false),
+            ),
             Container(
               margin: const EdgeInsets.only(top: 16),
               padding: const EdgeInsets.all(12),
@@ -1198,6 +1239,73 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
       ),
     );
+  }
+
+  /// Opens the "add server" dialog directly, then connects the newly added
+  /// node so the user's own daemon is actually used (not just listed).
+  Future<void> _addServerNode() async {
+    final pubkeysBefore =
+        ref.read(mostroNodesProvider).map((n) => n.pubkey).toSet();
+    await AddCustomNodeDialog.show(context, ref);
+    if (!mounted) return;
+
+    final pubkeysAfter =
+        ref.read(mostroNodesProvider).map((n) => n.pubkey).toSet();
+    final newPubkeys = pubkeysAfter.difference(pubkeysBefore);
+    if (newPubkeys.isEmpty) return;
+
+    await _selectServerNode(newPubkeys.first);
+  }
+
+  /// Selects [pubkey] as the active Mostro node and re-runs the restore
+  /// process (relay reconnection + session restore), mirroring the node
+  /// selector's switch flow.
+  Future<void> _selectServerNode(String pubkey) async {
+    if (_switchingServerNode) return;
+    setState(() => _switchingServerNode = true);
+
+    final colors = AppTheme.colors(context);
+    final notifier = ref.read(mostroNodesProvider.notifier);
+    final oldPubkey = ref.read(settingsProvider).mostroPublicKey;
+
+    try {
+      await notifier.selectNode(pubkey);
+
+      if (oldPubkey != pubkey) {
+        final restoreService = ref.read(restoreServiceProvider);
+        final success = await restoreService.initRestoreProcess();
+        if (!mounted) return;
+        if (!success) {
+          SnackBarHelper.showTopSnackBar(
+            context,
+            S.of(context)!.errorSwitchingNode,
+            backgroundColor: colors.danger,
+          );
+          return;
+        }
+      }
+
+      if (!mounted) return;
+      final nodeName = notifier.selectedNode?.displayName ?? pubkey;
+      SnackBarHelper.showTopSnackBar(
+        context,
+        S.of(context)!.nodeSwitchedSuccess(nodeName),
+        backgroundColor: colors.success,
+      );
+    } catch (e) {
+      logger.w('Server node switch failed', error: e);
+      if (mounted) {
+        SnackBarHelper.showTopSnackBar(
+          context,
+          S.of(context)!.errorSwitchingNode,
+          backgroundColor: colors.danger,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _switchingServerNode = false);
+      }
+    }
   }
 
   Widget _buildCurrencySelector(BuildContext context) {

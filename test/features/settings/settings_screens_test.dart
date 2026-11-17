@@ -115,6 +115,28 @@ void main() {
       expect(tester.takeException(), isNull);
       await disposeScreen(tester);
     });
+
+    testWidgets('exposes a discoverable "Add your server" npub entry',
+        (tester) async {
+      await pumpScreen(tester, const SettingsScreen());
+
+      await tester.scrollUntilVisible(
+        find.text('Add your server'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+
+      expect(find.text('Add your server'), findsOneWidget);
+
+      await tester.tap(find.text('Add your server'));
+      await tester.pumpAndSettle();
+
+      // The add-server dialog surfaces the npub input (labelled "Public Key").
+      expect(find.text('Public Key'), findsOneWidget);
+
+      await disposeScreen(tester);
+    });
   });
 
   group('NotificationSettingsScreen', () {

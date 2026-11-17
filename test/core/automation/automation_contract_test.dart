@@ -49,6 +49,7 @@ const List<String> staticIds = [
   AutomationIds.keysPublicKey,
   AutomationIds.settingsMostroNode,
   AutomationIds.settingsMostroNodePubkey,
+  AutomationIds.settingsMostroNodeAdd,
   AutomationIds.settingsWallet,
   AutomationIds.settingsRelaysAdd,
   AutomationIds.settingsRelaysAddUrl,
