@@ -7,7 +7,9 @@ import 'package:dart_nostr/nostr/model/request/filter.dart';
 import 'package:dart_nostr/nostr/model/request/request.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:satonero_mobile/data/models/cant_do.dart';
 import 'package:satonero_mobile/data/models/enums/action.dart';
+import 'package:satonero_mobile/data/models/enums/cant_do_reason.dart';
 import 'package:satonero_mobile/data/models/mostro_message.dart';
 import 'package:satonero_mobile/data/models/nostr_event.dart';
 import 'package:satonero_mobile/data/models/payload.dart';
@@ -187,6 +189,12 @@ class TelegramLinkService {
     }
 
     if (msg.action == Action.cantDo) {
+      final reason = msg.getPayload<CantDo>()?.cantDoReason;
+      if (reason == CantDoReason.tooManyRequests) {
+        throw const TelegramLinkException(
+          'Too many link attempts; wait a moment and try again',
+        );
+      }
       throw const TelegramLinkException(
         'Telegram notifications are not available on this node',
       );
