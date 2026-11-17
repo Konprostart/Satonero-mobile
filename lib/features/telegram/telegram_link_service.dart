@@ -106,7 +106,7 @@ class TelegramLinkService {
 
   Future<StreamSubscription<NostrEvent>> _subscribe(
     String mostroPubkey,
-    MostroInstance? instance,
+    NostrEvent? instance,
   ) async {
     final v2Filter = NostrFilter(
       kinds: [14],
@@ -154,7 +154,7 @@ class TelegramLinkService {
   Future<void> _sendRequest(
     int requestId,
     String mostroPubkey,
-    MostroInstance? instance,
+    NostrEvent? instance,
   ) async {
     final settings = ref.read(settingsProvider);
     final message = MostroMessage<EmptyPayload>(
