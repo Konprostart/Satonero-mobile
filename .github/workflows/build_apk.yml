@@ -1,6 +1,7 @@
 name: Build APK
 
-# Builds a release APK and exposes it as a downloadable GitHub Artifact.
+# Builds a release APK and publishes the bare `.apk` file as a GitHub Release
+# asset (direct download, no ZIP) under the rolling tag `latest-apk`.
 #
 # Triggered automatically on every push to `main` and manually from the
 # Actions tab (`workflow_dispatch`). The release build is signed with the
@@ -15,7 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-apk:
@@ -68,9 +69,15 @@ jobs:
           ALLOW_DEBUG_SIGNING: 'true'
         run: flutter build apk --release --dart-define=TELEGRAM_BOT_USERNAME=${{ secrets.TELEGRAM_BOT_USERNAME }}
 
-      - name: Upload release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: satonero-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 7
+      - name: Publish release APK (direct .apk, no ZIP)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apk="build/app/outputs/flutter-apk/app-release.apk"
+          cp "$apk" satonero-release.apk
+          # Rolling release: reuse one tag so the download URL never changes.
+          gh release delete "latest-apk" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "latest-apk" satonero-release.apk \
+            --title "Satonero testing APK (latest)" \
+            --notes "Direct .apk download (no ZIP). Debug-signed — testing only, never publish to a store. Built from ${{ github.sha }}."
