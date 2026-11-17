@@ -14,6 +14,8 @@ class BackupReminderNotifier extends StateNotifier<bool> {
     // If the backup reminder was dismissed, state should be false
     // If it was never dismissed (or new user), state should be true
     final isDismissed = await _prefs.getBool(_backupReminderKey) ?? false;
+    // The prefs read is async; the provider can be disposed before it lands.
+    if (!mounted) return;
     state = !isDismissed;
   }
 

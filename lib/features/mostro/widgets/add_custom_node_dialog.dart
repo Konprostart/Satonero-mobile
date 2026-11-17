@@ -239,6 +239,10 @@ class _AddCustomNodeDialogContentState
               name: name.isEmpty ? null : name,
             );
 
+            // The dialog is barrier-dismissible, so the user can close it while
+            // the persistence write is in flight.
+            if (!mounted) return;
+
             if (added) {
               // Fire-and-forget: errors are logged inside fetchNodeMetadata
               unawaited(notifier.fetchNodeMetadata(hexPubkey));

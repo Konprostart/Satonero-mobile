@@ -207,13 +207,21 @@ class SettingsNotifier extends StateNotifier<Settings> {
   }
 
   Future<void> _saveToPrefs() async {
-    final jsonString = jsonEncode(state.toJson());
-    await _prefs.setString(_storageKey, jsonString);
+    try {
+      final jsonString = jsonEncode(state.toJson());
+      await _prefs.setString(_storageKey, jsonString);
+    } catch (e, stackTrace) {
+      // A failed settings write must never surface as an unhandled async
+      // error out of a discarded `update*` future (the toggle handlers are
+      // fire-and-forget). Log and continue with the in-memory state.
+      logger.e('Failed to persist settings', error: e, stackTrace: stackTrace);
+    }
   }
 
   Future<void> updateLoggingEnabled(bool newValue) async {
     state = state.copyWith(isLoggingEnabled: newValue);
     MemoryLogOutput.isLoggingEnabled = newValue;
+    await _saveToPrefs();
   }
 
   /// Push toggle transitions run one after another. Run concurrently, the

@@ -139,6 +139,7 @@ class Settings extends Equatable {
         'defaultLightningAddress': defaultLightningAddress,
         'blacklistedRelays': blacklistedRelays,
         'userRelays': userRelays,
+        'isLoggingEnabled': isLoggingEnabled,
         'pushNotificationsEnabled': pushNotificationsEnabled,
         'notificationSoundEnabled': notificationSoundEnabled,
         'notificationVibrationEnabled': notificationVibrationEnabled,
@@ -161,7 +162,7 @@ class Settings extends Equatable {
       userRelays: (json['userRelays'] as List<dynamic>?)
               ?.cast<Map<String, dynamic>>() ??
           [],
-      isLoggingEnabled: false,
+      isLoggingEnabled: json['isLoggingEnabled'] as bool? ?? false,
       pushNotificationsEnabled:
           json['pushNotificationsEnabled'] as bool? ?? true,
       notificationSoundEnabled:

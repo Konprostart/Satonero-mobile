@@ -603,9 +603,14 @@ class NostrService {
     NostrFilter filter,
     List<String> relays,
   ) async {
+    // Capture the FULL settings snapshot before mutating. The `settings`
+    // getter reads the live, mutated value, so restoring from it (as the old
+    // code did) was a no-op that leaked the temporary relays into the active
+    // set forever. Restoring from this snapshot puts the exact prior relay
+    // list back.
+    final originalSettings = settings;
     try {
-      // Store current relays
-      final originalRelays = List<String>.from(settings.relays);
+      final originalRelays = List<String>.from(originalSettings.relays);
 
       // Temporarily add specific relays if not already present
       final allRelays = <String>{...originalRelays, ...relays}.toList();
@@ -613,22 +618,13 @@ class NostrService {
       if (!ListEquality().equals(originalRelays, allRelays)) {
         logger.i('Temporarily connecting to additional relays: $relays');
 
-        // Update settings with additional relays
-        final tempSettings = Settings(
-          relays: allRelays,
-          mostroPublicKey: settings.mostroPublicKey,
-          fullPrivacyMode: settings.fullPrivacyMode,
-          defaultFiatCode: settings.defaultFiatCode,
-          selectedLanguage: settings.selectedLanguage,
-        );
-
-        await updateSettings(tempSettings);
+        await updateSettings(originalSettings.copyWith(relays: allRelays));
 
         // Fetch the events
         final events = await fetchEvents(filter);
 
         // Restore original relays
-        await updateSettings(settings);
+        await updateSettings(originalSettings);
 
         return events;
       } else {
@@ -639,7 +635,7 @@ class NostrService {
       logger.e('Error fetching from specific relays: $e');
       // Ensure we restore original settings even on error
       try {
-        await updateSettings(settings);
+        await updateSettings(originalSettings);
       } catch (restoreError) {
         logger.e('Failed to restore original relay settings: $restoreError');
       }

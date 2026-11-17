@@ -231,6 +231,12 @@ class AbstractMostroNotifier extends StateNotifier<OrderState> {
             previousStatus: previousStatus,
             wasUserInitiatedCancel: wasUserInitiatedCancel);
 
+    // `handleEvent` is fire-and-forget, and the notifier can be disposed while
+    // the extraction awaited (a concurrent cancel/timeout deletes the session).
+    // Reading `ref` or assigning `state` below would then throw out of an
+    // unawaited future, so stop here once unmounted.
+    if (!mounted) return;
+
     // Only notify for recent events; old disputes still update state below
     if (notificationData != null && (isRecent || !bypassTimestampGate)) {
       sendNotification(

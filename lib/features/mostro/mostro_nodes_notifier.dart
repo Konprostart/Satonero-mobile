@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,8 +210,9 @@ class MostroNodesNotifier extends StateNotifier<List<MostroNode>> {
       return n;
     }).toList();
 
-    // Persist metadata so it survives app restart
-    _saveCustomNodes(customNodes);
+    // Persist metadata so it survives app restart (best-effort: failures are
+    // logged inside _saveCustomNodes, which returns false rather than throw).
+    unawaited(_saveCustomNodes(customNodes));
     _updateTrustedMetadataCache(pubkey, name, picture, website, about);
   }
 

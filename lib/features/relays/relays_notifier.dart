@@ -158,10 +158,14 @@ class RelaysNotifier extends StateNotifier<List<Relay>> {
     bool receivedEose = false;
     bool isConnected = false;
 
-    try {
-      // Create isolated instance for testing
-      final testNostr = Nostr();
+    // Create an isolated instance for testing. It is declared OUTSIDE the
+    // try so the catch path below can clean up this throwaway instance —
+    // never the production `Nostr.instance` singleton, whose `disconnectFromRelays`
+    // would knock the app's live relay connections offline as a side effect of
+    // a failed relay validation.
+    final testNostr = Nostr();
 
+    try {
       // Setup listeners to track EVENT and EOSE responses
       await testNostr.services.relays.init(
         relaysUrl: [url],
@@ -240,7 +244,7 @@ class RelaysNotifier extends StateNotifier<List<Relay>> {
     } catch (e) {
       // Protocol test failed with error
       try {
-        await _cleanupTestConnection(Nostr.instance);
+        await _cleanupTestConnection(testNostr);
       } catch (_) {
         // Ignore cleanup errors
       }

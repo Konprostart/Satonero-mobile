@@ -314,6 +314,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       );
                       if (confirmed != true) return;
                     }
+                    if (!mounted) return;
                     await ref
                         .read(settingsProvider.notifier)
                         .updatePrivateMode(value);
