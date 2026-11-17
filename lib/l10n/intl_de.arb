@@ -1412,6 +1412,7 @@
     "restoreError": "Wiederherstellungsfehler",
     "restoreErrorMessage": "Fehler beim Wiederherstellen der Nutzerdaten. Bitte prüfe deine Verbindung und versuche es erneut.",
     "restoreInvalidTradeIndex": "Ungültiger Handelsindex",
+    "restoreServerUnreachable": "Dein Satonero-Server ist nicht erreichbar. Stelle sicher, dass der Daemon läuft und seine Relays von diesem Gerät aus erreichbar sind.",
     "@_comment_file_messaging": "Dateiversand-Strings",
     "download": "Herunterladen",
     "openFile": "Datei öffnen",

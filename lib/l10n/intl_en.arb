@@ -1469,6 +1469,7 @@
     "restoreError": "Restore error",
     "restoreErrorMessage": "Error restoring user data. Please check your connection and try again.",
     "restoreInvalidTradeIndex": "Invalid trade index",
+    "restoreServerUnreachable": "Cannot reach your Satonero server. Make sure your daemon is running and its relays are reachable from this device.",
     "@_comment_file_messaging": "File messaging strings",
     "download": "Download",
     "openFile": "Open File",

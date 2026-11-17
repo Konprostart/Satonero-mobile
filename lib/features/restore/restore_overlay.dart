@@ -179,6 +179,9 @@ class RestoreOverlay extends ConsumerWidget {
 
   String _getMessage(BuildContext context, RestoreProgressState state) {
     if (state.step == RestoreStep.error) {
+      if (state.errorMessage == 'server_unreachable') {
+        return S.of(context)!.restoreServerUnreachable;
+      }
       return S.of(context)!.restoreErrorMessage;
     }
 

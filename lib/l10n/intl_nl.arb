@@ -1457,6 +1457,7 @@
     "restoreError": "Fout bij herstellen",
     "restoreErrorMessage": "Fout bij het herstellen van je gegevens. Controleer je verbinding en probeer het opnieuw.",
     "restoreInvalidTradeIndex": "Ongeldige trade-index",
+    "restoreServerUnreachable": "Kan je Satonero-server niet bereiken. Zorg dat de daemon draait en dat de relays bereikbaar zijn vanaf dit apparaat.",
     "@_comment_file_messaging": "File messaging strings",
     "download": "Downloaden",
     "openFile": "Bestand openen",

@@ -1457,6 +1457,7 @@
     "restoreError": "Erro na restauração",
     "restoreErrorMessage": "Erro ao restaurar os dados do usuário. Verifique sua conexão e tente novamente.",
     "restoreInvalidTradeIndex": "Índice de operação inválido",
+    "restoreServerUnreachable": "Não foi possível alcançar o seu servidor Satonero. Certifique-se de que o daemon está em execução e de que os relays estão acessíveis a partir deste dispositivo.",
     "@_comment_file_messaging": "File messaging strings",
     "download": "Baixar",
     "openFile": "Abrir Arquivo",

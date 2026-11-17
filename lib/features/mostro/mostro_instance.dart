@@ -234,6 +234,15 @@ extension MostroInstanceExtensions on NostrEvent {
     return raw == null ? null : int.tryParse(raw);
   }
 
+  /// NIP-13 difficulty a *first-contact* sender must mine at on this node.
+  ///
+  /// The daemon advertises `pow_first_contact` already resolved to
+  /// `max(pow, effective_pow_first_contact)`, so when present it is the only
+  /// value a sender that does not know whether the node recognises its trade
+  /// key should use. Legacy daemons omit the tag, in which case the base
+  /// `pow` is the right difficulty.
+  int get effectiveFirstContactPow => powFirstContact ?? pow;
+
   /// Parses the anti-abuse bond policy from the `bond_enabled` tag.
   ///
   /// - Tag absent → [BondPolicy.unsupported] (legacy daemon).

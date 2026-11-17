@@ -414,5 +414,18 @@ void main() {
       expect(event.powFirstContact, isNull);
       expect(MostroInstance.fromEvent(event).powFirstContact, isNull);
     });
+
+    test('effectiveFirstContactPow prefers pow_first_contact', () {
+      final event = buildEvent(const [
+        ['pow_first_contact', '16'],
+      ]);
+      expect(event.effectiveFirstContactPow, 16);
+    });
+
+    test('effectiveFirstContactPow falls back to pow when tag absent', () {
+      final event = buildEvent(const []);
+      // The fixture advertises `pow=4`.
+      expect(event.effectiveFirstContactPow, 4);
+    });
   });
 }

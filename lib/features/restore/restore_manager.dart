@@ -162,10 +162,19 @@ class RestoreService {
       await Future.delayed(pollInterval);
     }
 
+    final liveRelays = nostrService.liveRelayCount;
+    if (liveRelays == 0) {
+      logger.w(
+        'Restore: node $mostroPubkey unreachable after ${maxWait.inSeconds}s '
+        '(no info event and no live relays)',
+      );
+      throw const RestoreServerUnreachableException();
+    }
+
     logger.w(
       'Restore: node info not received within ${maxWait.inSeconds}s; '
       'proceeding on best-effort connectivity '
-      '(${nostrService.liveRelayCount} live relays)',
+      '($liveRelays live relays)',
     );
   }
 
@@ -289,7 +298,10 @@ class RestoreService {
     // Respect full privacy mode: if enabled, don't pass master key, wrap will be done just with trade key
     final mostroInstance =
         await ref.read(orderRepositoryProvider).awaitMostroInstance();
-    final mostroPow = mostroInstance?.pow ?? 0;
+    // A restore request is first-contact (trade key index 1 is not part of an
+    // active trade), so mine at the stiffer advertised `pow_first_contact`,
+    // falling back to `pow` for legacy daemons that do not advertise it.
+    final mostroPow = mostroInstance?.effectiveFirstContactPow ?? 0;
     if (mostroInstance == null) {
       logger.w(
         'Mostro instance info unavailable, sending with PoW 0 — '
@@ -387,7 +399,7 @@ class RestoreService {
     // Respect full privacy mode: if enabled, don't pass master key, wrap will be done just with trade key
     final mostroInstance =
         await ref.read(orderRepositoryProvider).awaitMostroInstance();
-    final mostroPow = mostroInstance?.pow ?? 0;
+    final mostroPow = mostroInstance?.effectiveFirstContactPow ?? 0;
     if (mostroInstance == null) {
       logger.w(
         'Mostro instance info unavailable, sending with PoW 0 — '
@@ -469,7 +481,7 @@ class RestoreService {
     // Respect full privacy mode: if enabled, don't pass master key, wrap will be done just with trade key
     final mostroInstance =
         await ref.read(orderRepositoryProvider).awaitMostroInstance();
-    final mostroPow = mostroInstance?.pow ?? 0;
+    final mostroPow = mostroInstance?.effectiveFirstContactPow ?? 0;
     if (mostroInstance == null) {
       logger.w(
         'Mostro instance info unavailable, sending with PoW 0 — '
@@ -1036,7 +1048,9 @@ class RestoreService {
       );
       final errorKey = e is RestoreInvalidTradeIndexException
           ? 'invalid_trade_index'
-          : 'restore_error';
+          : (e is RestoreServerUnreachableException || e is TimeoutException)
+              ? 'server_unreachable'
+              : 'restore_error';
       ref
           .read(restoreProgressProvider.notifier)
           .showError(errorKey); // overlay maps the key to a localized message
@@ -1195,6 +1209,17 @@ class RestoreInvalidTradeIndexException implements Exception {
 
   @override
   String toString() => 'RestoreInvalidTradeIndexException';
+}
+
+/// Thrown when the freshly selected node cannot be reached at all: its
+/// kind-38385 info event never arrived and there is no live relay connection,
+/// so a restore request would only time out. Mapped to a dedicated, actionable
+/// error message rather than the generic "error restoring user data".
+class RestoreServerUnreachableException implements Exception {
+  const RestoreServerUnreachableException();
+
+  @override
+  String toString() => 'RestoreServerUnreachableException';
 }
 
 final restoreServiceProvider = Provider<RestoreService>((ref) {
