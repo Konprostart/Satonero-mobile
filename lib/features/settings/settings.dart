@@ -34,6 +34,9 @@ class Settings extends Equatable {
   final bool pushNotificationsEnabled;
   final bool notificationSoundEnabled;
   final bool notificationVibrationEnabled;
+  // Telegram notification linking (read-only): whether the user enabled the
+  // account link. The daemon sends notifications directly once linked.
+  final bool telegramNotificationsEnabled;
   final int? sessionExpirationHours;
   final ThemeModePreference themeMode;
 
@@ -51,6 +54,7 @@ class Settings extends Equatable {
     this.pushNotificationsEnabled = true,
     this.notificationSoundEnabled = true,
     this.notificationVibrationEnabled = true,
+    this.telegramNotificationsEnabled = false,
     this.sessionExpirationHours,
     this.themeMode = ThemeModePreference.dark,
   });
@@ -72,6 +76,7 @@ class Settings extends Equatable {
         pushNotificationsEnabled,
         notificationSoundEnabled,
         notificationVibrationEnabled,
+        telegramNotificationsEnabled,
         sessionExpirationHours,
         themeMode,
       ];
@@ -91,6 +96,7 @@ class Settings extends Equatable {
     bool? pushNotificationsEnabled,
     bool? notificationSoundEnabled,
     bool? notificationVibrationEnabled,
+    bool? telegramNotificationsEnabled,
     int? sessionExpirationHours,
     bool clearSessionExpiration = false,
     ThemeModePreference? themeMode,
@@ -114,6 +120,8 @@ class Settings extends Equatable {
           notificationSoundEnabled ?? this.notificationSoundEnabled,
       notificationVibrationEnabled:
           notificationVibrationEnabled ?? this.notificationVibrationEnabled,
+      telegramNotificationsEnabled:
+          telegramNotificationsEnabled ?? this.telegramNotificationsEnabled,
       sessionExpirationHours: clearSessionExpiration
           ? null
           : (sessionExpirationHours ?? this.sessionExpirationHours),
@@ -134,6 +142,7 @@ class Settings extends Equatable {
         'pushNotificationsEnabled': pushNotificationsEnabled,
         'notificationSoundEnabled': notificationSoundEnabled,
         'notificationVibrationEnabled': notificationVibrationEnabled,
+        'telegramNotificationsEnabled': telegramNotificationsEnabled,
         'sessionExpirationHours': sessionExpirationHours,
         'themeMode': themeMode.name,
       };
@@ -159,6 +168,8 @@ class Settings extends Equatable {
           json['notificationSoundEnabled'] as bool? ?? true,
       notificationVibrationEnabled:
           json['notificationVibrationEnabled'] as bool? ?? true,
+      telegramNotificationsEnabled:
+          json['telegramNotificationsEnabled'] as bool? ?? false,
       sessionExpirationHours: json['sessionExpirationHours'] as int?,
       themeMode: themeModePreferenceFromName(json['themeMode'] as String?),
     );

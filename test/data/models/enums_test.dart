@@ -18,6 +18,9 @@ void main() {
       expect(Action.fromString('hold-invoice-payment-settled'),
           Action.holdInvoicePaymentSettled);
       expect(Action.fromString('restore-session'), Action.restore);
+      expect(Action.fromString('request-telegram-code'),
+          Action.requestTelegramCode);
+      expect(Action.fromString('telegram-code'), Action.telegramCode);
     });
 
     test('throws ArgumentError for an unknown value', () {

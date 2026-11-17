@@ -97,6 +97,8 @@ class NotificationMessageMapper {
       case mostro.Action.addBondInvoice:
       case mostro.Action.bondInvoiceAccepted:
       case mostro.Action.bondPayoutCompleted:
+      case mostro.Action.requestTelegramCode:
+      case mostro.Action.telegramCode:
         return 'TODO: implement  title key if needed';
       case mostro.Action.bondSlashed:
         return 'notification_bond_slashed_title';
@@ -220,6 +222,8 @@ class NotificationMessageMapper {
       case mostro.Action.addBondInvoice:
       case mostro.Action.bondInvoiceAccepted:
       case mostro.Action.bondPayoutCompleted:
+      case mostro.Action.requestTelegramCode:
+      case mostro.Action.telegramCode:
         return 'TODO: implement message key if needed';
       case mostro.Action.bondSlashed:
         return 'notification_bond_slashed_message';

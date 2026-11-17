@@ -51,7 +51,9 @@ enum Action {
   tradePubkey('trade-pubkey'),
   restore('restore-session'),
   orders('orders'),
-  lastTradeIndex('last-trade-index');
+  lastTradeIndex('last-trade-index'),
+  requestTelegramCode('request-telegram-code'),
+  telegramCode('telegram-code');
 
   final String value;
 

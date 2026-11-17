@@ -59,6 +59,24 @@ void main() {
         base(),
         isNot(base().copyWith(relays: const ['wss://relay.b'])),
       );
+      expect(
+        base(),
+        isNot(base().copyWith(telegramNotificationsEnabled: true)),
+      );
+    });
+
+    test('telegramNotificationsEnabled round-trips through JSON', () {
+      final withTelegram = base().copyWith(telegramNotificationsEnabled: true);
+      final restored = Settings.fromJson(withTelegram.toJson());
+
+      expect(restored.telegramNotificationsEnabled, isTrue);
+      expect(restored, withTelegram);
+    });
+
+    test('telegramNotificationsEnabled defaults to false', () {
+      expect(base().telegramNotificationsEnabled, isFalse);
+      expect(Settings.fromJson(base().toJson()).telegramNotificationsEnabled,
+          isFalse);
     });
   });
 

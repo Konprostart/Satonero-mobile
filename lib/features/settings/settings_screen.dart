@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:satonero_mobile/core/app_theme.dart';
 import 'package:satonero_mobile/core/automation/automation_id.dart';
 import 'package:satonero_mobile/core/automation/automation_ids.dart';
+import 'package:satonero_mobile/core/config.dart';
 import 'package:satonero_mobile/features/mostro/mostro_nodes_provider.dart';
 import 'package:satonero_mobile/features/mostro/widgets/mostro_node_avatar.dart';
 import 'package:satonero_mobile/features/mostro/widgets/mostro_node_selector.dart';
@@ -13,10 +14,16 @@ import 'package:satonero_mobile/features/mostro/widgets/trusted_badge.dart';
 import 'package:satonero_mobile/features/relays/widgets/relay_selector.dart';
 import 'package:satonero_mobile/features/settings/settings_provider.dart';
 import 'package:satonero_mobile/features/settings/settings.dart';
+import 'package:satonero_mobile/features/telegram/telegram_deep_link.dart';
+import 'package:satonero_mobile/features/telegram/telegram_link_provider.dart';
+import 'package:satonero_mobile/features/telegram/telegram_link_service.dart';
+import 'package:satonero_mobile/services/logger_service.dart';
 import 'package:satonero_mobile/shared/widgets/currency_selection_dialog.dart';
 import 'package:satonero_mobile/shared/providers/exchange_service_provider.dart';
 import 'package:satonero_mobile/shared/widgets/language_selector.dart';
+import 'package:satonero_mobile/shared/widgets/mostro_switch.dart';
 import 'package:satonero_mobile/shared/widgets/trade_history_selector.dart';
+import 'package:satonero_mobile/shared/utils/snack_bar_helper.dart';
 import 'package:satonero_mobile/features/wallet/widgets/wallet_status_card.dart';
 import 'package:satonero_mobile/features/cashu/widgets/cashu_wallet_card.dart';
 import 'package:satonero_mobile/generated/l10n.dart';
@@ -30,6 +37,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late final TextEditingController _lightningAddressController;
+  bool _linkingTelegram = false;
 
   @override
   void initState() {
@@ -124,6 +132,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                   // Notification Settings Card
                   _buildNotificationSettingsCard(context),
+                  const SizedBox(height: 16),
+
+                  // Telegram Notifications Card
+                  _buildTelegramNotificationsCard(context),
                   const SizedBox(height: 16),
 
                   // Trade History Card
@@ -440,6 +452,103 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTelegramNotificationsCard(BuildContext context) {
+    final settings = ref.watch(settingsProvider);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.colors(context).cardBackground,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.colors(context).textPrimary.withValues(alpha: 0.1)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.telegram,
+                  color: AppTheme.colors(context).accent,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    S.of(context)!.telegramNotifications,
+                    style: TextStyle(
+                      color: AppTheme.colors(context).textPrimary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                MostroSwitch(
+                  value: settings.telegramNotificationsEnabled,
+                  onChanged: _linkingTelegram ? null : _handleTelegramToggle,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              S.of(context)!.telegramNotificationsDescription,
+              style: TextStyle(
+                color: AppTheme.colors(context).textSecondary,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleTelegramToggle(bool enabled) async {
+    final settingsNotifier = ref.read(settingsProvider.notifier);
+
+    if (!enabled) {
+      await settingsNotifier.updateTelegramNotificationsEnabled(false);
+      return;
+    }
+
+    if (!Config.telegramConfigured) {
+      _showTelegramError(S.of(context)!.telegramBotNotConfigured);
+      return;
+    }
+
+    setState(() => _linkingTelegram = true);
+    try {
+      final code = await ref.read(telegramLinkServiceProvider).requestCode();
+      final uri = buildTelegramDeepLink(Config.telegramBotUsername, code);
+      final opened = await openTelegramDeepLink(uri);
+      if (!opened) {
+        throw const TelegramLinkException('Could not open Telegram');
+      }
+      if (mounted) {
+        await settingsNotifier.updateTelegramNotificationsEnabled(true);
+      }
+    } catch (e) {
+      logger.w('Telegram link failed', error: e);
+      if (mounted) {
+        _showTelegramError(S.of(context)!.telegramLinkFailed);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _linkingTelegram = false);
+      }
+    }
+  }
+
+  void _showTelegramError(String message) {
+    SnackBarHelper.showTopSnackBar(
+      context,
+      message,
+      duration: const Duration(seconds: 3),
+      backgroundColor: AppTheme.colors(context).danger,
     );
   }
 
