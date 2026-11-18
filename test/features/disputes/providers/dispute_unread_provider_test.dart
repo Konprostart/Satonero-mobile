@@ -71,8 +71,7 @@ void main() {
 
     // What DisputeChatScreen does on open: persist the cursor, then bump.
     await DisputeReadStatusService.markDisputeAsRead(disputeId);
-    container.read(disputeReadStatusProvider(disputeId).notifier).state =
-        DateTime.now().millisecondsSinceEpoch;
+    container.read(disputeReadStatusProvider(disputeId).notifier).state++;
 
     final after =
         await container.read(disputeHasUnreadProvider(disputeId).future);

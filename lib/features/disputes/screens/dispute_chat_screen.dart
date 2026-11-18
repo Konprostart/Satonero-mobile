@@ -42,9 +42,7 @@ class _DisputeChatScreenState extends ConsumerState<DisputeChatScreen> {
         DisputeReadStatusService.markDisputeAsRead(widget.disputeId)
             .then((_) {
           if (!mounted) return;
-          ref
-              .read(disputeReadStatusProvider(widget.disputeId).notifier)
-              .state = DateTime.now().millisecondsSinceEpoch;
+          ref.read(disputeReadStatusProvider(widget.disputeId).notifier).state++;
         }),
       );
       ref
